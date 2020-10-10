@@ -10,8 +10,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python 3.7
-      env:
-        DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
       uses: actions/setup-python@v2
       with:
         python-version: 3.7
@@ -23,5 +21,7 @@ jobs:
       run: |
         pylint ./**/*.py
     - name: Run Tests
+      env:
+        DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
       run: |
         python manage.py test
