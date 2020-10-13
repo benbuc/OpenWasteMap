@@ -1,3 +1,5 @@
-from django.test import TestCase
+"""
+Test cases for the Accounts app.
+"""
 
-# Create your tests here.
+#from django.test import TestCase
