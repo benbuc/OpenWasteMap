@@ -19,7 +19,7 @@ jobs:
         pip install -r requirements.txt
     - name: Lint with Pylint
       run: |
-        pylint ./**/*.py
+        pylint ./**/*.py *.py
     - name: Run Tests
       env:
         DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
