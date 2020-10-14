@@ -9,4 +9,6 @@ app_name = 'accounts' # pylint: disable=invalid-name
 urlpatterns = [
     path('', include('django.contrib.auth.urls')),
     path('profile/', views.profile, name='profile'),
+    path('register/', views.register, name='register'),
+    path('register/done', views.register_done, name='register_done'),
 ]
