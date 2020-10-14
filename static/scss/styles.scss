@@ -1,3 +1,10 @@
-h1 {
-    color: red;
-}
+// Settings
+@import '00-settings/normalize';
+@import '00-settings/variables';
+
+// Mixins
+@import '01-mixins/border-radius';
+@import '01-mixins/breakpoints';
+@import '01-mixins/center-block';
+@import '01-mixins/centre';
+@import '01-mixins/clearfix';
