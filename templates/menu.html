@@ -1,11 +1,9 @@
 <header class="main-header">
-    <div>
-        <a href="{% url 'map_viewer:index' %}">HOME</a>
+    <a class="main-header__title" href="{% url 'map_viewer:index' %}">OpenWasteMap</a>
 
-        <nav class="main-nav">
-            <ul class="main_nav__items">
-                <li>Menu Item</li>
-            </ul>
-        </nav>
-    </div>
+    <nav class="main-nav">
+        <ul class="main-nav__items">
+            <li><a href="{% url 'accounts:login' %}">Log In</a></li>
+        </ul>
+    </nav>
 </header>
