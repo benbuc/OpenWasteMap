@@ -13,12 +13,13 @@
     color: $color-white;
     a {
         color: $color-white;
+        text-decoration: none;
     }
 
     &__title {
         float: left;
-        font-size: ($main-nav-height - 20px);
-        margin: 10px 0 10px 50px;
+        font-size: ($main-nav-height - 30px);
+        margin: 15px 0 15px 50px;
         line-height: 1;
     }
 }

@@ -1,6 +1,7 @@
 // Settings
 @import '00-settings/normalize';
 @import '00-settings/variables';
+@import '00-settings/fonts';
 
 // Mixins
 @import '01-mixins/border-radius';
@@ -8,6 +9,9 @@
 @import '01-mixins/center-block';
 @import '01-mixins/centre';
 @import '01-mixins/clearfix';
+
+// Globals
+@import '02-globals/global';
 
 // Elements
 @import '03-elements/main-header';
