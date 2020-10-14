@@ -4,7 +4,92 @@ Test cases for the Accounts app.
 
 from django.test import TestCase
 from django.urls import reverse
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
+
+class UserSessionTests(TestCase):
+    """
+    Test the ability for authenticated users to use the site.
+    """
+
+    def setUp(self):
+        """
+        Sets up the UserSessionTests by creating a new user.
+        """
+
+        self.credentials = {
+            'username'  : 'testuser',
+            'email'     : 'mail@example.com',
+            'password'  : 'MySup3erSecretK3Y',
+        }
+        user = User.objects.create_user(
+            username=self.credentials['username'],
+            email=self.credentials['email']
+        )
+        user.set_password(self.credentials['password'])
+        user.save()
+
+    def test_user_can_authenticate(self):
+        """
+        Test whether existing users can authenticate.
+        """
+        user = authenticate(
+            username=self.credentials['username'],
+            password=self.credentials['password'],
+        )
+
+        self.assertIsNotNone(user)
+        self.assertTrue(user.is_authenticated)
+
+    def test_wrong_password_cant_authenticate(self):
+        """
+        Test whether existing users can not authenticate with wrong passwords.
+        """
+        user = authenticate(
+            username=self.credentials['username'],
+            password=self.credentials['password']+"lalala",
+        )
+
+        self.assertIsNone(user)
+
+    def test_login_page_accessible(self):
+        """
+        The login page is accessible.
+        """
+        response = self.client.get(reverse('accounts:login'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "<form")
+
+    def test_can_login_using_view(self):
+        """
+        Test whether users can log in using the login view.
+        """
+        response = self.client.post(reverse('accounts:login'), {
+            'username': self.credentials['username'],
+            'password': self.credentials['password'],
+        })
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, reverse('accounts:profile'))
+
+    def test_restricted_access(self):
+        """
+        Using shall not be able to access the profile page without logging in.
+        """
+        profile_not_logged_in = self.client.get(reverse('accounts:profile'))
+
+        self.assertEqual(profile_not_logged_in.status_code, 302)
+        self.assertIn(reverse('accounts:login'), profile_not_logged_in.url)
+
+        logged_in = self.client.login(
+            username=self.credentials['username'],
+            password=self.credentials['password'],
+        )
+        self.assertTrue(logged_in)
+
+        profile_logged_in = self.client.get(reverse('accounts:profile'))
+        self.assertEqual(profile_logged_in.status_code, 200)
+        self.assertContains(profile_logged_in, self.credentials['username'])
 
 class UserRegistrationTests(TestCase):
     """
