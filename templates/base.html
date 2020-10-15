@@ -6,11 +6,11 @@
 
     {% block bodytag %}<body>{% endblock %}
 
-        {% include "menu.html" %}
-
         <div class="main-wrap">
+            {% include "menu.html" %}
+
             <div class="main-wrap__content">
-                {% block content %}{% endblock %}
+                    {% block content %}{% endblock %}
             </div>
 
             {% include "footer.html" %}
