@@ -1,3 +1,7 @@
 <meta charset="utf-8" />
-<title>{% block pagetitle %}{% endblock %} - OpenWasteMap</title>
+{% if page_title %}
+<title>{{ page_title }} - OpenWasteMap</title>
+{% else %}
+<title>OpenWasteMap</title>
+{% endif %}
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
