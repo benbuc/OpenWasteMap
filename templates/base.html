@@ -1,10 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <title>OpenWasteMap</title>
+        {% include "includes/head.html" %}
     </head>
 
-    <body>
-    {% block content %}{% endblock content %}
+    {% block bodytag %}<body>{% endblock %}
+
+        <div class="main-wrap">
+            {% include "menu.html" %}
+
+            <div class="main-wrap__content">
+                    {% block content %}{% endblock %}
+            </div>
+
+            {% include "footer.html" %}
+        </div>
+
+        {% include "includes/foot.html" %}
+    
     </body>
 </html>

@@ -11,7 +11,9 @@ from .forms import RegistrationForm
 @login_required
 def profile(request):
     """Render a profile overview for a logged in user."""
-    return render(request, 'registration/profile.html')
+    return render(request, 'registration/profile.html', {
+        'page_title': request.user.get_username()
+    })
 
 def register(request):
     """Used to let new users register on the site."""
@@ -25,9 +27,12 @@ def register(request):
             login(request, user)
     else:
         form = RegistrationForm()
-    return render(request, 'registration/register.html', {'form': form})
+    return render(request, 'registration/register.html', {
+        'form': form,
+        'page_title': "Register"
+    })
 
 @login_required
 def register_done(request):
     """Show a thanks page after successful registration."""
-    render(request, 'registration/register_done.html')
+    render(request, 'registration/register_done.html', {'page_title': "Done"})
