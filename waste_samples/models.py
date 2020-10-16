@@ -19,3 +19,10 @@ class WasteSample(models.Model):
     user            = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     longitude       = models.DecimalField(max_digits=9, decimal_places=6)
     latitude        = models.DecimalField(max_digits=9, decimal_places=6)
+
+    def __str__(self):
+        """String representation of WasteSample."""
+        return (
+            f"{self.waste_level} by "
+            f"{User.objects.get(username=self.user).username if self.user else 'Null User'}"
+        )
