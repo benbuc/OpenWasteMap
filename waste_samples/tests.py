@@ -3,7 +3,7 @@ Tests for the Waste Samples App.
 """
 
 from django.test import TestCase
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 from .models import WasteSample
 
@@ -35,7 +35,7 @@ class WasteSampleModelTests(TestCase):
         """
         Test whether the string representation contains the waste level and username.
         """
-        testuser = User.objects.create_user(username="testuser")
+        testuser = get_user_model().objects.create_user(username="testuser")
         sample = create_sample(waste_level=2, user=testuser)
 
         self.assertIn(str(2), str(sample))
