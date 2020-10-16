@@ -4,8 +4,7 @@ Test cases for the Accounts app.
 
 from django.test import TestCase
 from django.urls import reverse
-from django.contrib.auth import authenticate
-from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, get_user_model
 
 class UserSessionTests(TestCase):
     """
@@ -22,7 +21,7 @@ class UserSessionTests(TestCase):
             'email'     : 'mail@example.com',
             'password'  : 'MySup3erSecretK3Y',
         }
-        user = User.objects.create_user(
+        user = get_user_model().objects.create_user(
             username=self.credentials['username'],
             email=self.credentials['email']
         )
@@ -116,12 +115,14 @@ class UserRegistrationTests(TestCase):
         """
         Test whether new users can be created.
         """
-        num_users_before = User.objects.count()
+        num_users_before = get_user_model().objects.count()
         response = self.client.post(reverse('accounts:register'), self.credentials)
-        num_users_after = User.objects.count()
+        num_users_after = get_user_model().objects.count()
 
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(User.objects.filter(username=self.credentials['username']).exists())
+        self.assertTrue(
+            get_user_model().objects.filter(username=self.credentials['username']).exists()
+        )
         self.assertGreater(num_users_after, num_users_before)
 
     def test_existing_username_gives_error_message(self):
@@ -129,12 +130,12 @@ class UserRegistrationTests(TestCase):
         Registering with an existing username must return an error message.
         """
         self.client.post(reverse('accounts:register'), self.credentials)
-        num_users_before = User.objects.count()
+        num_users_before = get_user_model().objects.count()
 
         credentials = self.credentials
         credentials["email"] = "anothermail@example.com"
         user_two = self.client.post(reverse('accounts:register'), credentials)
-        num_users_after = User.objects.count()
+        num_users_after = get_user_model().objects.count()
 
         self.assertEqual(user_two.status_code, 200)
         self.assertContains(user_two, "already exists")
@@ -145,13 +146,13 @@ class UserRegistrationTests(TestCase):
         Users must only be allowed to register with an email address.
         """
 
-        num_users_before = User.objects.count()
+        num_users_before = get_user_model().objects.count()
 
         credentials = self.credentials
         credentials["email"] = "testmail"
 
         response = self.client.post(reverse('accounts:register'), credentials)
-        num_users_after = User.objects.count()
+        num_users_after = get_user_model().objects.count()
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(num_users_before, num_users_after)
@@ -168,7 +169,7 @@ class UserRegistrationTests(TestCase):
         response = self.client.post(reverse('accounts:register'), credentials)
 
         self.assertEqual(response.status_code, 200)
-        user = User.objects.get(username=credentials['username'])
+        user = get_user_model().objects.get(username=credentials['username'])
 
         self.assertEqual(user.email, credentials['email'])
         self.assertEqual(user.first_name, credentials['first_name'])
