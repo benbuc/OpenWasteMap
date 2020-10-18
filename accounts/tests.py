@@ -6,6 +6,8 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import authenticate, get_user_model
 
+from utilities.test_utilities import get_testuser
+
 class UserSessionTests(TestCase):
     """
     Test the ability for authenticated users to use the site.
@@ -16,17 +18,7 @@ class UserSessionTests(TestCase):
         Sets up the UserSessionTests by creating a new user.
         """
 
-        self.credentials = {
-            'username'  : 'testuser',
-            'email'     : 'mail@example.com',
-            'password'  : 'MySup3erSecretK3Y',
-        }
-        user = get_user_model().objects.create_user(
-            username=self.credentials['username'],
-            email=self.credentials['email']
-        )
-        user.set_password(self.credentials['password'])
-        user.save()
+        self.user, self.credentials = get_testuser()
 
     def test_user_can_authenticate(self):
         """
