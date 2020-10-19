@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block page_title %}New Sample{% endblock %}
+
 {% block additional_scripts %}
 {% load static %}
 <script src="{% static 'waste_samples/waste_samples.js' %}"></script>
@@ -7,16 +9,18 @@
 
 {% block content %}
 
-<h2>Create New Sample</h2>
-<form method="post">
-    {% csrf_token %}
-    {% for field in form %}
-    {{ field.label_tag }}
-    {{ field }}<br>
-    {% endfor %}
-    <p>GPS Accuracy: <span id="gpsAccuracy">NaN</span></p>
-    <button type="button" onClick="getLocation()">Get GPS Location</button><br>
-    <button type="submit">Create Sample</button>
-</form>
+<section class="section--fullscreen-centered">
+    <h2>Create New Sample</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        {{ field.label_tag }}
+        {{ field }}<br>
+        {% endfor %}
+        <p>GPS Accuracy: <span id="gpsAccuracy">NaN</span></p>
+        <button type="button" onClick="getLocation()">Get GPS Location</button><br>
+        <button type="submit">Create Sample</button>
+    </form>
+</section>
 
 {% endblock %}

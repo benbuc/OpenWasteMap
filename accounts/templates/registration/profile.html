@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block page_title %}{{ user.username }}{% endblock %}
+
 {% block content %}
 
 Viewing profile for: {{ user }}
