@@ -1,7 +1,12 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        {% include "includes/head.html" %}
+        <meta charset="utf-8" />
+        <title>{% block page_title %}{% endblock %} - OpenWasteMap</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link href="{% static 'css/styles.css' %}" rel="stylesheet" type="text/css">
+        {% block additional_scripts %}{% endblock %}
     </head>
 
     {% block bodytag %}<body>{% endblock %}
@@ -15,8 +20,6 @@
 
             {% include "footer.html" %}
         </div>
-
-        {% include "includes/foot.html" %}
     
     </body>
 </html>
