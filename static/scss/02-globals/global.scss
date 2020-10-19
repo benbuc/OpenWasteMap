@@ -5,3 +5,15 @@ html, body {
 body {
     @include font-regular;
 }
+
+@include breakpoint(md-max) {
+    .desktop-only {
+        display: none
+    }
+}
+
+@include breakpoint(md-min) {
+    .mobile-only {
+        display: none;
+    }
+}
