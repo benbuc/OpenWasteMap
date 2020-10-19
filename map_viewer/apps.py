@@ -1,5 +1,5 @@
 """
-Used to configure the Map Viewer app."
+Used to configure the Map Viewer app.
 """
 
 from django.apps import AppConfig

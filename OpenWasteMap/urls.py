@@ -21,4 +21,5 @@ urlpatterns = [
     path('', include('map_viewer.urls'), name='home'),
     url(r'^admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
+    path('samples/', include('waste_samples.urls')),
 ]

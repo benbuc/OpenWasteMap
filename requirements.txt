@@ -2,3 +2,4 @@ django
 pylint
 python-dotenv
 django-sass
+pylint-django

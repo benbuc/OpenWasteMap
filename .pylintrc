@@ -1,0 +1,4 @@
+[MASTER]
+
+load-plugins=pylint_django
+max-parents=15
