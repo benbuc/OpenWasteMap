@@ -1,7 +1,14 @@
 function getLocation() {
+
+    var options = {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
+    };
+
     if (navigator.geolocation) {
-        document.getElementById("gpsAccuracy").innerHTML = "Getting Position...";
-        navigator.geolocation.getCurrentPosition(updatePosition, errorGettingPosition);
+        document.getElementById("gpsAccuracy").innerHTML = "Getting Position...Please Wait";
+        navigator.geolocation.getCurrentPosition(updatePosition, errorGettingPosition, options);
     } else {
         console.error("Geolocation is not supported by this browser.");
     }
@@ -14,7 +21,7 @@ function updatePosition(position) {
 
     longitudeInput.value = position.coords.longitude.toFixed(6);
     latitudeInput.value = position.coords.latitude.toFixed(6);
-    document.getElementById("gpsAccuracy").innerHTML = position.coords.accuracy;
+    document.getElementById("gpsAccuracy").innerHTML = position.coords.accuracy + "m";
 }
 
 function errorGettingPosition(error) {
