@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block page_title %}Logged out{% endblock %}
+
+{% block content %}
+
+<p>Logout successful</p>
+
+<p><a href="{% url 'map_viewer:index' %}">Back to start</a></p>
+
+{% endblock %}

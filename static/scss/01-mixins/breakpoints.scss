@@ -1,0 +1,50 @@
+// Breakpoints
+@mixin breakpoint($point) {
+	@if $point == xxl-min {
+		@media (min-width: 1440px) { @content ; }
+	}
+	@else if $point == xxl-max {
+		@media (max-width: 1439px) { @content ; }
+	}
+	@else if $point == xl-min {
+		@media (min-width: 1200px) { @content ; }
+	}
+	@else if $point == xl-max {
+		@media (max-width: 1199px) { @content ; }
+	}
+	@else if $point == lg-min {
+		@media (min-width: 1025px) { @content ; }
+	}
+	@else if $point == lg-max {
+		@media (max-width: 1024px) { @content ; }
+	}
+	@else if $point == md-min {
+		@media (min-width: 769px) { @content ; }
+	}
+	@else if $point == md-max {
+		@media (max-width: 768px) { @content ; }
+	}
+	@else if $point == sm-min {
+		@media (min-width: 576px) { @content ; }
+	}
+	@else if $point == sm-max {
+		@media (max-width: 575px) { @content ; }
+	}
+	@else if $point == xs-min {
+		@media (min-width: 375px) { @content ; }
+	}
+	@else if $point == xs-max {
+		@media (max-width: 374px) { @content ; }
+	}
+}
+
+
+// These values will not show up in content, but can be
+// queried by JavaScript to know which breakpoint is active.
+body:before {
+	display: none;
+	content: 'is-mobile';
+	@include breakpoint(md-min) {
+		content: 'is-desktop';
+	}
+}

@@ -1,0 +1,40 @@
+<header class="main-header">
+    <a class="main-header__title" href="{% url 'map_viewer:index' %}">OpenWasteMap</a>
+
+    <nav id="main-nav" class="main-nav desktop-only">
+        <ul class="main-nav__items">
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'accounts:profile' %}">View Profile</a></li>
+            <li><a href="{% url 'waste_samples:index' %}">Show Samples</a></li>
+            <li><a href="{% url 'waste_samples:create' %}">Create Sample</a></li>
+            <li><a href="{% url 'accounts:logout' %}">Log Out</a></li>
+            {% else %}
+            <li><a href="{% url 'accounts:login' %}">Log In</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <nav id="mobile-nav" class="mobile-nav mobile-only">
+        <ul class="mobile-nav__items">
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'accounts:profile' %}">View Profile</a></li>
+            <li><a href="{% url 'accounts:logout' %}">Log Out</a></li>
+            {% else %}
+            <li><a href="{% url 'accounts:login' %}">Log In</a></li>
+            {% endif %}
+            <li>
+                <a href="{% url 'waste_samples:index' %}">Samples</a>
+                {% if user.is_authenticated %}
+                <ul>
+                    <li><a href="{% url 'waste_samples:create' %}">Create New</a></li>
+                </ul>
+                {% endif %}
+            </li>
+        </ul>
+    </nav>
+    <button class="mobile-nav__button mobile-only" id="mobile-nav-button">
+        <span class="mobile-nav__button__line"></span>
+        <span class="mobile-nav__button__line"></span>
+        <span class="mobile-nav__button__line"></span>
+    </button>
+</header>
