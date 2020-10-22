@@ -15,7 +15,6 @@ function getLocation() {
 }
 
 function updatePosition(position) {
-    console.log(position);
     var longitudeInput = document.getElementById("id_longitude");
     var latitudeInput = document.getElementById("id_latitude");
 
@@ -25,6 +24,5 @@ function updatePosition(position) {
 }
 
 function errorGettingPosition(error) {
-    console.log(error);
     document.getElementById("gpsAccuracy").innerHTML = "Error " + error.code + ": " + error.message;
 }
