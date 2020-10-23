@@ -111,7 +111,8 @@ class UserRegistrationTests(TestCase):
         response = self.client.post(reverse('accounts:register'), self.credentials)
         num_users_after = get_user_model().objects.count()
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, reverse('accounts:register_done'))
         self.assertTrue(
             get_user_model().objects.filter(username=self.credentials['username']).exists()
         )
@@ -160,9 +161,20 @@ class UserRegistrationTests(TestCase):
 
         response = self.client.post(reverse('accounts:register'), credentials)
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, reverse('accounts:register_done'))
         user = get_user_model().objects.get(username=credentials['username'])
 
         self.assertEqual(user.email, credentials['email'])
         self.assertEqual(user.first_name, credentials['first_name'])
         self.assertEqual(user.last_name, credentials['last_name'])
+
+    def test_done_view_accessible(self):
+        """
+        The thank you page after registration has to be accessible.
+        """
+
+        self.client.login(**get_testuser()[1])
+        response = self.client.get(reverse('accounts:register_done'))
+
+        self.assertEqual(response.status_code, 200)

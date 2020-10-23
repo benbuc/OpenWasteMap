@@ -2,7 +2,7 @@
 Contains the Views for the Accounts app."
 """
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect, reverse
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 
@@ -25,6 +25,7 @@ def register(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
+            return redirect(reverse('accounts:register_done'))
     else:
         form = RegistrationForm()
     return render(request, 'registration/register.html', {
@@ -35,4 +36,4 @@ def register(request):
 @login_required
 def register_done(request):
     """Show a thanks page after successful registration."""
-    render(request, 'registration/register_done.html', {'page_title': "Done"})
+    return render(request, 'registration/register_done.html')
