@@ -5,3 +5,4 @@ django-sass
 pylint-django
 mysqlclient
 Pillow
+numpy
