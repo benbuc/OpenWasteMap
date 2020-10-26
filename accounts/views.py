@@ -6,13 +6,15 @@ from django.shortcuts import render, redirect, reverse
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 
+from waste_samples.models import WasteSample
+
 from .forms import RegistrationForm
 
 @login_required
 def profile(request):
     """Render a profile overview for a logged in user."""
     return render(request, 'registration/profile.html', {
-        'page_title': request.user.get_username()
+        'samples': WasteSample.objects.filter(user=request.user)
     })
 
 def register(request):

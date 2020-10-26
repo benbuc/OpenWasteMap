@@ -4,23 +4,11 @@
 
 {% block content %}
 
-{% if waste_samples %}
-<table>
-    <tr>
-        <th>Waste Level</th>
-        <th>Longitude</th>
-        <th>Latitude</th>
-    </tr>
-    {% for sample in waste_samples %}
-    <tr>
-        <td>{{ sample.waste_level }}</td>
-        <td>{{ sample.longitude }}</td>
-        <td>{{ sample.latitude }}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% else %}
-<p>No Waste Samples available.</p>
-{% endif %}
+<section class="section--wide-content">
+    <div class="richtext">
+        <h1>View Created Samples</h1>
+        {% include "elements/sample_table.html" %}
+    </div>
+</section>
 
 {% endblock %}
