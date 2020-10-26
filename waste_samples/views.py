@@ -14,7 +14,7 @@ class IndexView(generic.ListView):
     """Show recently added samples."""
 
     template_name = 'waste_samples/index.html'
-    context_object_name = 'waste_samples'
+    context_object_name = 'samples'
 
     def get_queryset(self):
         """Return the last 20 samples."""
@@ -38,5 +38,4 @@ def new_sample(request):
 
     return render(request, 'waste_samples/new_sample.html', {
         'form': form,
-        'page_title': "New Sample"
     })

@@ -6,6 +6,8 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import authenticate, get_user_model
 
+from waste_samples.models import WasteSample
+
 from utilities.test_utilities import get_testuser
 
 class UserSessionTests(TestCase):
@@ -178,3 +180,48 @@ class UserRegistrationTests(TestCase):
         response = self.client.get(reverse('accounts:register_done'))
 
         self.assertEqual(response.status_code, 200)
+
+class ProfileViewTests(TestCase):
+    """
+    Profile view displays important information for the user.
+    """
+
+    def setUp(self):
+        """Create the testuser and log him in."""
+
+        self.user, self.credentials = get_testuser()
+        self.client.login(**self.credentials)
+
+    def test_profile_shows_username(self):
+        """
+        Test whether users can see their username.
+        """
+
+        response = self.client.get(reverse('accounts:profile'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.user.username)
+
+    def test_profile_shows_samples(self):
+        """
+        The Profile view should show all my samples and the number of total samples.
+        """
+
+        response = self.client.get(reverse('accounts:profile'))
+
+        self.assertContains(response, "My Samples (0)")
+        self.assertContains(response, "no samples")
+
+        sample = WasteSample.objects.create(
+            waste_level=4,
+            latitude=12.345,
+            longitude=23.456,
+            user=self.user,
+        )
+
+        response = self.client.get(reverse('accounts:profile'))
+
+        self.assertContains(response, "My Samples (1)")
+        self.assertContains(response, sample.waste_level)
+        self.assertContains(response, sample.latitude)
+        self.assertContains(response, sample.longitude)

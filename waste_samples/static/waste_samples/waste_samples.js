@@ -15,11 +15,11 @@ function getLocation() {
 }
 
 function updatePosition(position) {
-    var longitudeInput = document.getElementById("id_longitude");
     var latitudeInput = document.getElementById("id_latitude");
+    var longitudeInput = document.getElementById("id_longitude");
 
-    longitudeInput.value = position.coords.longitude.toFixed(6);
     latitudeInput.value = position.coords.latitude.toFixed(6);
+    longitudeInput.value = position.coords.longitude.toFixed(6);
     document.getElementById("gpsAccuracy").innerHTML = position.coords.accuracy + "m";
 }
 

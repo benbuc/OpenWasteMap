@@ -17,8 +17,8 @@ class WasteSample(models.Model):
     update_date     = models.DateTimeField('Last Change', auto_now=True)
     waste_level     = models.PositiveSmallIntegerField(validators=[MaxValueValidator(10)])
     user            = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True)
-    longitude       = models.DecimalField(max_digits=9, decimal_places=6)
     latitude        = models.DecimalField(max_digits=9, decimal_places=6)
+    longitude       = models.DecimalField(max_digits=9, decimal_places=6)
 
     def __str__(self):
         """String representation of WasteSample."""

@@ -12,4 +12,4 @@ class WasteSampleCreationForm(ModelForm):
     class Meta:
         """Define fields for the Form."""
         model = WasteSample
-        fields = ['waste_level', 'longitude', 'latitude']
+        fields = ['waste_level', 'latitude', 'longitude']
