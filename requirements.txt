@@ -4,3 +4,4 @@ python-dotenv
 django-sass
 pylint-django
 mysqlclient
+Pillow
