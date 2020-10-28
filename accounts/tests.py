@@ -136,6 +136,23 @@ class UserRegistrationTests(TestCase):
         self.assertContains(user_two, "already exists")
         self.assertEqual(num_users_before, num_users_after)
 
+    def test_existing_email_gives_error_message(self):
+        """
+        Registering with an existing email must return an error message.
+        """
+        self.client.post(reverse('accounts:register'), self.credentials)
+        num_users_before = get_user_model().objects.count()
+
+        credentials = self.credentials
+        credentials['username'] = "anotheruser"
+        user_two = self.client.post(reverse('accounts:register'), credentials)
+        num_users_after = get_user_model().objects.count()
+
+        self.assertEqual(user_two.status_code, 200)
+        self.assertContains(user_two, "already exists")
+        self.assertEqual(num_users_before, num_users_after)
+
+
     def test_register_with_valid_mail(self):
         """
         Users must only be allowed to register with an email address.
