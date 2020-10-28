@@ -9,7 +9,7 @@ from PIL import Image
 from waste_samples.models import WasteSample
 
 # radius (in m) of the samples maximum influence
-SAMPLE_MAX_INFLUENCE = 300.0
+SAMPLE_MAX_INFLUENCE = lambda zoom: 300.0 * 1.6**(14-zoom)
 
 # earth radius (in m)
 EARTH_RADIUS = 6372.7982 * 1000
@@ -54,7 +54,7 @@ class TileRenderer: # pylint: disable=too-many-instance-attributes
         self.xnum    = xnum
         self.ynum    = ynum
 
-        self.sample_max_influence = SAMPLE_MAX_INFLUENCE
+        self.sample_max_influence = SAMPLE_MAX_INFLUENCE(zoom)
 
         self.tile_nw = coordinates_from_tilename(self.zoom, self.xnum, self.ynum)
         self.tile_se = coordinates_from_tilename(self.zoom, self.xnum+1, self.ynum+1)
