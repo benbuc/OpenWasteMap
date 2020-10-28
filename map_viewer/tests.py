@@ -18,4 +18,4 @@ class MapViewerTests(TestCase):
         response = self.client.get(reverse('map_viewer:index'))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Map Viewer")
+        self.assertContains(response, "owm-map")

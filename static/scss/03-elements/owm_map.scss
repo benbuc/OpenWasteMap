@@ -1,0 +1,10 @@
+#owm-map-container {
+    position: absolute;
+    top: $main-nav-height;
+    bottom: 38px;
+    width: 100%;
+}
+
+#owm-map {
+    height: 100%;
+}
