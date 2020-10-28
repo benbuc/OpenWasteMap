@@ -4,6 +4,17 @@
 
 {% block content %}
 
-Viewing profile for: {{ user }}
+<section class="section--wide-content">
+    <div class="richtext">
+
+        <h1>{{ user }}</h1>
+
+        <h2>My Samples ({{ samples.count }})</h2>
+        
+        {% include "elements/sample_table.html" %}
+
+    </div>
+
+</section>
 
 {% endblock %}

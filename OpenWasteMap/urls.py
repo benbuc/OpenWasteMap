@@ -22,4 +22,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('samples/', include('waste_samples.urls')),
+    path('tiles/', include('tile_server.urls'), name='tiles'),
 ]

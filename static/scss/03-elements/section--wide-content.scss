@@ -1,0 +1,10 @@
+.section--wide-content {
+    padding: 0 25px;
+
+    @include breakpoint(sm-min) {
+        padding: 0 50px;
+    }
+    @include breakpoint(md-min) {
+        padding: 0 30%;
+    }
+}
