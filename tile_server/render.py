@@ -17,6 +17,18 @@ EARTH_RADIUS = 6372.7982 * 1000
 # the size of each tile in pixels
 TILE_SIZE = 256
 
+# array of rgb colors and their stops from 0 to 1
+# in form of (stop, r, g, b)
+# stops have to be in order and contain 0 and 1
+COLORS = [
+    (0.0,    0.0, 255.0,   0.0),
+    (0.2,  255.0, 248.0,   0.0),
+    (0.30, 255.0, 171.0,   0.0),
+    (0.75, 255.0,   0.0,   0.0),
+    (0.9,  255.0,  13.0, 111.0),
+    (1.0,  166.0, 150.0, 255.0)
+]
+
 def coordinates_from_tilename(zoom, xnum, ynum):
     """
     Calculate coordinates from tilename
@@ -34,6 +46,25 @@ def coordinates_from_tilename(zoom, xnum, ynum):
     lat_deg     = math.degrees(lat_rad)
 
     return (lat_deg, lon_deg)
+
+def get_color_channels_for_waste_levels(waste_levels):
+    """
+    Convert array of waste levels to arrays for each color channel
+    """
+
+    normalized_levels = (waste_levels / 10.0)[..., None]
+
+    pixels = np.zeros(waste_levels.shape + (3,))
+
+    for col1, col2 in zip(COLORS, COLORS[1:]):
+        mix = (normalized_levels - col1[0]) / (col2[0] - col1[0])
+        color_section = (normalized_levels >= col1[0]) & (normalized_levels < col2[0])
+
+        color = np.array(col1[1:]) * (1-mix) + np.array(col2[1:]) * mix
+
+        pixels = np.where(color_section, color, pixels)
+
+    return pixels
 
 class TileRenderer: # pylint: disable=too-many-instance-attributes
     """
@@ -193,9 +224,7 @@ class TileRenderer: # pylint: disable=too-many-instance-attributes
         waste_levels, confidence_sum = self.get_weighted_average(confidence_levels)
 
         blend = np.clip(confidence_sum, 0, 1) * 0.75
-        waste_levels *= 25
-        self.pixels[..., 0] = waste_levels
-        self.pixels[..., 1] = (255-waste_levels)
+        self.pixels[..., :3] = get_color_channels_for_waste_levels(waste_levels)
         self.pixels[..., 3] = blend*255
 
         return Image.fromarray(self.pixels.astype(np.uint8))
