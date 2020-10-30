@@ -52,13 +52,13 @@ def get_color_channels_for_waste_levels(waste_levels):
     Convert array of waste levels to arrays for each color channel
     """
 
-    normalized_levels = (waste_levels / 10.0)[..., None]
+    normalized_levels = np.clip((waste_levels / 10.0)[..., None], 0, 1)
 
     pixels = np.zeros(waste_levels.shape + (3,))
 
     for col1, col2 in zip(COLORS, COLORS[1:]):
         mix = (normalized_levels - col1[0]) / (col2[0] - col1[0])
-        color_section = (normalized_levels >= col1[0]) & (normalized_levels < col2[0])
+        color_section = (normalized_levels >= col1[0]) & (normalized_levels <= col2[0])
 
         color = np.array(col1[1:]) * (1-mix) + np.array(col2[1:]) * mix
 
