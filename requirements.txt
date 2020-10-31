@@ -6,3 +6,4 @@ pylint-django
 mysqlclient
 Pillow
 numpy
+django-email-verification

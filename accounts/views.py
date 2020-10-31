@@ -3,8 +3,8 @@ Contains the Views for the Accounts app."
 """
 
 from django.shortcuts import render, redirect, reverse
-from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
+from django_email_verification import sendConfirm
 
 from waste_samples.models import WasteSample
 
@@ -22,17 +22,13 @@ def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
-            login(request, user)
+            user = form.save()
+            sendConfirm(user)
             return redirect(reverse('accounts:register_done'))
     else:
         form = RegistrationForm()
     return render(request, 'registration/register.html', {
         'form': form,
-        'page_title': "Register"
     })
 
 @login_required

@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path, include
+from django_email_verification import urls as mail_urls
 
 urlpatterns = [
     path('', include('map_viewer.urls'), name='home'),
@@ -23,4 +24,5 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('samples/', include('waste_samples.urls')),
     path('tiles/', include('tile_server.urls'), name='tiles'),
+    path('email/', include(mail_urls)),
 ]

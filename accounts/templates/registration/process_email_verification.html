@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block page_title %}{% if success %}Verified{% else %}Hmmm{% endif %}{% endblock %}
+
+{% block content %}
+
+<section class="section--fullscreen-centered">
+{% if success %}
+    <h1>Email verified!</h1>
+
+    <p>Thanks for registering.</p>
+    <p><a href="{% url 'accounts:login' %}">Continue to log in</a></p>
+
+{% else %}
+    <h1>That did not work</h1>
+
+    <p>
+        The activation link was invalid.<br>
+        Please try again.
+    </p>
+{% endif %}
+</section>
+
+{% endblock %}
