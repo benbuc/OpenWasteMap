@@ -266,3 +266,25 @@ class ExtendedUserModelTests(TestCase):
 
         user = get_testuser()[0]
         self.assertIsInstance(user.owmuser.email_verified, bool)
+
+class EmailVerificationTests(TestCase):
+    """
+    Users need verified email address.
+    If the email is not yet verified, there is functionality to
+    change the address or resend the verification email.
+    """
+
+    def test_not_verified_cant_access(self):
+        """
+        Unverified users must not be able to access their
+        account or the sample creation, etc.
+        """
+
+        credentials = get_testuser(email_verified=False)[1]
+
+        self.client.login(**credentials)
+
+        response = self.client.get(reverse('accounts:profile'))
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, reverse('accounts:not_verified'))
