@@ -198,6 +198,17 @@ class UserRegistrationTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
+    def test_registration_creates_owmuser(self):
+        """
+        The registration view must create an OWMUser for the user.
+        """
+
+        self.client.post(reverse('accounts:register'), self.credentials)
+
+        user = get_user_model().objects.get(username=self.credentials['username'])
+        self.assertIsNotNone(user.owmuser)
+        self.assertFalse(user.owmuser.email_verified)
+
 class ProfileViewTests(TestCase):
     """
     Profile view displays important information for the user.
@@ -242,3 +253,16 @@ class ProfileViewTests(TestCase):
         self.assertContains(response, sample.waste_level)
         self.assertContains(response, sample.latitude)
         self.assertContains(response, sample.longitude)
+
+class ExtendedUserModelTests(TestCase):
+    """
+    Test the additional data which is saved for every user.
+    """
+
+    def test_has_email_verified_field(self):
+        """
+        Each user must have a boolean field whether the email address was verified.
+        """
+
+        user = get_testuser()[0]
+        self.assertIsInstance(user.owmuser.email_verified, bool)
