@@ -6,4 +6,4 @@ pylint-django
 mysqlclient
 Pillow
 numpy
-django-email-verification
+git+git://github.com/AbdoMahfoz/django-email-verification@master#egg=django-email-verification

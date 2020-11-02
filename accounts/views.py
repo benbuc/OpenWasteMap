@@ -27,10 +27,10 @@ def register(request):
 
         if form.is_valid():
             user = form.save()
-            OWMUser.objects.create(user=user)
+            user_profile = OWMUser.objects.create(user=user)
 
             if not settings.IS_TEST:
-                sendConfirm(user)
+                sendConfirm(user_profile)
 
             return redirect(reverse('accounts:register_done'))
 
