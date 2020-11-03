@@ -193,7 +193,6 @@ class UserRegistrationTests(TestCase):
         The thank you page after registration has to be accessible.
         """
 
-        self.client.login(**get_testuser()[1])
         response = self.client.get(reverse('accounts:register_done'))
 
         self.assertEqual(response.status_code, 200)
@@ -274,17 +273,79 @@ class EmailVerificationTests(TestCase):
     change the address or resend the verification email.
     """
 
+    def setUp(self):
+        """Email Verification Test setup."""
+
+        self.user, self.credentials = get_testuser(email_verified=False)
+
+        self.client.login(**self.credentials)
+
     def test_not_verified_cant_access(self):
         """
         Unverified users must not be able to access their
         account or the sample creation, etc.
         """
 
-        credentials = get_testuser(email_verified=False)[1]
-
-        self.client.login(**credentials)
-
         response = self.client.get(reverse('accounts:profile'))
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, reverse('accounts:not_verified'))
+
+    def test_not_verified_view_accessible(self):
+        """
+        The not verified page must be accessible.
+        """
+
+        response = self.client.get(reverse('accounts:not_verified'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "not verified")
+
+class EmailChangeTests(TestCase):
+    """
+    Test the EmailChange view and form.
+    """
+
+    def setUp(self):
+        """Set up by creating a dummy user."""
+
+        self.user, self.credentials = get_testuser(email_verified=False)
+
+        self.client.login(**self.credentials)
+
+    def test_can_change_email(self):
+        """A user is able to change the email using a POST Request."""
+
+        new_email = "mynewmail@example.com"
+        new_email_exists = lambda: get_user_model().objects.filter(email=new_email).exists()
+
+        self.assertEqual(self.user.email, self.credentials['email'])
+        self.assertFalse(new_email_exists())
+
+        response = self.client.post(reverse('accounts:email_change'), {
+            'email': new_email,
+        })
+
+        user = get_user_model().objects.get(username=self.credentials['username'])
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, reverse('accounts:email_change_done'))
+        self.assertTrue(new_email_exists())
+        self.assertEqual(user.email, new_email)
+        self.assertFalse(user.owmuser.email_verified)
+
+    def test_cant_change_to_existing_email(self):
+        """A user can't change the email to an already existing one."""
+
+        another_email = "anothermail@example.com"
+        get_testuser(username="anotheruser", email=another_email)
+
+        self.assertEqual(self.user.email, self.credentials['email'])
+
+        response = self.client.post(reverse('accounts:email_change'), {
+            'email': another_email,
+        })
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "exists")
+        self.assertEqual(self.user.email, self.credentials['email'])

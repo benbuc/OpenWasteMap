@@ -19,3 +19,16 @@ def verified_account_required(function):
         redirect_field_name=None,
     )
     return login_required(actual_decorator(function))
+
+def disallow_logged_in(function):
+    """
+    Decorator for views that checks that the user is not
+    logged in. Otherwise redirects to the profile page.
+    """
+
+    actual_decorator = user_passes_test(
+        lambda u: not u.is_authenticated,
+        login_url='accounts:profile',
+        redirect_field_name=None,
+    )
+    return actual_decorator(function)

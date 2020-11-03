@@ -9,9 +9,9 @@ from django_email_verification import sendConfirm
 
 from waste_samples.models import WasteSample
 
-from .forms import RegistrationForm
+from .forms import RegistrationForm, EmailChangeForm
 from .models import OWMUser, user_is_verified
-from .decorators import verified_account_required
+from .decorators import verified_account_required, disallow_logged_in
 
 @verified_account_required
 def profile(request):
@@ -20,6 +20,7 @@ def profile(request):
         'samples': WasteSample.objects.filter(user=request.user)
     })
 
+@disallow_logged_in
 def register(request):
     """Used to let new users register on the site."""
 
@@ -41,7 +42,7 @@ def register(request):
         'form': form,
     })
 
-@login_required
+@disallow_logged_in
 def register_done(request):
     """Show a thanks page after successful registration."""
     return render(request, 'registration/register_done.html')
@@ -56,3 +57,32 @@ def not_verified(request):
         return redirect(reverse('accounts:profile'))
 
     return render(request, 'registration/not_verified.html')
+
+@login_required
+def email_change(request):
+    """
+    Show a view where users can change their email address.
+    """
+
+    if request.method == 'POST':
+        form = EmailChangeForm(request.user, request.POST)
+
+        if form.is_valid():
+            user = form.save()
+            user.owmuser.email_verified = False
+            user.owmuser.save()
+
+            if not settings.IS_TEST:
+                sendConfirm(user.owmuser)
+
+            return redirect(reverse('accounts:email_change_done'))
+    else:
+        form = EmailChangeForm(request.user)
+    return render(request, 'registration/email_change.html', {
+        'form': form,
+    })
+
+@login_required
+def email_change_done(request):
+    """Show a confirmation page after email change."""
+    return render(request, 'registration/email_change_done.html')
