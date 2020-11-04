@@ -40,3 +40,42 @@ class RegistrationForm(UserCreationForm):
             'password1',
             'password2',
         )
+
+class EmailChangeForm(forms.Form):
+    """
+    Allow users to set a new email address.
+
+    The Email then has to be verified.
+    """
+    error_messages = {
+        'email_exists': 'The email address already exists.',
+    }
+    email = forms.EmailField(
+        max_length=254,
+        widget=forms.EmailInput(attrs={'autocomplete': 'email'})
+    )
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super().__init__(*args, **kwargs)
+
+    def clean_email(self):
+        """Make sure the email is not yet used."""
+        email = self.cleaned_data.get('email')
+
+        if get_user_model().objects.filter(email=email).exists():
+            raise forms.ValidationError(
+                self.error_messages['email_exists'],
+                code='email_exists',
+            )
+
+        return email
+
+    def save(self, commit=True):
+        """Save new Email."""
+        self.user.email = self.cleaned_data['email']
+
+        if commit:
+            self.user.save()
+
+        return self.user

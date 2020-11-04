@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -27,6 +28,8 @@ DEBUG = False
 
 ALLOWED_HOSTS = []
 
+# some actions may not be performed in the test environment
+IS_TEST = 'test' in sys.argv
 
 # Application definition
 
@@ -41,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_sass',
+    'django_email_verification',
 ]
 
 MIDDLEWARE = [
@@ -125,3 +129,21 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static/'),
 )
+
+# settings for account verification email
+# overwrite in local_settings as necessary
+
+EMAIL_USE_TLS = True
+EMAIL_SERVER = ''
+EMAIL_ADDRESS = ''
+EMAIL_FROM_ADDRESS = ''
+EMAIL_PASSWORD = ''
+EMAIL_PORT = 587
+EMAIL_USER_MODEL_FK = 'user'
+EMAIL_USER_MODEL = 'accounts.OWMUser'
+EMAIL_ACTIVE_FIELD = 'email_verified'
+EMAIL_MAIL_SUBJECT = 'OpenWasteMap Email Verification'
+EMAIL_MAIL_HTML = 'registration/verify_email.html'
+EMAIL_MAIL_PLAIN = 'registration/verify_email.txt'
+EMAIL_PAGE_TEMPLATE = 'registration/process_email_verification.html'
+EMAIL_PAGE_DOMAIN = 'http://www.openwastemap.org/'

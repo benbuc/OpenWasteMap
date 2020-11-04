@@ -5,7 +5,8 @@ Views for the Waste Samples App.
 from django.shortcuts import render, redirect
 from django.views import generic
 from django.utils import timezone
-from django.contrib.auth.decorators import login_required
+
+from accounts.decorators import verified_account_required
 
 from .models import WasteSample
 from .forms import WasteSampleCreationForm
@@ -22,7 +23,7 @@ class IndexView(generic.ListView):
             sampling_date__lte=timezone.now()
         ).order_by('-sampling_date')[:20]
 
-@login_required
+@verified_account_required
 def new_sample(request):
     """Displays a form which allows users to create a new WasteSample."""
     if request.method == 'POST':
