@@ -10,6 +10,7 @@ def user_is_verified(user):
     try:
         return user.owmuser.email_verified
     except OWMUser.DoesNotExist:
+        OWMUser.objects.create(user=user)
         return False
 
 class OWMUser(models.Model):

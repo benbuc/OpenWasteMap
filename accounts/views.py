@@ -69,8 +69,9 @@ def email_change(request):
 
         if form.is_valid():
             user = form.save()
-            user.owmuser.email_verified = False
-            user.owmuser.save()
+            if user_is_verified(user):
+                user.owmuser.email_verified = False
+                user.owmuser.save()
 
             if not settings.IS_TEST:
                 sendConfirm(user.owmuser)
@@ -86,3 +87,14 @@ def email_change(request):
 def email_change_done(request):
     """Show a confirmation page after email change."""
     return render(request, 'registration/email_change_done.html')
+
+@login_required
+def resend_confirmation(request):
+    """Send a new confirmation mail."""
+    if user_is_verified(request.user):
+        return redirect(reverse('accounts:profile'))
+
+    if not settings.IS_TEST:
+        sendConfirm(request.user.owmuser)
+
+    return render(request, 'registration/register_done.html')

@@ -14,4 +14,5 @@ urlpatterns = [
     path('register/done', views.register_done, name='register_done'),
     path('email_change/', views.email_change, name='email_change'),
     path('email_change/done', views.email_change_done, name='email_change_done'),
+    path('resend_confirmation/', views.resend_confirmation, name='resend_confirmation'),
 ]

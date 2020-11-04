@@ -299,7 +299,7 @@ class EmailVerificationTests(TestCase):
         response = self.client.get(reverse('accounts:not_verified'))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "not verified")
+        self.assertContains(response, "not yet verified")
 
 class EmailChangeTests(TestCase):
     """
@@ -349,3 +349,11 @@ class EmailChangeTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "exists")
         self.assertEqual(self.user.email, self.credentials['email'])
+
+    def test_email_change_accessible(self):
+        """The email change form is accessible."""
+
+        response = self.client.get(reverse('accounts:email_change'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "<form")
