@@ -23,6 +23,12 @@ class IndexView(generic.ListView):
             sampling_date__lte=timezone.now()
         ).order_by('-sampling_date')[:20]
 
+    def get_context_data(self, **kwargs):
+        """Return Context for template."""
+        context = super().get_context_data(**kwargs)
+        context['total_samples'] = WasteSample.objects.all().count()
+        return context
+
 @verified_account_required
 def new_sample(request):
     """Displays a form which allows users to create a new WasteSample."""
