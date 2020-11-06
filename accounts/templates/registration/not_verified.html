@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block page_title %}Please verify{% endblock %}
+
+{% block content %}
+
+<section class="section--wide-content">
+    <div class="richtext">
+
+        <h1>Almost Done :D</h1>
+
+        <p>
+            <b>Your email is not yet verified.</b>
+            I already sent a confirmation message to {{ user.email }}.
+            Please click the link in the email to continue.
+        </p>
+
+        <h3>You got no email?</h3>
+        <p>
+            Hmmm. Have you checked your SPAM folder?
+            I promise to never send any, but your spam filter doesn't know that, right?
+        </p>
+        <p>
+            Alternatively, check your email for typos or just try to send a new confirmation mail.
+        </p>
+    </div>
+</section>
+
+<section class="section--wide-content">
+    <div class="richtext">
+        <a href="{% url 'accounts:resend_confirmation' %}">Resend Confirmation</a><br>
+        <a href="{% url 'accounts:email_change' %}">Change E-Mail</a>
+    </div>
+</section>
+
+<section class="section--wide-content">
+    <div class="richtext">
+
+        <h4>Why email verification?</h4>
+        <p>
+            Glad you asked. It just reduces frustration for everyone.
+        </p>
+        <p>
+            It may be calming for you to know you can always reset your password in case you forgot.
+            Now is the best moment to realize you had a typo in your email.
+            Confirm by entering a second time? Who doesn't just copy paste the email...
+        </p>
+        <p>
+            It's a first easy countermeasure against bots.
+            Nasty bots as Waste Mappers? Nah. Well, only if they can verify their email it seems.
+        </p>
+        <p>
+            Also, I promise to never use it unless it's really important.
+            Nobody likes unwanted newsletter - at least I don't.
+            That's why I'll protect your email like Frodo protected the ring.
+        </p>
+
+    </div>
+</section>
+
+{% endblock %}

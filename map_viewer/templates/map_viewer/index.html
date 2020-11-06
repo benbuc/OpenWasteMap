@@ -16,7 +16,7 @@
 {% block content %}
 
 <div id="owm-map-container">
-    <div id="owm-map" data-tile-url="{% url 'tile_server:index' %}"></div>
+    <div id="owm-map" data-tile-url="{% url 'tile_server:index' %}" data-owm-version="{{ owm_version }}"></div>
 </div>
 
 {% endblock %}
