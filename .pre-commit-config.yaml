@@ -34,3 +34,4 @@ repos:
         pass_filenames: false
         always_run: true
         entry: poetry run python manage.py test
+        stages: [push]
