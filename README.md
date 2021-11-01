@@ -22,3 +22,10 @@ Start the development server with
 ```bash
 python manage.py runserver
 ```
+
+## Installing new version on server
+```bash
+poetry install --no-dev
+python manage.py migrate
+python manage.py collectstatic
+```
