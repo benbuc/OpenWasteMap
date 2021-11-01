@@ -10,7 +10,8 @@
    ```bash
    poetry install
    ```
-1. Install the [pre-commit](https://github.com/pre-commit/pre-commit) hooks
+1. Install the [pre-commit](https://github.com/pre-commit/pre-commit) and pre-push hooks
    ```bash
    pre-commit install
+   pre-commit install -t push
    ```
