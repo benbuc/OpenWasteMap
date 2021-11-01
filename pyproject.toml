@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "openwastemap"
-version = "0.3"
+version = "0.4"
 description = ""
 authors = ["Benito Buchheim <benito@openwastemap.org>"]
 
