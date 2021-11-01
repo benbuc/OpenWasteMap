@@ -136,6 +136,14 @@ django = "*"
 libsass = "*"
 
 [[package]]
+name = "dotenv"
+version = "0.0.5"
+description = "Handle .env files"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "filelock"
 version = "3.3.2"
 description = "A platform independent file lock."
@@ -418,7 +426,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7, <3.11"
-content-hash = "8d48d587df4c043ad24d7feab187401733af448a4f4b65cc429b054f31f15d93"
+content-hash = "8886cb43f24285fc14c345be982de3443d197881747a34dd443f8f7c22d0e11f"
 
 [metadata.files]
 asgiref = [
@@ -457,6 +465,9 @@ django-email-verification = []
 django-sass = [
     {file = "django-sass-1.1.0.tar.gz", hash = "sha256:da163cd7ad7b9c2f1f10f2ec8b76939640d5b32d21ee74a240ca50a059c5fe7a"},
     {file = "django_sass-1.1.0-py3-none-any.whl", hash = "sha256:992f39d97a7b2d7d891255e5f99512ffd616b2e0aae1ca9b76983c5ecd603342"},
+]
+dotenv = [
+    {file = "dotenv-0.0.5.tar.gz", hash = "sha256:b58d2ab3f83dbd4f8a362b21158a606bee87317a9444485566b3c8f0af847091"},
 ]
 filelock = [
     {file = "filelock-3.3.2-py3-none-any.whl", hash = "sha256:bb2a1c717df74c48a2d00ed625e5a66f8572a3a30baacb7657add1d7bac4097b"},
