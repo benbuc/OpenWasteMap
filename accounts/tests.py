@@ -2,13 +2,13 @@
 Test cases for the Accounts app.
 """
 
+from django.contrib.auth import authenticate, get_user_model
 from django.test import TestCase
 from django.urls import reverse
-from django.contrib.auth import authenticate, get_user_model
-
-from waste_samples.models import WasteSample
 
 from utilities.test_utilities import get_testuser
+from waste_samples.models import WasteSample
+
 
 class UserSessionTests(TestCase):
     """
@@ -27,8 +27,8 @@ class UserSessionTests(TestCase):
         Test whether existing users can authenticate.
         """
         user = authenticate(
-            username=self.credentials['username'],
-            password=self.credentials['password'],
+            username=self.credentials["username"],
+            password=self.credentials["password"],
         )
 
         self.assertIsNotNone(user)
@@ -39,8 +39,8 @@ class UserSessionTests(TestCase):
         Test whether existing users can not authenticate with wrong passwords.
         """
         user = authenticate(
-            username=self.credentials['username'],
-            password=self.credentials['password']+"lalala",
+            username=self.credentials["username"],
+            password=self.credentials["password"] + "lalala",
         )
 
         self.assertIsNone(user)
@@ -49,7 +49,7 @@ class UserSessionTests(TestCase):
         """
         The login page is accessible.
         """
-        response = self.client.get(reverse('accounts:login'))
+        response = self.client.get(reverse("accounts:login"))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "<form")
 
@@ -57,51 +57,56 @@ class UserSessionTests(TestCase):
         """
         Test whether users can log in using the login view.
         """
-        response = self.client.post(reverse('accounts:login'), {
-            'username': self.credentials['username'],
-            'password': self.credentials['password'],
-        })
+        response = self.client.post(
+            reverse("accounts:login"),
+            {
+                "username": self.credentials["username"],
+                "password": self.credentials["password"],
+            },
+        )
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, reverse('accounts:profile'))
+        self.assertEqual(response.url, reverse("accounts:profile"))
 
     def test_restricted_access(self):
         """
         Using shall not be able to access the profile page without logging in.
         """
-        profile_not_logged_in = self.client.get(reverse('accounts:profile'))
+        profile_not_logged_in = self.client.get(reverse("accounts:profile"))
 
         self.assertEqual(profile_not_logged_in.status_code, 302)
-        self.assertIn(reverse('accounts:login'), profile_not_logged_in.url)
+        self.assertIn(reverse("accounts:login"), profile_not_logged_in.url)
 
         logged_in = self.client.login(
-            username=self.credentials['username'],
-            password=self.credentials['password'],
+            username=self.credentials["username"],
+            password=self.credentials["password"],
         )
         self.assertTrue(logged_in)
 
-        profile_logged_in = self.client.get(reverse('accounts:profile'))
+        profile_logged_in = self.client.get(reverse("accounts:profile"))
         self.assertEqual(profile_logged_in.status_code, 200)
-        self.assertContains(profile_logged_in, self.credentials['username'])
+        self.assertContains(profile_logged_in, self.credentials["username"])
+
 
 class UserRegistrationTests(TestCase):
     """
     Test the ability for users to register on the site.
     """
+
     def setUp(self):
         "Setup User Registration Test Case"
         self.credentials = {
-            'username': 'testuser',
-            'email': 'mymail@example.com',
-            'password1': 'MySup3erSecretK3Y',
-            'password2': 'MySup3erSecretK3Y',
+            "username": "testuser",
+            "email": "mymail@example.com",
+            "password1": "MySup3erSecretK3Y",
+            "password2": "MySup3erSecretK3Y",
         }
 
     def test_registration_form_is_accessible(self):
         """
         The registration form can be loaded.
         """
-        response = self.client.get(reverse('accounts:register'))
+        response = self.client.get(reverse("accounts:register"))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "<form")
 
@@ -110,13 +115,15 @@ class UserRegistrationTests(TestCase):
         Test whether new users can be created.
         """
         num_users_before = get_user_model().objects.count()
-        response = self.client.post(reverse('accounts:register'), self.credentials)
+        response = self.client.post(reverse("accounts:register"), self.credentials)
         num_users_after = get_user_model().objects.count()
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, reverse('accounts:register_done'))
+        self.assertEqual(response.url, reverse("accounts:register_done"))
         self.assertTrue(
-            get_user_model().objects.filter(username=self.credentials['username']).exists()
+            get_user_model()
+            .objects.filter(username=self.credentials["username"])
+            .exists()
         )
         self.assertGreater(num_users_after, num_users_before)
 
@@ -124,12 +131,12 @@ class UserRegistrationTests(TestCase):
         """
         Registering with an existing username must return an error message.
         """
-        self.client.post(reverse('accounts:register'), self.credentials)
+        self.client.post(reverse("accounts:register"), self.credentials)
         num_users_before = get_user_model().objects.count()
 
         credentials = self.credentials
         credentials["email"] = "anothermail@example.com"
-        user_two = self.client.post(reverse('accounts:register'), credentials)
+        user_two = self.client.post(reverse("accounts:register"), credentials)
         num_users_after = get_user_model().objects.count()
 
         self.assertEqual(user_two.status_code, 200)
@@ -140,18 +147,17 @@ class UserRegistrationTests(TestCase):
         """
         Registering with an existing email must return an error message.
         """
-        self.client.post(reverse('accounts:register'), self.credentials)
+        self.client.post(reverse("accounts:register"), self.credentials)
         num_users_before = get_user_model().objects.count()
 
         credentials = self.credentials
-        credentials['username'] = "anotheruser"
-        user_two = self.client.post(reverse('accounts:register'), credentials)
+        credentials["username"] = "anotheruser"
+        user_two = self.client.post(reverse("accounts:register"), credentials)
         num_users_after = get_user_model().objects.count()
 
         self.assertEqual(user_two.status_code, 200)
         self.assertContains(user_two, "already exists")
         self.assertEqual(num_users_before, num_users_after)
-
 
     def test_register_with_valid_mail(self):
         """
@@ -163,7 +169,7 @@ class UserRegistrationTests(TestCase):
         credentials = self.credentials
         credentials["email"] = "testmail"
 
-        response = self.client.post(reverse('accounts:register'), credentials)
+        response = self.client.post(reverse("accounts:register"), credentials)
         num_users_after = get_user_model().objects.count()
 
         self.assertEqual(response.status_code, 200)
@@ -175,25 +181,25 @@ class UserRegistrationTests(TestCase):
         """
 
         credentials = self.credentials
-        credentials['first_name'] = "Obi-Wan"
-        credentials['last_name']  = "Kenobi"
+        credentials["first_name"] = "Obi-Wan"
+        credentials["last_name"] = "Kenobi"
 
-        response = self.client.post(reverse('accounts:register'), credentials)
+        response = self.client.post(reverse("accounts:register"), credentials)
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, reverse('accounts:register_done'))
-        user = get_user_model().objects.get(username=credentials['username'])
+        self.assertEqual(response.url, reverse("accounts:register_done"))
+        user = get_user_model().objects.get(username=credentials["username"])
 
-        self.assertEqual(user.email, credentials['email'])
-        self.assertEqual(user.first_name, credentials['first_name'])
-        self.assertEqual(user.last_name, credentials['last_name'])
+        self.assertEqual(user.email, credentials["email"])
+        self.assertEqual(user.first_name, credentials["first_name"])
+        self.assertEqual(user.last_name, credentials["last_name"])
 
     def test_done_view_accessible(self):
         """
         The thank you page after registration has to be accessible.
         """
 
-        response = self.client.get(reverse('accounts:register_done'))
+        response = self.client.get(reverse("accounts:register_done"))
 
         self.assertEqual(response.status_code, 200)
 
@@ -202,11 +208,12 @@ class UserRegistrationTests(TestCase):
         The registration view must create an OWMUser for the user.
         """
 
-        self.client.post(reverse('accounts:register'), self.credentials)
+        self.client.post(reverse("accounts:register"), self.credentials)
 
-        user = get_user_model().objects.get(username=self.credentials['username'])
+        user = get_user_model().objects.get(username=self.credentials["username"])
         self.assertIsNotNone(user.owmuser)
         self.assertFalse(user.owmuser.email_verified)
+
 
 class ProfileViewTests(TestCase):
     """
@@ -224,7 +231,7 @@ class ProfileViewTests(TestCase):
         Test whether users can see their username.
         """
 
-        response = self.client.get(reverse('accounts:profile'))
+        response = self.client.get(reverse("accounts:profile"))
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.user.username)
@@ -234,7 +241,7 @@ class ProfileViewTests(TestCase):
         The Profile view should show all my samples and the number of total samples.
         """
 
-        response = self.client.get(reverse('accounts:profile'))
+        response = self.client.get(reverse("accounts:profile"))
 
         self.assertContains(response, "My Samples (0)")
         self.assertContains(response, "no samples")
@@ -246,12 +253,13 @@ class ProfileViewTests(TestCase):
             user=self.user,
         )
 
-        response = self.client.get(reverse('accounts:profile'))
+        response = self.client.get(reverse("accounts:profile"))
 
         self.assertContains(response, "My Samples (1)")
         self.assertContains(response, sample.waste_level)
         self.assertContains(response, sample.latitude)
         self.assertContains(response, sample.longitude)
+
 
 class ExtendedUserModelTests(TestCase):
     """
@@ -265,6 +273,7 @@ class ExtendedUserModelTests(TestCase):
 
         user = get_testuser()[0]
         self.assertIsInstance(user.owmuser.email_verified, bool)
+
 
 class EmailVerificationTests(TestCase):
     """
@@ -286,20 +295,21 @@ class EmailVerificationTests(TestCase):
         account or the sample creation, etc.
         """
 
-        response = self.client.get(reverse('accounts:profile'))
+        response = self.client.get(reverse("accounts:profile"))
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, reverse('accounts:not_verified'))
+        self.assertEqual(response.url, reverse("accounts:not_verified"))
 
     def test_not_verified_view_accessible(self):
         """
         The not verified page must be accessible.
         """
 
-        response = self.client.get(reverse('accounts:not_verified'))
+        response = self.client.get(reverse("accounts:not_verified"))
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "not yet verified")
+
 
 class EmailChangeTests(TestCase):
     """
@@ -317,19 +327,24 @@ class EmailChangeTests(TestCase):
         """A user is able to change the email using a POST Request."""
 
         new_email = "mynewmail@example.com"
-        new_email_exists = lambda: get_user_model().objects.filter(email=new_email).exists()
+        new_email_exists = (
+            lambda: get_user_model().objects.filter(email=new_email).exists()
+        )
 
-        self.assertEqual(self.user.email, self.credentials['email'])
+        self.assertEqual(self.user.email, self.credentials["email"])
         self.assertFalse(new_email_exists())
 
-        response = self.client.post(reverse('accounts:email_change'), {
-            'email': new_email,
-        })
+        response = self.client.post(
+            reverse("accounts:email_change"),
+            {
+                "email": new_email,
+            },
+        )
 
-        user = get_user_model().objects.get(username=self.credentials['username'])
+        user = get_user_model().objects.get(username=self.credentials["username"])
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, reverse('accounts:email_change_done'))
+        self.assertEqual(response.url, reverse("accounts:email_change_done"))
         self.assertTrue(new_email_exists())
         self.assertEqual(user.email, new_email)
         self.assertFalse(user.owmuser.email_verified)
@@ -340,20 +355,23 @@ class EmailChangeTests(TestCase):
         another_email = "anothermail@example.com"
         get_testuser(username="anotheruser", email=another_email)
 
-        self.assertEqual(self.user.email, self.credentials['email'])
+        self.assertEqual(self.user.email, self.credentials["email"])
 
-        response = self.client.post(reverse('accounts:email_change'), {
-            'email': another_email,
-        })
+        response = self.client.post(
+            reverse("accounts:email_change"),
+            {
+                "email": another_email,
+            },
+        )
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "exists")
-        self.assertEqual(self.user.email, self.credentials['email'])
+        self.assertEqual(self.user.email, self.credentials["email"])
 
     def test_email_change_accessible(self):
         """The email change form is accessible."""
 
-        response = self.client.get(reverse('accounts:email_change'))
+        response = self.client.get(reverse("accounts:email_change"))
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "<form")

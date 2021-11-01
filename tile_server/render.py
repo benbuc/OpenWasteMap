@@ -3,13 +3,14 @@ Module for rendering a single OWM tile.
 """
 
 import math
+
 import numpy as np
 from PIL import Image
 
 from waste_samples.models import WasteSample
 
 # radius (in m) of the samples maximum influence
-SAMPLE_MAX_INFLUENCE = lambda zoom: 300.0 * 1.6**(14-zoom)
+SAMPLE_MAX_INFLUENCE = lambda zoom: 300.0 * 1.6 ** (14 - zoom)  # noqa: E731
 
 # earth radius (in m)
 EARTH_RADIUS = 6372.7982 * 1000
@@ -21,13 +22,14 @@ TILE_SIZE = 256
 # in form of (stop, r, g, b)
 # stops have to be in order and contain 0 and 1
 COLORS = [
-    (0.0,    0.0, 255.0,   0.0),
-    (0.2,  255.0, 248.0,   0.0),
-    (0.30, 255.0, 171.0,   0.0),
-    (0.75, 255.0,   0.0,   0.0),
-    (0.9,  255.0,  13.0, 111.0),
-    (1.0,  166.0, 150.0, 255.0)
+    (0.0, 0.0, 255.0, 0.0),
+    (0.2, 255.0, 248.0, 0.0),
+    (0.30, 255.0, 171.0, 0.0),
+    (0.75, 255.0, 0.0, 0.0),
+    (0.9, 255.0, 13.0, 111.0),
+    (1.0, 166.0, 150.0, 255.0),
 ]
+
 
 def coordinates_from_tilename(zoom, xnum, ynum):
     """
@@ -40,12 +42,13 @@ def coordinates_from_tilename(zoom, xnum, ynum):
     https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
     """
 
-    num_tiles   = 2.0 ** zoom
-    lon_deg     = xnum / num_tiles * 360.0 - 180.0
-    lat_rad     = math.atan(math.sinh(math.pi * (1 - 2 * ynum / num_tiles)))
-    lat_deg     = math.degrees(lat_rad)
+    num_tiles = 2.0 ** zoom
+    lon_deg = xnum / num_tiles * 360.0 - 180.0
+    lat_rad = math.atan(math.sinh(math.pi * (1 - 2 * ynum / num_tiles)))
+    lat_deg = math.degrees(lat_rad)
 
     return (lat_deg, lon_deg)
+
 
 def get_color_channels_for_waste_levels(waste_levels):
     """
@@ -60,13 +63,14 @@ def get_color_channels_for_waste_levels(waste_levels):
         mix = (normalized_levels - col1[0]) / (col2[0] - col1[0])
         color_section = (normalized_levels >= col1[0]) & (normalized_levels <= col2[0])
 
-        color = np.array(col1[1:]) * (1-mix) + np.array(col2[1:]) * mix
+        color = np.array(col1[1:]) * (1 - mix) + np.array(col2[1:]) * mix
 
         pixels = np.where(color_section, color, pixels)
 
     return pixels
 
-class TileRenderer: # pylint: disable=too-many-instance-attributes
+
+class TileRenderer:  # pylint: disable=too-many-instance-attributes
     """
     Used to render tiles containing the sample overlay.
 
@@ -81,16 +85,18 @@ class TileRenderer: # pylint: disable=too-many-instance-attributes
         Initialize with zoom level and and x,y tile numbers.
         """
 
-        self.zoom    = zoom
-        self.xnum    = xnum
-        self.ynum    = ynum
+        self.zoom = zoom
+        self.xnum = xnum
+        self.ynum = ynum
 
         self.sample_max_influence = SAMPLE_MAX_INFLUENCE(zoom)
 
         self.tile_nw = coordinates_from_tilename(self.zoom, self.xnum, self.ynum)
-        self.tile_se = coordinates_from_tilename(self.zoom, self.xnum+1, self.ynum+1)
+        self.tile_se = coordinates_from_tilename(
+            self.zoom, self.xnum + 1, self.ynum + 1
+        )
 
-        self.pixels  = np.zeros((TILE_SIZE, TILE_SIZE, 4))
+        self.pixels = np.zeros((TILE_SIZE, TILE_SIZE, 4))
         self.samples = self.get_samples()
 
     def get_coordinate_boundaries(self):
@@ -101,17 +107,19 @@ class TileRenderer: # pylint: disable=too-many-instance-attributes
         # TO-DO: has weird behavior at the edges of the coordinate system
 
         lat_diff = math.degrees(self.sample_max_influence / EARTH_RADIUS)
-        min_lat  = self.tile_se[0] - lat_diff
-        max_lat  = self.tile_nw[0] + lat_diff
+        min_lat = self.tile_se[0] - lat_diff
+        max_lat = self.tile_nw[0] + lat_diff
 
         # For the longitude difference,
         # use the latitude which is farther away from the equator
-        lat_max  = math.radians(max(abs(min_lat), abs(max_lat)))
+        lat_max = math.radians(max(abs(min_lat), abs(max_lat)))
 
-        quotient = math.sin(self.sample_max_influence / (2 * EARTH_RADIUS)) / math.cos(lat_max)
+        quotient = math.sin(self.sample_max_influence / (2 * EARTH_RADIUS)) / math.cos(
+            lat_max
+        )
         lon_diff = abs(math.degrees(2 * math.asin(quotient)))
-        min_lon  = self.tile_nw[1] - lon_diff
-        max_lon   = self.tile_se[1] + lon_diff
+        min_lon = self.tile_nw[1] - lon_diff
+        max_lon = self.tile_se[1] + lon_diff
 
         return (min_lat, max_lat, min_lon, max_lon)
 
@@ -140,7 +148,7 @@ class TileRenderer: # pylint: disable=too-many-instance-attributes
             samples[i] = (
                 sample_object.waste_level,
                 sample_object.latitude,
-                sample_object.longitude
+                sample_object.longitude,
             )
 
         return samples
@@ -151,7 +159,7 @@ class TileRenderer: # pylint: disable=too-many-instance-attributes
         """
         # TO-DO: we can not use linear interpolation for smaller zoom levels!
 
-        latitudes  = np.linspace(self.tile_nw[0], self.tile_se[0], num=TILE_SIZE)
+        latitudes = np.linspace(self.tile_nw[0], self.tile_se[0], num=TILE_SIZE)
         longitudes = np.linspace(self.tile_nw[1], self.tile_se[1], num=TILE_SIZE)
 
         return np.array(np.meshgrid(latitudes, longitudes)).T
@@ -164,16 +172,18 @@ class TileRenderer: # pylint: disable=too-many-instance-attributes
 
         pixel_coordinates, samples = map(np.radians, [pixel_coordinates, self.samples])
 
-        px_lat     = pixel_coordinates[..., 0, None]
-        px_lon     = pixel_coordinates[..., 1, None]
+        px_lat = pixel_coordinates[..., 0, None]
+        px_lon = pixel_coordinates[..., 1, None]
         sample_lat = samples[..., 1]
         sample_lon = samples[..., 2]
 
-        dlat       = px_lat - sample_lat
-        dlon       = px_lon - sample_lon
+        dlat = px_lat - sample_lat
+        dlon = px_lon - sample_lon
 
-        radicand   = np.sin(dlat/2.0)**2 + \
-                     np.cos(px_lat) * np.cos(sample_lat) * np.sin(dlon/2.0)**2
+        radicand = (
+            np.sin(dlat / 2.0) ** 2
+            + np.cos(px_lat) * np.cos(sample_lat) * np.sin(dlon / 2.0) ** 2
+        )
 
         return 2 * EARTH_RADIUS * np.arcsin(np.sqrt(radicand))
 
@@ -195,14 +205,16 @@ class TileRenderer: # pylint: disable=too-many-instance-attributes
         and the sum of confidence levels for every pixel.
         """
 
-        confidence_sum   = np.sum(confidence_levels, axis=2)
+        confidence_sum = np.sum(confidence_levels, axis=2)
         waste_levels_sum = np.sum(confidence_levels * self.samples[..., 0], axis=2)
 
         # confidence sums may be zero!
         # so only devide if there is confidence at this pixel
-        average_waste_levels = np.divide(waste_levels_sum, confidence_sum,
+        average_waste_levels = np.divide(
+            waste_levels_sum,
+            confidence_sum,
             out=np.zeros_like(waste_levels_sum),
-            where=confidence_sum!=0
+            where=confidence_sum != 0,
         )
 
         return (average_waste_levels, confidence_sum)
@@ -213,7 +225,7 @@ class TileRenderer: # pylint: disable=too-many-instance-attributes
         """
 
         if not self.samples.size:
-            return Image.new('RGBA', (TILE_SIZE, TILE_SIZE))
+            return Image.new("RGBA", (TILE_SIZE, TILE_SIZE))
 
         pixel_coordinates = self.get_pixel_coordinates()
 
@@ -225,6 +237,6 @@ class TileRenderer: # pylint: disable=too-many-instance-attributes
 
         blend = np.clip(confidence_sum, 0, 1) * 0.75
         self.pixels[..., :3] = get_color_channels_for_waste_levels(waste_levels)
-        self.pixels[..., 3] = blend*255
+        self.pixels[..., 3] = blend * 255
 
         return Image.fromarray(self.pixels.astype(np.uint8))

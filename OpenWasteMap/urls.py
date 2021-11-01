@@ -15,14 +15,14 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import include, path
 from django_email_verification import urls as mail_urls
 
 urlpatterns = [
-    path('', include('map_viewer.urls'), name='home'),
-    url(r'^admin/', admin.site.urls),
-    path('accounts/', include('accounts.urls')),
-    path('samples/', include('waste_samples.urls')),
-    path('tiles/', include('tile_server.urls'), name='tiles'),
-    path('email/', include(mail_urls)),
+    path("", include("map_viewer.urls"), name="home"),
+    url(r"^admin/", admin.site.urls),
+    path("accounts/", include("accounts.urls")),
+    path("samples/", include("waste_samples.urls")),
+    path("tiles/", include("tile_server.urls"), name="tiles"),
+    path("email/", include(mail_urls)),
 ]
