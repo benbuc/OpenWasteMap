@@ -15,3 +15,10 @@
    pre-commit install
    pre-commit install -t push
    ```
+
+### Development Server
+
+Start the development server with
+```bash
+python manage.py runserver
+```
