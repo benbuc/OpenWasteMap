@@ -6,9 +6,11 @@ from django.http.response import HttpResponse
 
 from .render import TileRenderer
 
+
 def index(request):
     """Return empty response"""
     return HttpResponse()
+
 
 def tile(request, zoom, xcoord, ycoord):
     """Return the Tile at requested coordinates."""

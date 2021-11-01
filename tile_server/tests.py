@@ -4,12 +4,12 @@ Tests for the Tile Server App.
 
 import numpy as np
 import PIL
-
 from django.test import TestCase
 from django.urls import reverse
 
 import tile_server.render as r
 from waste_samples.models import WasteSample
+
 
 class TileServerTests(TestCase):
     """
@@ -21,7 +21,7 @@ class TileServerTests(TestCase):
         Test whether the tile server index can be loaded.
         """
 
-        response = self.client.get(reverse('tile_server:index'))
+        response = self.client.get(reverse("tile_server:index"))
 
         self.assertEqual(response.status_code, 200)
 
@@ -30,14 +30,20 @@ class TileServerTests(TestCase):
         Test that accessing a tile returns a png image.
         """
 
-        response = self.client.get(reverse('tile_server:tile', kwargs={
-            'zoom'      : 0,
-            'xcoord'    : 0,
-            'ycoord'    : 0,
-        }))
+        response = self.client.get(
+            reverse(
+                "tile_server:tile",
+                kwargs={
+                    "zoom": 0,
+                    "xcoord": 0,
+                    "ycoord": 0,
+                },
+            )
+        )
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response['content-type'], "image/png")
+        self.assertEqual(response["content-type"], "image/png")
+
 
 class TileRenderTests(TestCase):
     """
@@ -51,10 +57,7 @@ class TileRenderTests(TestCase):
 
         self.tile = (13, 4407, 2686)
         WasteSample.objects.create(
-            waste_level=0,
-            latitude=52.521226,
-            longitude=13.684172,
-            user=None
+            waste_level=0, latitude=52.521226, longitude=13.684172, user=None
         )
 
         self.renderer = r.TileRenderer(*self.tile)

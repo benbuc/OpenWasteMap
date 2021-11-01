@@ -2,13 +2,14 @@
 Tests for the Waste Samples App.
 """
 
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
-from django.contrib.auth import get_user_model
 
 from utilities.test_utilities import get_testuser
 
 from .models import WasteSample
+
 
 def create_sample(waste_level=5, latitude=12.345, longitude=23.456, user=None):
     """
@@ -20,6 +21,7 @@ def create_sample(waste_level=5, latitude=12.345, longitude=23.456, user=None):
         longitude=longitude,
         user=user,
     )
+
 
 class WasteSampleModelTests(TestCase):
     """
@@ -53,6 +55,7 @@ class WasteSampleModelTests(TestCase):
         self.assertIn(str(2), str(sample))
         self.assertIn("Null", str(sample))
 
+
 class WasteSampleRestrictedAccessTest(TestCase):
     """
     Protected areas shall not be accessed by unauthenticated users.
@@ -63,10 +66,12 @@ class WasteSampleRestrictedAccessTest(TestCase):
         The waste sample index page does not show a username.
         """
 
-        user = get_user_model().objects.create_user("testuser", "test@test.org", "temppw")
+        user = get_user_model().objects.create_user(
+            "testuser", "test@test.org", "temppw"
+        )
         create_sample(2, 3.1415, 2.71, user)
 
-        response = self.client.get(reverse('waste_samples:index'))
+        response = self.client.get(reverse("waste_samples:index"))
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, str(2))
@@ -74,17 +79,17 @@ class WasteSampleRestrictedAccessTest(TestCase):
         self.assertContains(response, str(2.71))
         self.assertNotContains(response, user.username)
 
-
     def test_access_sample_creation_without_login(self):
         """
         People may not be able to access the creation view
         without a valid session.
         """
 
-        response = self.client.get(reverse('waste_samples:create'))
+        response = self.client.get(reverse("waste_samples:create"))
 
         self.assertEqual(response.status_code, 302)
-        self.assertIn(reverse('accounts:login'), response.url)
+        self.assertIn(reverse("accounts:login"), response.url)
+
 
 class WasteSampleCreationViewTest(TestCase):
     """
@@ -105,7 +110,7 @@ class WasteSampleCreationViewTest(TestCase):
         The view for creating a Waste Sample can be accessed.
         """
 
-        response = self.client.get(reverse('waste_samples:create'))
+        response = self.client.get(reverse("waste_samples:create"))
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "<form")
@@ -116,18 +121,20 @@ class WasteSampleCreationViewTest(TestCase):
         """
 
         sample_data = {
-            'waste_level'   : 7,
-            'latitude'      : 42.8,
-            'longitude'     : 43.3,
+            "waste_level": 7,
+            "latitude": 42.8,
+            "longitude": 43.3,
         }
 
         total_before = WasteSample.objects.count()
-        response = self.client.post(reverse('waste_samples:create'), sample_data)
+        response = self.client.post(reverse("waste_samples:create"), sample_data)
         total_after = WasteSample.objects.count()
 
         self.assertEqual(response.status_code, 302)
         self.assertTrue(
-            WasteSample.objects.filter(waste_level=sample_data['waste_level']).exists()
+            WasteSample.objects.filter(waste_level=sample_data["waste_level"]).exists()
         )
         self.assertGreater(total_after, total_before)
-        self.assertTrue(self.user.wastesample_set.filter(waste_level=sample_data['waste_level']))
+        self.assertTrue(
+            self.user.wastesample_set.filter(waste_level=sample_data["waste_level"])
+        )

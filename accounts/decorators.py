@@ -2,9 +2,10 @@
 Decorators for Accounts app.
 """
 
-from django.contrib.auth.decorators import user_passes_test, login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 from .models import user_is_verified
+
 
 def verified_account_required(function):
     """
@@ -15,10 +16,11 @@ def verified_account_required(function):
 
     actual_decorator = user_passes_test(
         user_is_verified,
-        login_url='accounts:not_verified',
+        login_url="accounts:not_verified",
         redirect_field_name=None,
     )
     return login_required(actual_decorator(function))
+
 
 def disallow_logged_in(function):
     """
@@ -28,7 +30,7 @@ def disallow_logged_in(function):
 
     actual_decorator = user_passes_test(
         lambda u: not u.is_authenticated,
-        login_url='accounts:profile',
+        login_url="accounts:profile",
         redirect_field_name=None,
     )
     return actual_decorator(function)

@@ -7,4 +7,5 @@ from django.apps import AppConfig
 
 class WasteSamplesConfig(AppConfig):
     """Configuration for the Waste Samples App."""
-    name = 'waste_samples'
+
+    name = "waste_samples"
