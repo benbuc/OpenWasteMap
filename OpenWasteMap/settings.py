@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_sass",
     "django_email_verification",
+    "mailer",
 ]
 
 MIDDLEWARE = [
@@ -131,6 +132,7 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, "static/"),)
 # settings for account verification email
 # overwrite in local_settings as necessary
 
+EMAIL_BACKEND = "mailer.backend.DbBackend"
 EMAIL_USE_TLS = True
 EMAIL_SERVER = ""
 EMAIL_ADDRESS = ""
