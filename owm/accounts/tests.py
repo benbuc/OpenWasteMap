@@ -5,7 +5,6 @@ Test cases for the Accounts app.
 from django.contrib.auth import authenticate, get_user_model
 from django.test import TestCase
 from django.urls import reverse
-
 from utilities.test_utilities import get_testuser
 from waste_samples.models import WasteSample
 

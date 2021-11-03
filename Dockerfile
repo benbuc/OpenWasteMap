@@ -18,7 +18,7 @@ ENV PATH="/home/${USERNAME}/.local/bin:${PATH}"
 
 COPY build/requirements.txt ./
 RUN pip install -r requirements.txt
-COPY accounts/ map_viewer/ OpenWasteMap/ static/ templates/ tile_server/ utilities/ waste_samples/ manage.py ./
+COPY ./owm/ /app/
 ENV PYTHONPATH=/app
 ENV PATH="/app:${PATH}"
 

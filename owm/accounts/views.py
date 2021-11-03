@@ -6,7 +6,6 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, reverse
 from django_email_verification import sendConfirm
-
 from waste_samples.models import WasteSample
 
 from .decorators import disallow_logged_in, verified_account_required
