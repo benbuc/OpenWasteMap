@@ -12,9 +12,12 @@ RUN addgroup --gid $USERGID $USERNAME \
     && adduser --firstuid $USERUID --gid $USERGID \
     --gecos "$USERNAME" --disabled-password $USERNAME
 
+RUN chown ${USERNAME} /app
+
 USER ${USERNAME}
 
 ENV PATH="/home/${USERNAME}/.local/bin:${PATH}"
+ENV DJANGO_SETTINGS_MODULE="OpenWasteMap.local_settings"
 
 COPY build/requirements.txt ./
 RUN pip install -r requirements.txt
@@ -30,8 +33,7 @@ USER ${USERNAME}
 
 FROM appbuilder as staticbuilder
 
-RUN export SECRET_KEY=x \
-    && python manage.py collectstatic --no-input -v0 \
+RUN python manage.py collectstatic --no-input -v0 \
     && echo "Static filesystem populated"
 
 FROM nginx:latest as staticlayer
@@ -39,6 +41,6 @@ FROM nginx:latest as staticlayer
 EXPOSE 80
 
 VOLUME /var/log/nginx
-COPY --from=staticbuilder /app/static/ /app/static/
+COPY --from=staticbuilder /app/build/static/ /app/build/static/
 
 COPY httpd/ /etc/nginx/conf.d/

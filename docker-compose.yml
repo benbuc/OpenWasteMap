@@ -23,3 +23,12 @@ services:
     <<: *app_image
     restart: "no"
     command: python manage.py migrate --no-input
+
+  httpd:
+    build:
+      context: .
+      target: staticlayer
+    volumes:
+      - ./owm/:/app/
+    restart: "no"
+    command: /bin/true
