@@ -14,6 +14,8 @@ Pillow = "^8.4.0"
 numpy = "^1.21.3"
 django-email-verification = {git = "https://github.com/AbdoMahfoz/django-email-verification"}
 django-mailer = "^2.1"
+gunicorn = "^20.1.0"
+uvicorn = "^0.15.0"
 
 [tool.poetry.dev-dependencies]
 pre-commit = "^2.15.0"

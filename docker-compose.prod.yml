@@ -1,0 +1,29 @@
+version: "3.7"
+
+x-openwastemap: &app_image
+  image: owm_app_image:latest
+  restart: "unless-stopped"
+  env_file:
+    - .env
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
+
+services:
+  app:
+    <<: *app_image
+    ports:
+      - "127.0.0.1:7000:7000"
+    command: gunicorn --chdir /app OpenWasteMap.asgi:application -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:7000
+  
+  cmd:
+    <<: *app_image
+    restart: "no"
+    command: python manage.py migrate --no-input
+
+  httpd:
+    image: owm_static_image:latest
+    restart: "unless-stopped"
+    depends_on:
+      - app
+    ports:
+      - "127.0.0.1:7001:80"

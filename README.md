@@ -23,6 +23,16 @@ Start the development server with
 python manage.py runserver
 ```
 
+### Development Server Docker
+More information on the dockerization I used:
+https://github.com/rowdybeaver/sample-django-docker
+
+The Docker Dev Set-up can be launched using
+```bash
+./build_docker_dev.sh
+docker-compose --file docker-compose.dev.yml up
+```
+
 ## Installing new version on server
 ```bash
 poetry install --no-dev
