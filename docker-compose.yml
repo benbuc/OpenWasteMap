@@ -9,6 +9,8 @@ x-openwastemap: &app_image
     - .env
   volumes:
     - .:/app
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
 
 services:
   app:
