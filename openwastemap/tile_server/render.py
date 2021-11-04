@@ -6,7 +6,6 @@ import math
 
 import numpy as np
 from PIL import Image
-
 from waste_samples.models import WasteSample
 
 # radius (in m) of the samples maximum influence

@@ -2,11 +2,10 @@
 Views for the Waste Samples App.
 """
 
+from accounts.decorators import verified_account_required
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views import generic
-
-from accounts.decorators import verified_account_required
 
 from .forms import WasteSampleCreationForm
 from .models import WasteSample

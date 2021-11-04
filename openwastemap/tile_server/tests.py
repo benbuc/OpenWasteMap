@@ -4,10 +4,9 @@ Tests for the Tile Server App.
 
 import numpy as np
 import PIL
+import tile_server.render as r
 from django.test import TestCase
 from django.urls import reverse
-
-import tile_server.render as r
 from waste_samples.models import WasteSample
 
 

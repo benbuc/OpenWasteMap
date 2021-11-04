@@ -5,7 +5,6 @@ Tests for the Waste Samples App.
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
-
 from utilities.test_utilities import get_testuser
 
 from .models import WasteSample
