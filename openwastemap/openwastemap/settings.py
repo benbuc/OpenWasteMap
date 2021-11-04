@@ -58,7 +58,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "OpenWasteMap.urls"
+ROOT_URLCONF = "openwastemap.urls"
 
 TEMPLATES = [
     {
@@ -76,7 +76,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "OpenWasteMap.wsgi.application"
+WSGI_APPLICATION = "openwastemap.wsgi.application"
 
 
 # Database

@@ -8,7 +8,7 @@ x-openwastemap: &app_image
   env_file:
     - .env
   volumes:
-    - ./owm/:/app/
+    - ./openwastemap/:/app/
   extra_hosts:
     - "host.docker.internal:host-gateway"
 
@@ -29,6 +29,6 @@ services:
       context: .
       target: staticlayer
     volumes:
-      - ./owm/:/app/
+      - ./openwastemap/:/app/
     restart: "no"
     command: /bin/true

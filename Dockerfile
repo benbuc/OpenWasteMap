@@ -17,11 +17,10 @@ RUN chown ${USERNAME} /app
 USER ${USERNAME}
 
 ENV PATH="/home/${USERNAME}/.local/bin:${PATH}"
-ENV DJANGO_SETTINGS_MODULE="OpenWasteMap.local_settings"
 
 COPY build/requirements.txt ./
 RUN pip install -r requirements.txt
-COPY ./owm/ /app/
+COPY ./openwastemap/ /app/
 ENV PYTHONPATH=/app
 ENV PATH="/app:${PATH}"
 
@@ -33,7 +32,8 @@ USER ${USERNAME}
 
 FROM appbuilder as staticbuilder
 
-RUN python manage.py collectstatic --no-input -v0 \
+RUN export DJANGO_SETTINGS_MODULE="openwastemap.local_settings" \
+    && python manage.py collectstatic --no-input -v0 \
     && echo "Static filesystem populated"
 
 FROM nginx:latest as staticlayer
