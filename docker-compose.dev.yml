@@ -15,11 +15,28 @@ x-openwastemap: &app_image
     - "host.docker.internal:host-gateway"
 
 services:
+  redis:
+    image: redis:6
+
   app:
     <<: *app_image
     ports:
       - "127.0.0.1:7000:7000"
     command: python manage.py runserver 0.0.0.0:7000
+    depends_on:
+      - redis
+
+  cel_worker:
+    <<: *app_image
+    command: celery -A openwastemap worker -l INFO
+    depends_on:
+      - redis
+
+  cel_beat:
+    <<: *app_image
+    command: celery -A openwastemap beat -l INFO
+    depends_on:
+      - redis
   
   # Only runs migrations and exits
   # Can Also be invoked for special purposes:

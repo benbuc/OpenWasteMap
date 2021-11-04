@@ -89,6 +89,11 @@ DATABASES = {
     }
 }
 
+BROKER_TRANSPORT = "redis"
+BROKER_URL = "redis://redis:6379/0"
+CELERY_RESULT_BACKEND = BROKER_URL
+CELERYBEAT_SCHEDULE_FILENAME = "/tmp/celerybeat"
+
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
