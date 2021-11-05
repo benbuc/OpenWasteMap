@@ -56,4 +56,4 @@ EXPOSE 80
 VOLUME /var/log/nginx
 COPY --from=staticbuilder /app/build/static/ /app/build/static/
 
-COPY httpd/ /etc/nginx/conf.d/
+COPY httpd/ /etc/nginx/

@@ -7,6 +7,8 @@ x-openwastemap: &app_image
   restart: "unless-stopped"
   env_file:
     - .env
+  volumes:
+    - ./tiles/:/tiles/
   extra_hosts:
     - "host.docker.internal:host-gateway"
 
@@ -49,3 +51,5 @@ services:
       - app
     ports:
       - "127.0.0.1:7001:80"
+    volumes:
+    - ./tiles/:/tiles/
