@@ -27,6 +27,8 @@ RUN addgroup --gid $USERGID $USERNAME \
     --gecos "$USERNAME" --disabled-password $USERNAME
 
 RUN chown ${USERNAME} /app
+RUN mkdir /tiles \
+    && chown ${USERNAME} /tiles
 
 COPY ./openwastemap/ /app/
 ENV PATH="/app:${PATH}"

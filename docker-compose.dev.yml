@@ -11,6 +11,7 @@ x-openwastemap: &app_image
     - .env
   volumes:
     - ./openwastemap/:/app/
+    - ./tiles/:/tiles/
   extra_hosts:
     - "host.docker.internal:host-gateway"
 
