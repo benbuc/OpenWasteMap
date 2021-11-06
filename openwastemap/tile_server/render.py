@@ -179,10 +179,14 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
         dlat = px_lat - sample_lat
         dlon = px_lon - sample_lon
 
-        radicand = (
-            np.sin(dlat / 2.0) ** 2
-            + np.cos(px_lat) * np.cos(sample_lat) * np.sin(dlon / 2.0) ** 2
-        )
+        # The full formula would be:
+        # np.sin(dlat / 2.0) ** 2
+        # + np.cos(px_lat) * np.cos(sample_lat) * np.sin(dlon / 2.0) ** 2
+        # but due to the fact that dlat and dlon are small enough,
+        # we are using small-angle approximation
+        radicand = (dlat / 2.0) ** 2 + np.cos(px_lat) * np.cos(sample_lat) * (
+            dlon / 2.0
+        ) ** 2
 
         return 2 * EARTH_RADIUS * np.arcsin(np.sqrt(radicand))
 
