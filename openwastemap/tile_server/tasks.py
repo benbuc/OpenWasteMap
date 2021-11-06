@@ -16,6 +16,7 @@ def render_tile(zoom, xcoord, ycoord):
     out_path = (
         Path(settings.TILES_ROOT) / str(zoom) / str(xcoord) / (str(ycoord) + ".png")
     )
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    rendered_tile.save(out_path)
+    if not settings.DEBUG or settings.CHECK_TILE_CACHE_HIT:
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        rendered_tile.save(out_path)
     return rendered_tile
