@@ -95,7 +95,7 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
             self.zoom, self.xnum + 1, self.ynum + 1
         )
 
-        self.pixels = np.zeros((TILE_SIZE, TILE_SIZE, 4))
+        self.pixels = np.zeros((TILE_SIZE, TILE_SIZE, 4), dtype=np.float32)
         self.samples = self.get_samples()
 
     def get_coordinate_boundaries(self):
@@ -140,7 +140,7 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
             longitude__lte=max_lon,
         )
 
-        samples = np.zeros((len(sample_objects), 3))
+        samples = np.zeros((len(sample_objects), 3), dtype=np.float32)
 
         for i, sample_object in enumerate(sample_objects):
             sample_object = sample_objects[i]
@@ -158,8 +158,12 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
         """
         # TO-DO: we can not use linear interpolation for smaller zoom levels!
 
-        latitudes = np.linspace(self.tile_nw[0], self.tile_se[0], num=TILE_SIZE)
-        longitudes = np.linspace(self.tile_nw[1], self.tile_se[1], num=TILE_SIZE)
+        latitudes = np.linspace(
+            self.tile_nw[0], self.tile_se[0], num=TILE_SIZE, dtype=np.float32
+        )
+        longitudes = np.linspace(
+            self.tile_nw[1], self.tile_se[1], num=TILE_SIZE, dtype=np.float32
+        )
 
         return np.array(np.meshgrid(latitudes, longitudes)).T
 
@@ -179,16 +183,10 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
         dlat = px_lat - sample_lat
         dlon = px_lon - sample_lon
 
-        # The full formula would be:
-        # np.sin(dlat / 2.0) ** 2
-        # + np.cos(px_lat) * np.cos(sample_lat) * np.sin(dlon / 2.0) ** 2
-        # but due to the fact that dlat and dlon are small enough,
-        # we are using small-angle approximation
-        radicand = (dlat / 2.0) ** 2 + np.cos(px_lat) * np.cos(sample_lat) * (
-            dlon / 2.0
-        ) ** 2
-
-        return 2 * EARTH_RADIUS * np.arcsin(np.sqrt(radicand))
+        # This is a highly optimized version of the Haversine formula
+        return EARTH_RADIUS * np.sqrt(
+            (dlat ** 2) + (np.cos(sample_lat) ** 2) * (dlon ** 2)
+        )
 
     def get_confidence_levels(self, distances):
         """
