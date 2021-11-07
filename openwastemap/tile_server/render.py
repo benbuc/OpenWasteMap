@@ -11,6 +11,9 @@ from waste_samples.models import WasteSample
 # radius (in m) of the samples maximum influence
 SAMPLE_MAX_INFLUENCE = lambda zoom: 300.0 * 1.6 ** (14 - zoom)  # noqa: E731
 
+# number of tiles in an axis for a zoom level
+NUM_TILES = lambda zoom: 2.0 ** zoom  # noqa: E731
+
 # earth radius (in m)
 EARTH_RADIUS = 6372.7982 * 1000
 
@@ -30,23 +33,19 @@ COLORS = [
 ]
 
 
-def coordinates_from_tilename(zoom, xnum, ynum):
-    """
-    Calculate coordinates from tilename
+# Calculate coordinates from tilename
+#
+# Calculates latitude and longitude of
+# the north-western corner of the tile.
+# For the other corners, invoke with xnum+1, ynum+1
+# or xnum+1 and ynum+1 respectively
+# https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
+def latitude_from_tilename(zoom, ynum):
+    return np.arctan(np.sinh(np.pi * (1 - 2 * ynum / NUM_TILES(zoom))))
 
-    Calculates latitude and longitude of
-    the north-western corner of the tile.
-    For the other corners, invoke with xnum+1, ynum+1
-    or xnum+1 and ynum+1 respectively
-    https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
-    """
 
-    num_tiles = 2.0 ** zoom
-    lon_deg = xnum / num_tiles * 360.0 - 180.0
-    lat_rad = math.atan(math.sinh(math.pi * (1 - 2 * ynum / num_tiles)))
-    lat_deg = math.degrees(lat_rad)
-
-    return (lat_deg, lon_deg)
+def longitude_from_tilename(zoom, xnum):
+    return xnum / NUM_TILES(zoom) * 2 * np.pi - np.pi
 
 
 def get_color_channels_for_waste_levels(waste_levels):
@@ -90,9 +89,13 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
 
         self.sample_max_influence = SAMPLE_MAX_INFLUENCE(zoom)
 
-        self.tile_nw = coordinates_from_tilename(self.zoom, self.xnum, self.ynum)
-        self.tile_se = coordinates_from_tilename(
-            self.zoom, self.xnum + 1, self.ynum + 1
+        self.tile_nw = (
+            math.degrees(latitude_from_tilename(zoom, ynum)),
+            math.degrees(longitude_from_tilename(zoom, xnum)),
+        )
+        self.tile_se = (
+            math.degrees(latitude_from_tilename(zoom, ynum + 1)),
+            math.degrees(longitude_from_tilename(zoom, xnum + 1)),
         )
 
         self.pixels = np.zeros((TILE_SIZE, TILE_SIZE, 4), dtype=np.float32)
@@ -156,13 +159,17 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
         """
         Returns an array mapping each pixel to a lat / lon pair.
         """
-        # TO-DO: we can not use linear interpolation for smaller zoom levels!
 
-        latitudes = np.linspace(
-            self.tile_nw[0], self.tile_se[0], num=TILE_SIZE, dtype=np.float32
+        pixel_position_y = np.linspace(
+            self.ynum, self.ynum + 1, num=TILE_SIZE, endpoint=False, dtype=np.float32
+        )
+        latitudes = latitude_from_tilename(self.zoom, pixel_position_y)
+
+        west_lon, east_lon = (
+            longitude_from_tilename(self.zoom, self.xnum + i) for i in [0, 1]
         )
         longitudes = np.linspace(
-            self.tile_nw[1], self.tile_se[1], num=TILE_SIZE, dtype=np.float32
+            west_lon, east_lon, num=TILE_SIZE, endpoint=False, dtype=np.float32
         )
 
         return np.array(np.meshgrid(latitudes, longitudes)).T
@@ -173,7 +180,7 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
         to every sample.
         """
 
-        pixel_coordinates, samples = map(np.radians, [pixel_coordinates, self.samples])
+        samples = np.radians(self.samples)
 
         px_lat = pixel_coordinates[..., 0, None]
         px_lon = pixel_coordinates[..., 1, None]
