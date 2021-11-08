@@ -6,6 +6,7 @@ from accounts.decorators import verified_account_required
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views import generic
+from tile_server.tasks import invalidate_tiles
 
 from .forms import WasteSampleCreationForm
 from .models import WasteSample
@@ -39,6 +40,11 @@ def new_sample(request):
             new_waste_sample = form.save(commit=False)
             new_waste_sample.user = request.user
             new_waste_sample.save()
+
+            invalidate_tiles.now(
+                float(form.cleaned_data["latitude"]),
+                float(form.cleaned_data["longitude"]),
+            )
 
             return redirect("waste_samples:index")
     else:

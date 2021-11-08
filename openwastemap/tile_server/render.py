@@ -44,8 +44,16 @@ def latitude_from_tilename(zoom, ynum):
     return np.arctan(np.sinh(np.pi * (1 - 2 * ynum / NUM_TILES(zoom))))
 
 
+def tile_ynum_from_latitude(zoom, latitude):
+    return (1 - np.arcsinh(np.tan(latitude)) / np.pi) / 2 * NUM_TILES(zoom)
+
+
 def longitude_from_tilename(zoom, xnum):
-    return xnum / NUM_TILES(zoom) * 2 * np.pi - np.pi
+    return xnum / NUM_TILES(zoom) * 2.0 * np.pi - np.pi
+
+
+def tile_xnum_from_longitude(zoom, longitude):
+    return (longitude + np.pi) / (2 * np.pi) * NUM_TILES(zoom)
 
 
 def get_color_channels_for_waste_levels(waste_levels):
