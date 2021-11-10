@@ -8,17 +8,8 @@ import numpy as np
 from PIL import Image
 from waste_samples.models import WasteSample
 
-# radius (in m) of the samples maximum influence
-SAMPLE_MAX_INFLUENCE = lambda zoom: 300.0 * 1.6 ** (14 - zoom)  # noqa: E731
-
-# number of tiles in an axis for a zoom level
-NUM_TILES = lambda zoom: 2.0 ** zoom  # noqa: E731
-
-# earth radius (in m)
-EARTH_RADIUS = 6372.7982 * 1000
-
-# the size of each tile in pixels
-TILE_SIZE = 256
+from .parameters import EARTH_RADIUS, SAMPLE_MAX_INFLUENCE, TILE_SIZE
+from .utilities import latitude_from_tilename, longitude_from_tilename
 
 # array of rgb colors and their stops from 0 to 1
 # in form of (stop, r, g, b)
@@ -31,29 +22,6 @@ COLORS = [
     (0.9, 255.0, 13.0, 111.0),
     (1.0, 166.0, 150.0, 255.0),
 ]
-
-
-# Calculate coordinates from tilename
-#
-# Calculates latitude and longitude of
-# the north-western corner of the tile.
-# For the other corners, invoke with xnum+1, ynum+1
-# or xnum+1 and ynum+1 respectively
-# https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
-def latitude_from_tilename(zoom, ynum):
-    return np.arctan(np.sinh(np.pi * (1 - 2 * ynum / NUM_TILES(zoom))))
-
-
-def tile_ynum_from_latitude(zoom, latitude):
-    return (1 - np.arcsinh(np.tan(latitude)) / np.pi) / 2 * NUM_TILES(zoom)
-
-
-def longitude_from_tilename(zoom, xnum):
-    return xnum / NUM_TILES(zoom) * 2.0 * np.pi - np.pi
-
-
-def tile_xnum_from_longitude(zoom, longitude):
-    return (longitude + np.pi) / (2 * np.pi) * NUM_TILES(zoom)
 
 
 def get_color_channels_for_waste_levels(waste_levels):

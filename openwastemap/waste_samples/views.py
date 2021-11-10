@@ -41,7 +41,7 @@ def new_sample(request):
             new_waste_sample.user = request.user
             new_waste_sample.save()
 
-            invalidate_tiles.now(
+            invalidate_tiles.run(
                 float(form.cleaned_data["latitude"]),
                 float(form.cleaned_data["longitude"]),
             )
