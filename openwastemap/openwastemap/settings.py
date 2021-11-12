@@ -35,6 +35,7 @@ IS_TEST = "test" in sys.argv
 # in the development environment
 # in production this is performed by the webserver
 CHECK_TILE_CACHE_HIT = False
+TILES_ROOT = "/tiles"
 
 # Application definition
 
