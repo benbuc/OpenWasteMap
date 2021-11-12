@@ -5,6 +5,7 @@ Tests for the Tile Server App.
 import numpy as np
 import PIL
 import tile_server.render as r
+import tile_server.utilities as u
 from django.test import TestCase
 from django.urls import reverse
 from waste_samples.models import WasteSample
@@ -95,3 +96,19 @@ class TileRenderTests(TestCase):
         self.assertTrue((rendered_image[..., 0] == 0).all())
         self.assertTrue((rendered_image[..., 1] == 255).any())
         self.assertTrue((rendered_image[..., 2] == 0).all())
+
+
+class UtilityTests(TestCase):
+    """
+    Test utility functions.
+    """
+
+    def test_sample_affects_all_zoom_levels(self):
+        """
+        Test that all zoom levels (0-18) are present in which tiles
+        are affected by a sample.
+        """
+
+        zoom_levels = [zoom for (zoom, x, y) in u.tiles_affected_by_sample(0, 0)]
+        for z in range(19):
+            self.assertTrue(z in zoom_levels)
