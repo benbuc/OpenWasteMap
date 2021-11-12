@@ -2,6 +2,8 @@
 Tests for the Tile Server App.
 """
 
+from pathlib import Path
+
 import numpy as np
 import PIL
 import tile_server.render as r
@@ -112,3 +114,21 @@ class UtilityTests(TestCase):
         zoom_levels = [zoom for (zoom, x, y) in u.tiles_affected_by_sample(0, 0)]
         for z in range(19):
             self.assertTrue(z in zoom_levels)
+
+    def test_get_path_returns_path(self):
+        """
+        Test that the tile cache path generator utility returns
+        a pathlib.Path object.
+        """
+
+        tile_path = u.get_tile_cache_path(0, 0, 0)
+        self.assertIsInstance(tile_path, Path)
+
+    def test_get_path_suffix_png(self):
+        """
+        Test that the tile cache path generator utility returns
+        a path ending in .png
+        """
+
+        tile_path = u.get_tile_cache_path(0, 0, 0)
+        self.assertEqual(tile_path.suffix, ".png")

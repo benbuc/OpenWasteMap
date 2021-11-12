@@ -2,12 +2,11 @@
 Views from the Tile Server App.
 """
 
-from pathlib import Path
-
 from django.conf import settings
 from django.http.response import HttpResponse
 
 from .tasks import render_tile
+from .utilities import get_tile_cache_path
 
 
 def index(request):
@@ -19,9 +18,7 @@ def tile(request, zoom, xcoord, ycoord):
     """Return the Tile at requested coordinates."""
 
     if not settings.IS_TEST and settings.CHECK_TILE_CACHE_HIT:
-        tile_path = (
-            Path(settings.TILES_ROOT) / str(zoom) / str(xcoord) / (str(ycoord) + ".png")
-        )  # TODO: this is written twice (tasks.py)
+        tile_path = get_tile_cache_path(zoom, xcoord, ycoord)
 
         if tile_path.exists():
             with open(tile_path, "rb") as tile_image:
