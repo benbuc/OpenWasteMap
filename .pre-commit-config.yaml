@@ -28,5 +28,5 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
-        entry: poetry run python openwastemap/manage.py test
+        entry: bash -c 'cd openwastemap && poetry run python manage.py test'
         stages: [push]

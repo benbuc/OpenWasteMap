@@ -27,6 +27,8 @@ RUN addgroup --gid $USERGID $USERNAME \
     --gecos "$USERNAME" --disabled-password $USERNAME
 
 RUN chown ${USERNAME} /app
+RUN mkdir /tiles \
+    && chown ${USERNAME} /tiles
 
 COPY ./openwastemap/ /app/
 ENV PATH="/app:${PATH}"
@@ -54,4 +56,4 @@ EXPOSE 80
 VOLUME /var/log/nginx
 COPY --from=staticbuilder /app/build/static/ /app/build/static/
 
-COPY httpd/ /etc/nginx/conf.d/
+COPY httpd/ /etc/nginx/

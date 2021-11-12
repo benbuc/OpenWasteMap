@@ -16,11 +16,15 @@ django-email-verification = {git = "https://github.com/AbdoMahfoz/django-email-v
 django-mailer = "^2.1"
 gunicorn = "^20.1.0"
 uvicorn = "^0.15.0"
+celery = "^5.1.2"
+django-redis = "^5.0.0"
+redis = "^3.5.3"
 
 [tool.poetry.dev-dependencies]
 pre-commit = "^2.15.0"
 black = {version = "^21.10b0", allow-prereleases = true}
 flake8 = "^4.0.1"
+django-silk = "^4.2.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

@@ -31,12 +31,19 @@ ALLOWED_HOSTS = []
 # some actions may not be performed in the test environment
 IS_TEST = "test" in sys.argv
 
+# can be overwritten in local_settings to check for existing tiles
+# in the development environment
+# in production this is performed by the webserver
+CHECK_TILE_CACHE_HIT = False
+TILES_ROOT = "/tiles"
+
 # Application definition
 
 INSTALLED_APPS = [
     "accounts.apps.AccountsConfig",
     "map_viewer.apps.MapViewerConfig",
     "waste_samples.apps.WasteSamplesConfig",
+    "tile_server",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -88,6 +95,11 @@ DATABASES = {
         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
     }
 }
+
+BROKER_TRANSPORT = "redis"
+BROKER_URL = "redis://redis:6379/0"
+CELERY_RESULT_BACKEND = BROKER_URL
+CELERYBEAT_SCHEDULE_FILENAME = "/tmp/celerybeat"
 
 
 # Password validation

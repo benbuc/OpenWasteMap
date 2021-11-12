@@ -38,4 +38,4 @@ jobs:
       env:
         DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
       run: |
-        poetry run python openwastemap/manage.py test
+        bash -c 'cd openwastemap && poetry run python manage.py test'

@@ -8,14 +8,8 @@ import numpy as np
 from PIL import Image
 from waste_samples.models import WasteSample
 
-# radius (in m) of the samples maximum influence
-SAMPLE_MAX_INFLUENCE = lambda zoom: 300.0 * 1.6 ** (14 - zoom)  # noqa: E731
-
-# earth radius (in m)
-EARTH_RADIUS = 6372.7982 * 1000
-
-# the size of each tile in pixels
-TILE_SIZE = 256
+from .parameters import EARTH_RADIUS, SAMPLE_MAX_INFLUENCE, TILE_SIZE
+from .utilities import latitude_from_tilename, longitude_from_tilename
 
 # array of rgb colors and their stops from 0 to 1
 # in form of (stop, r, g, b)
@@ -28,25 +22,6 @@ COLORS = [
     (0.9, 255.0, 13.0, 111.0),
     (1.0, 166.0, 150.0, 255.0),
 ]
-
-
-def coordinates_from_tilename(zoom, xnum, ynum):
-    """
-    Calculate coordinates from tilename
-
-    Calculates latitude and longitude of
-    the north-western corner of the tile.
-    For the other corners, invoke with xnum+1, ynum+1
-    or xnum+1 and ynum+1 respectively
-    https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
-    """
-
-    num_tiles = 2.0 ** zoom
-    lon_deg = xnum / num_tiles * 360.0 - 180.0
-    lat_rad = math.atan(math.sinh(math.pi * (1 - 2 * ynum / num_tiles)))
-    lat_deg = math.degrees(lat_rad)
-
-    return (lat_deg, lon_deg)
 
 
 def get_color_channels_for_waste_levels(waste_levels):
@@ -90,12 +65,16 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
 
         self.sample_max_influence = SAMPLE_MAX_INFLUENCE(zoom)
 
-        self.tile_nw = coordinates_from_tilename(self.zoom, self.xnum, self.ynum)
-        self.tile_se = coordinates_from_tilename(
-            self.zoom, self.xnum + 1, self.ynum + 1
+        self.tile_nw = (
+            math.degrees(latitude_from_tilename(zoom, ynum)),
+            math.degrees(longitude_from_tilename(zoom, xnum)),
+        )
+        self.tile_se = (
+            math.degrees(latitude_from_tilename(zoom, ynum + 1)),
+            math.degrees(longitude_from_tilename(zoom, xnum + 1)),
         )
 
-        self.pixels = np.zeros((TILE_SIZE, TILE_SIZE, 4))
+        self.pixels = np.zeros((TILE_SIZE, TILE_SIZE, 4), dtype=np.float32)
         self.samples = self.get_samples()
 
     def get_coordinate_boundaries(self):
@@ -140,7 +119,7 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
             longitude__lte=max_lon,
         )
 
-        samples = np.zeros((len(sample_objects), 3))
+        samples = np.zeros((len(sample_objects), 3), dtype=np.float32)
 
         for i, sample_object in enumerate(sample_objects):
             sample_object = sample_objects[i]
@@ -156,10 +135,18 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
         """
         Returns an array mapping each pixel to a lat / lon pair.
         """
-        # TO-DO: we can not use linear interpolation for smaller zoom levels!
 
-        latitudes = np.linspace(self.tile_nw[0], self.tile_se[0], num=TILE_SIZE)
-        longitudes = np.linspace(self.tile_nw[1], self.tile_se[1], num=TILE_SIZE)
+        pixel_position_y = np.linspace(
+            self.ynum, self.ynum + 1, num=TILE_SIZE, endpoint=False, dtype=np.float32
+        )
+        latitudes = latitude_from_tilename(self.zoom, pixel_position_y)
+
+        west_lon, east_lon = (
+            longitude_from_tilename(self.zoom, self.xnum + i) for i in [0, 1]
+        )
+        longitudes = np.linspace(
+            west_lon, east_lon, num=TILE_SIZE, endpoint=False, dtype=np.float32
+        )
 
         return np.array(np.meshgrid(latitudes, longitudes)).T
 
@@ -169,7 +156,7 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
         to every sample.
         """
 
-        pixel_coordinates, samples = map(np.radians, [pixel_coordinates, self.samples])
+        samples = np.radians(self.samples)
 
         px_lat = pixel_coordinates[..., 0, None]
         px_lon = pixel_coordinates[..., 1, None]
@@ -179,12 +166,10 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
         dlat = px_lat - sample_lat
         dlon = px_lon - sample_lon
 
-        radicand = (
-            np.sin(dlat / 2.0) ** 2
-            + np.cos(px_lat) * np.cos(sample_lat) * np.sin(dlon / 2.0) ** 2
+        # This is a highly optimized version of the Haversine formula
+        return EARTH_RADIUS * np.sqrt(
+            (dlat ** 2) + (np.cos(sample_lat) ** 2) * (dlon ** 2)
         )
-
-        return 2 * EARTH_RADIUS * np.arcsin(np.sqrt(radicand))
 
     def get_confidence_levels(self, distances):
         """
