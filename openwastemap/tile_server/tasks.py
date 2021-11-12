@@ -14,7 +14,7 @@ from .utilities import tiles_affected_by_sample
 @task(name="render_tile")
 def render_tile(zoom, xcoord, ycoord):
     rendered_tile = TileRenderer(zoom, xcoord, ycoord).render()
-    if not settings.DEBUG or settings.CHECK_TILE_CACHE_HIT:
+    if not settings.IS_TEST and (not settings.DEBUG or settings.CHECK_TILE_CACHE_HIT):
         out_path = (
             Path(settings.TILES_ROOT) / str(zoom) / str(xcoord) / (str(ycoord) + ".png")
         )
@@ -29,6 +29,8 @@ def invalidate_tiles(latitude, longitude):
     Invalidate all tiles which are affected
     by a sample at the given coordinates.
     """
+    if settings.IS_TEST or (settings.DEBUG and not settings.CHECK_TILE_CACHE_HIT):
+        return
 
     for (zoom, xnum, ynum) in tiles_affected_by_sample(latitude, longitude):
         (

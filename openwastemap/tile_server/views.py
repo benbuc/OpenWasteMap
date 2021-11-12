@@ -18,7 +18,7 @@ def index(request):
 def tile(request, zoom, xcoord, ycoord):
     """Return the Tile at requested coordinates."""
 
-    if settings.CHECK_TILE_CACHE_HIT:
+    if not settings.IS_TEST and settings.CHECK_TILE_CACHE_HIT:
         tile_path = (
             Path(settings.TILES_ROOT) / str(zoom) / str(xcoord) / (str(ycoord) + ".png")
         )  # TODO: this is written twice (tasks.py)
