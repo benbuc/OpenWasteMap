@@ -19,6 +19,8 @@ ENV PYTHONUNBUFFERED 1
 
 WORKDIR /app
 
+RUN apt update && apt install -y cron
+
 COPY build/requirements.txt ./
 RUN pip install -r requirements.txt
 
@@ -56,4 +58,20 @@ EXPOSE 80
 VOLUME /var/log/nginx
 COPY --from=staticbuilder /app/build/static/ /app/build/static/
 
-COPY httpd/ /etc/nginx/
+COPY deployment/httpd/ /etc/nginx/
+
+#----- Stage 5: Mailer to send scheduled emails
+FROM appbuilder as mailerlayer
+
+COPY deployment/cron/mailer_cron /etc/cron.d/mailer_cron
+RUN chmod 0644 /etc/cron.d/mailer_cron
+
+RUN crontab /etc/cron.d/mailer_cron
+
+RUN touch /var/log/cron_mail.log \
+    && touch /var/log/cron_mail_deferred.log \
+    && touch /var/log/cron_mail_purge.log
+
+CMD printenv > /etc/environment \
+    && cron \
+    && tail -f /var/log/cron_mail.log

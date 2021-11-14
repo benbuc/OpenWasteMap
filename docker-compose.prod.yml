@@ -33,6 +33,16 @@ services:
     command: celery -A openwastemap beat -l INFO
     depends_on:
       - redis
+
+  mailer:
+    build:
+      context: .
+      target: mailerlayer
+    restart: "unless-stopped"
+    env_file:
+      - .env
+    volumes:
+      - ./openwastemap/:/app/
   
   # Only runs migrations and exits
   # Can Also be invoked for special purposes:
