@@ -100,45 +100,54 @@ class TileRenderTests(TestCase):
         self.assertTrue((rendered_image[..., 2] == 0).all())
 
 
-class GetSamplesTests(TestCase):
+class GetSamplesOverflowTests(TestCase):
     """
     Test that influencing samples are correctly loaded from the database.
     With special attention to the edges of the coordinate system.
     """
 
-    def test_get_sample_at_north_pole(self):
+    def test_get_sample_overflow(self):
         """
-        Test that loading samples at the poles reaches over the poles.
+        Test that loading samples at longitude around 180 degrees
+        correctly reaches over the edge of the coordinate system.
         """
 
-        tile = (
+        tile_left = (13, 0, int(u.tile_ynum_from_latitude(13, np.radians(50.0))))
+        tile_right = (
             13,
-            u.tile_xnum_from_longitude(13, 13.0),
-            u.tile_ynum_from_latitude(13, 89.99),
+            u.num_tiles(13) - 1,
+            int(u.tile_ynum_from_latitude(13, np.radians(50.0))),
         )
         WasteSample.objects.create(
-            waste_level=0, latitude=89.99, longitude=180 - 13.0, user=None
+            waste_level=0, latitude=50.0, longitude=179.99999, user=None
+        )
+        WasteSample.objects.create(
+            waste_level=0, latitude=50.0, longitude=-179.99999, user=None
+        )
+
+        renderer_left = r.TileRenderer(*tile_left)
+        self.assertEqual(len(renderer_left.samples), 2)
+        renderer_right = r.TileRenderer(*tile_right)
+        self.assertEqual(len(renderer_right.samples), 2)
+
+    def test_overflow_is_rendered(self):
+        """
+        Test that a sample which is loaded from overflowing coordinate system
+        is rendered correctly.
+        """
+
+        tile = (18, 0, 88904)
+        WasteSample.objects.create(
+            waste_level=0, latitude=50.0, longitude=179.99999, user=None
         )
 
         renderer = r.TileRenderer(*tile)
-        self.assertEqual(len(renderer.samples), 1)
 
-    def test_get_sample_at_south_pole(self):
-        """
-        Test that loading samples at the poles reaches over the poles.
-        """
-
-        tile = (
-            13,
-            u.tile_xnum_from_longitude(13, 13.0),
-            u.tile_ynum_from_latitude(13, -89.99),
-        )
-        WasteSample.objects.create(
-            waste_level=0, latitude=-89.99, longitude=180 - 13.0, user=None
-        )
-
-        renderer = r.TileRenderer(*tile)
-        self.assertEqual(len(renderer.samples), 1)
+        rendered_image = np.array(renderer.render())
+        self.assertTrue((rendered_image[..., 0] == 0).all())
+        self.assertTrue((rendered_image[..., 1] == 255).any())
+        self.assertTrue((rendered_image[..., 2] == 0).all())
+        self.assertTrue((rendered_image[..., 3] > 0).any())
 
 
 class UtilityTests(TestCase):

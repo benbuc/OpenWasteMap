@@ -5,6 +5,7 @@ Module for rendering a single OWM tile.
 import math
 
 import numpy as np
+from django.db.models import Q
 from PIL import Image
 from waste_samples.models import WasteSample
 
@@ -22,6 +23,8 @@ COLORS = [
     (0.9, 255.0, 13.0, 111.0),
     (1.0, 166.0, 150.0, 255.0),
 ]
+
+DATATYPE = np.float32
 
 
 def get_color_channels_for_waste_levels(waste_levels):
@@ -74,7 +77,7 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
             math.degrees(longitude_from_tilename(zoom, xnum + 1)),
         )
 
-        self.pixels = np.zeros((TILE_SIZE, TILE_SIZE, 4), dtype=np.float32)
+        self.pixels = np.zeros((TILE_SIZE, TILE_SIZE, 4), dtype=DATATYPE)
         self.samples = self.get_samples()
 
     def get_coordinate_boundaries(self):
@@ -112,14 +115,20 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
 
         min_lat, max_lat, min_lon, max_lon = self.get_coordinate_boundaries()
 
+        min_overflow = abs(min_lon + 180) if min_lon < -180 else 0
+        max_overflow = abs(max_lon - 180) if max_lon > 180 else 0
+
         sample_objects = WasteSample.objects.filter(
-            latitude__gte=min_lat,
-            latitude__lte=max_lat,
-            longitude__gte=min_lon,
-            longitude__lte=max_lon,
+            Q(latitude__gte=min_lat)
+            & Q(latitude__lte=max_lat)
+            & (
+                (Q(longitude__gte=min_lon) & Q(longitude__lte=max_lon))
+                | Q(longitude__gte=180 - min_overflow)
+                | Q(longitude__lte=-180 + max_overflow)
+            )
         )
 
-        samples = np.zeros((len(sample_objects), 3), dtype=np.float32)
+        samples = np.zeros((len(sample_objects), 3), dtype=DATATYPE)
 
         for i, sample_object in enumerate(sample_objects):
             sample_object = sample_objects[i]
@@ -137,7 +146,7 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
         """
 
         pixel_position_y = np.linspace(
-            self.ynum, self.ynum + 1, num=TILE_SIZE, endpoint=False, dtype=np.float32
+            self.ynum, self.ynum + 1, num=TILE_SIZE, endpoint=False, dtype=DATATYPE
         )
         latitudes = latitude_from_tilename(self.zoom, pixel_position_y)
 
@@ -145,7 +154,7 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
             longitude_from_tilename(self.zoom, self.xnum + i) for i in [0, 1]
         )
         longitudes = np.linspace(
-            west_lon, east_lon, num=TILE_SIZE, endpoint=False, dtype=np.float32
+            west_lon, east_lon, num=TILE_SIZE, endpoint=False, dtype=DATATYPE
         )
 
         return np.array(np.meshgrid(latitudes, longitudes)).T
@@ -164,7 +173,15 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
         sample_lon = samples[..., 2]
 
         dlat = px_lat - sample_lat
-        dlon = px_lon - sample_lon
+
+        # This allows us to use small-angle approximation even at the edges
+        # of the coordinate system (longitude around -180 oder 180 degrees)
+        # if for a pixel the longitude difference becomes larger than 180 degrees
+        # we are simply subtracting 360 degrees.
+        # This works with the assumption, that the maximum influence of a sample does
+        # not exceed 180 degrees.
+        dlon = np.abs(px_lon - sample_lon)
+        dlon[dlon > np.pi] -= 2 * np.pi
 
         # This is a highly optimized version of the Haversine formula
         return EARTH_RADIUS * np.sqrt(
