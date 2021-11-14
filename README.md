@@ -58,6 +58,7 @@ To automatically send queued emails, this has to be added for example to the cro
 *       * * * * (/path/to/your/python /path/to/your/manage.py send_mail >> ~/cron_mail.log 2>&1)
 0,20,40 * * * * (/path/to/your/python /path/to/your/manage.py retry_deferred >> ~/cron_mail_deferred.log 2>&1)
 0       0 * * * (/path/to/your/python /path/to/your/manage.py purge_mail_log 7 >> ~/cron_mail_purge.log 2>&1)
+# Remember the empty line at the end of the cron file
 ```
 The last command removes successfull log entries older than a week.
 
