@@ -35,9 +35,7 @@ services:
       - redis
 
   mailer:
-    build:
-      context: .
-      target: mailerlayer
+    image: owm_mailer_image:latest
     restart: "unless-stopped"
     env_file:
       - .env
