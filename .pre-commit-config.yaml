@@ -21,12 +21,3 @@ repos:
     rev: 3.9.0
     hooks:
       - id: flake8
-  - repo: local
-    hooks:
-      - id: djangotest
-        name: Django Test
-        language: system
-        pass_filenames: false
-        always_run: true
-        entry: bash -c 'cd openwastemap && poetry run python manage.py test'
-        stages: [push]

@@ -100,6 +100,47 @@ class TileRenderTests(TestCase):
         self.assertTrue((rendered_image[..., 2] == 0).all())
 
 
+class GetSamplesTests(TestCase):
+    """
+    Test that influencing samples are correctly loaded from the database.
+    With special attention to the edges of the coordinate system.
+    """
+
+    def test_get_sample_at_north_pole(self):
+        """
+        Test that loading samples at the poles reaches over the poles.
+        """
+
+        tile = (
+            13,
+            u.tile_xnum_from_longitude(13, 13.0),
+            u.tile_ynum_from_latitude(13, 89.99),
+        )
+        WasteSample.objects.create(
+            waste_level=0, latitude=89.99, longitude=180 - 13.0, user=None
+        )
+
+        renderer = r.TileRenderer(*tile)
+        self.assertEqual(len(renderer.samples), 1)
+
+    def test_get_sample_at_south_pole(self):
+        """
+        Test that loading samples at the poles reaches over the poles.
+        """
+
+        tile = (
+            13,
+            u.tile_xnum_from_longitude(13, 13.0),
+            u.tile_ynum_from_latitude(13, -89.99),
+        )
+        WasteSample.objects.create(
+            waste_level=0, latitude=-89.99, longitude=180 - 13.0, user=None
+        )
+
+        renderer = r.TileRenderer(*tile)
+        self.assertEqual(len(renderer.samples), 1)
+
+
 class UtilityTests(TestCase):
     """
     Test utility functions.
