@@ -160,6 +160,6 @@ EMAIL_MAIL_PLAIN = "registration/verify_email.txt"
 EMAIL_PAGE_TEMPLATE = "registration/process_email_verification.html"
 EMAIL_PAGE_DOMAIN = "http://www.openwastemap.org/"
 
-OWM_VERSION = "0.5"
+OWM_VERSION = "0.6"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
