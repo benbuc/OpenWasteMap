@@ -48,6 +48,13 @@ git pull
 docker-compose -f docker-compose.prod.yml up -d
 ```
 
+## Tile Cache on Server writable
+Make sure docker containers have write access to the `tiles/` folder on the server.
+
+```bash
+chmod 777 /tiles
+```
+
 ## Email sending on server
 To prevent email [enumeration timing attacks](https://docs.djangoproject.com/en/3.1/topics/auth/default/#django.contrib.auth.views.PasswordResetView) we are using `django-mailer` for queueing emails and sending them asynchronously.
 
