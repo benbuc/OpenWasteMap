@@ -1,0 +1,69 @@
+# Development docker-compose
+
+version: "3.7"
+
+x-openwastemap: &app_image
+  build:
+    context: .
+    target: applayer
+  restart: "unless-stopped"
+  env_file:
+    - .env
+  volumes:
+    - ./openwastemap/:/app/
+    - ./tiles/:/tiles/
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
+
+services:
+  redis:
+    image: redis:6
+
+  app:
+    <<: *app_image
+    ports:
+      - "127.0.0.1:7000:7000"
+    command: python manage.py runserver 0.0.0.0:7000
+    depends_on:
+      - redis
+
+  cel_worker:
+    <<: *app_image
+    command: celery -A openwastemap worker -l INFO
+    depends_on:
+      - redis
+
+  cel_beat:
+    <<: *app_image
+    command: celery -A openwastemap beat -l INFO
+    depends_on:
+      - redis
+
+  mailer:
+    build:
+      context: .
+      target: mailerlayer
+    restart: "unless-stopped"
+    env_file:
+      - .env
+    volumes:
+      - ./openwastemap/:/app/
+  
+  # Only runs migrations and exits
+  # Can Also be invoked for special purposes:
+  # 'docker-compose run cmd manage.py createsuperuser' to create the admin user
+  # 'docker-compose run cmd manage.py shell' to get a python prompt with our code
+  # 'docker-compose run cmd /bin/bash` to get a command line inside a fresh container
+  cmd:
+    <<: *app_image
+    restart: "no"
+    command: python manage.py migrate --no-input
+
+  # Not used in development, but still built to make sure it builds correctly.
+  # It therefore directly exits with /bin/true
+  httpd:
+    build:
+      context: .
+      target: staticlayer
+    restart: "no"
+    command: /bin/true

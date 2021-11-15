@@ -2,9 +2,8 @@
 Containing helper functions for running tests.
 """
 
-from django.contrib.auth import get_user_model
-
 from accounts.models import OWMUser
+from django.contrib.auth import get_user_model
 
 
 def get_testuser(
