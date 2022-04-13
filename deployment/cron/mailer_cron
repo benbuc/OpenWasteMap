@@ -1,3 +1,0 @@
-*       * * * * (/usr/local/bin/python /app/manage.py send_mail >> /var/log/cron_mail.log 2>&1)
-0,20,40 * * * * (/usr/local/bin/python /app/manage.py retry_deferred >> /var/log/cron_mail_deferred.log 2>&1)
-0       0 * * * (/usr/local/bin/python /app/manage.py purge_mail_log 7 >> /var/log/cron_mail_purge.log 2>&1)

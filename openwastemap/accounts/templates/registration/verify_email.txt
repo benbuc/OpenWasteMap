@@ -1,4 +1,0 @@
-Hey! Thanks for registering.
-Open the following link to verify your email:
-
-{{ link }}
