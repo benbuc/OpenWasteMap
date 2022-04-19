@@ -8,4 +8,3 @@ from .waste_sample import (
     WasteSampleInDB,
     WasteSampleUpdate,
 )
-

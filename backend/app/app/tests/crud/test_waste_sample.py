@@ -1,4 +1,5 @@
-from random import random, randint
+from random import randint, random
+
 from sqlalchemy.orm import Session
 
 from app import crud
