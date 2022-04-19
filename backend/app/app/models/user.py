@@ -6,7 +6,6 @@ from sqlalchemy.orm import relationship
 from app.db.base_class import Base
 
 if TYPE_CHECKING:
-    from .item import Item  # noqa: F401
     from .waste_sample import WasteSample  # noqa: F401
 
 
@@ -17,5 +16,4 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
     is_active = Column(Boolean(), default=True)
     is_superuser = Column(Boolean(), default=False)
-    items = relationship("Item", back_populates="owner")
     waste_samples = relationship("WasteSample", back_populates="owner")
