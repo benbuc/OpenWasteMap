@@ -8,11 +8,11 @@ router = APIRouter()
 
 
 @router.get(
-    "/{x}/{y}/{z}.png",
+    "/{zoom}/{xcoord}/{ycoord}.png",
     response_class=Response,
     responses={200: {"content": {"image/png": {}}}},
 )
-def get_tile(x: int, y: int, z: int):
+def get_tile(zoom: int, xcoord: int, ycoord: int):
     im = Image.new("RGBA", (256, 256))
     image_out = io.BytesIO()
     im.save(image_out, format="png")
