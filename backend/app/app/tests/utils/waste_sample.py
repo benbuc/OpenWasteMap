@@ -18,6 +18,23 @@ def create_random_waste_sample(
     waste_level = randint(0, 10)
     latitude = random() * 90
     longitude = random() * 90
+    return create_waste_sample(
+        db,
+        owner_id=owner_id,
+        waste_level=waste_level,
+        latitude=latitude,
+        longitude=longitude,
+    )
+
+
+def create_waste_sample(
+    db: Session,
+    *,
+    owner_id: Optional[int] = None,
+    waste_level: int,
+    latitude: float,
+    longitude: float
+) -> models.WasteSample:
     waste_sample_in = WasteSampleCreate(
         waste_level=waste_level, latitude=latitude, longitude=longitude, id=id
     )

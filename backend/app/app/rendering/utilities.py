@@ -1,8 +1,6 @@
 import itertools
-from pathlib import Path
 
 import numpy as np
-from django.conf import settings
 
 from .parameters import EARTH_RADIUS, SAMPLE_MAX_INFLUENCE
 
@@ -70,11 +68,3 @@ def tiles_affected_by_sample(latitude, longitude):
             range(min_xy[0], max_xy[0] + 1), range(min_xy[1], max_xy[1] + 1)
         ):
             yield (zoom, x, y)
-
-
-def get_tile_cache_path(zoom, xnum, ynum):
-    """
-    Get the path for the specified tile in the tile cache.
-    """
-
-    return Path(settings.TILES_ROOT) / str(zoom) / str(xnum) / (str(ynum) + ".png")

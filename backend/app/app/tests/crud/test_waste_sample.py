@@ -90,3 +90,46 @@ def test_delete_waste_sample(db: Session) -> None:
     assert waste_sample2.latitude == latitude
     assert waste_sample2.longitude == longitude
     assert waste_sample2.owner_id == user.id
+
+
+def test_get_waste_sample_in_range(db: Session) -> None:
+    waste_level = randint(0, 10)
+    latitude = 45.0
+    longitude = 45.0
+
+    waste_sample_in = WasteSampleCreate(
+        waste_level=waste_level, latitude=latitude, longitude=longitude
+    )
+    user = create_random_user(db)
+    waste_sample = crud.waste_sample.create_with_owner(
+        db=db, obj_in=waste_sample_in, owner_id=user.id
+    )
+    stored_waste_samples = crud.waste_sample.get_multi_in_range(
+        db=db,
+        min_lat=latitude - 1,
+        max_lat=latitude + 1,
+        min_lon=longitude - 1,
+        max_lon=longitude + 1,
+    )
+    assert stored_waste_samples
+    assert waste_sample.id in [s.id for s in stored_waste_samples]
+
+
+def test_get_waste_sample_outside_range(db: Session) -> None:
+    waste_level = randint(0, 10)
+    latitude = 45.0
+    longitude = 45.0
+
+    waste_sample_in = WasteSampleCreate(
+        waste_level=waste_level, latitude=latitude, longitude=longitude
+    )
+    user = create_random_user(db)
+    crud.waste_sample.create_with_owner(db=db, obj_in=waste_sample_in, owner_id=user.id)
+    stored_waste_samples = crud.waste_sample.get_multi_in_range(
+        db=db,
+        min_lat=latitude - 2,
+        max_lat=latitude - 1,
+        min_lon=longitude - 1,
+        max_lon=longitude + 1,
+    )
+    assert not stored_waste_samples

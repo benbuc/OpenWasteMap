@@ -1,8 +1,11 @@
 import io
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi.responses import Response
-from PIL import Image
+from sqlalchemy.orm import Session
+
+from app.api import deps
+from app.rendering.render import TileRenderer
 
 router = APIRouter()
 
@@ -12,9 +15,11 @@ router = APIRouter()
     response_class=Response,
     responses={200: {"content": {"image/png": {}}}},
 )
-def get_tile(zoom: int, xcoord: int, ycoord: int):
-    im = Image.new("RGBA", (256, 256))
+def get_tile(
+    zoom: int, xcoord: int, ycoord: int, db: Session = Depends(deps.get_db),
+):
     image_out = io.BytesIO()
-    im.save(image_out, format="png")
+    rendered_tile = TileRenderer(zoom, xcoord, ycoord, db).render()
+    rendered_tile.save(image_out, "png")
 
     return Response(content=image_out.getvalue(), media_type="image/png")

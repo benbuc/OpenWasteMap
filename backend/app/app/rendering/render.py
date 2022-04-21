@@ -3,11 +3,13 @@ Module for rendering a single OWM tile.
 """
 
 import math
+from typing import Optional
 
 import numpy as np
-from django.db.models import Q
 from PIL import Image
-from waste_samples.models import WasteSample
+from sqlalchemy.orm import Session
+
+from app import crud
 
 from .parameters import EARTH_RADIUS, SAMPLE_MAX_INFLUENCE, TILE_SIZE
 from .utilities import latitude_from_tilename, longitude_from_tilename
@@ -57,10 +59,13 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
     which influence every given pixel.
     """
 
-    def __init__(self, zoom, xnum, ynum):
+    def __init__(self, zoom, xnum, ynum, db: Session, owner_id: Optional[int] = None):
         """
         Initialize with zoom level and and x,y tile numbers.
         """
+
+        self.db = db
+        self.owner_id = owner_id
 
         self.zoom = zoom
         self.xnum = xnum
@@ -115,17 +120,13 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
 
         min_lat, max_lat, min_lon, max_lon = self.get_coordinate_boundaries()
 
-        min_overflow = abs(min_lon + 180) if min_lon < -180 else 0
-        max_overflow = abs(max_lon - 180) if max_lon > 180 else 0
-
-        sample_objects = WasteSample.objects.filter(
-            Q(latitude__gte=min_lat)
-            & Q(latitude__lte=max_lat)
-            & (
-                (Q(longitude__gte=min_lon) & Q(longitude__lte=max_lon))
-                | Q(longitude__gte=180 - min_overflow)
-                | Q(longitude__lte=-180 + max_overflow)
-            )
+        sample_objects = crud.waste_sample.get_multi_in_range(
+            self.db,
+            min_lat=min_lat,
+            max_lat=max_lat,
+            min_lon=min_lon,
+            max_lon=max_lon,
+            owner_id=self.owner_id,
         )
 
         samples = np.zeros((len(sample_objects), 3), dtype=DATATYPE)
