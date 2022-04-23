@@ -42,4 +42,7 @@ export const api = {
       token,
     });
   },
+  getTilesEndpoint() {
+    return `${apiUrl}/api/v1/tiles/{z}/{x}/{y}.png`;
+  },
 };
