@@ -1,6 +1,6 @@
 <template>
     <div class="menu-wrapper">
-        <v-btn class="mx-2" fab color="primary">
+        <v-btn class="mx-2" fab color="primary" to="/login">
             <v-icon>
                 person
             </v-icon>

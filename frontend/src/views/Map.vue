@@ -5,6 +5,9 @@
         <l-tile-layer :url="urlOwm" :attribution="attributionOwm"></l-tile-layer>
     </l-map>
     <Nav />
+    <v-dialog v-model="showDialog" width="500">
+      <router-view></router-view>
+    </v-dialog>
     </v-content>
 </template>
 
@@ -25,5 +28,8 @@ export default class Map extends Vue {
   }
   public attribution = '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
   public attributionOwm = 'TODO';
+  public get showDialog() {
+    return this.$route.name !== 'home';
+  }
 }
 </script>
