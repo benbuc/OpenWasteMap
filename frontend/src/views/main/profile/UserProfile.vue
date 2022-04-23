@@ -17,8 +17,8 @@
         </div>
       </v-card-text>
       <v-card-actions>
-        <v-btn to="/main/profile/edit">Edit</v-btn>
-        <v-btn to="/main/profile/password">Change password</v-btn>
+        <v-btn to="/admin/main/profile/edit">Edit</v-btn>
+        <v-btn to="/admin/main/profile/password">Change password</v-btn>
       </v-card-actions>
     </v-card>
   </v-container>

@@ -4,7 +4,7 @@
       <v-layout column fill-height>
         <v-list>
           <v-subheader>Main menu</v-subheader>
-          <v-list-tile to="/main/dashboard">
+          <v-list-tile to="/admin/main/dashboard">
             <v-list-tile-action>
               <v-icon>web</v-icon>
             </v-list-tile-action>
@@ -12,7 +12,7 @@
               <v-list-tile-title>Dashboard</v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
-          <v-list-tile to="/main/profile/view">
+          <v-list-tile to="/admin/main/profile/view">
             <v-list-tile-action>
               <v-icon>person</v-icon>
             </v-list-tile-action>
@@ -20,7 +20,7 @@
               <v-list-tile-title>Profile</v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
-          <v-list-tile to="/main/profile/edit">
+          <v-list-tile to="/admin/main/profile/edit">
             <v-list-tile-action>
               <v-icon>edit</v-icon>
             </v-list-tile-action>
@@ -28,7 +28,7 @@
               <v-list-tile-title>Edit Profile</v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
-          <v-list-tile to="/main/profile/password">
+          <v-list-tile to="/admin/main/profile/password">
             <v-list-tile-action>
               <v-icon>vpn_key</v-icon>
             </v-list-tile-action>
@@ -40,7 +40,7 @@
         <v-divider></v-divider>
         <v-list subheader v-show="hasAdminAccess">
           <v-subheader>Admin</v-subheader>
-          <v-list-tile to="/main/admin/users/all">
+          <v-list-tile to="/admin/main/admin/users/all">
             <v-list-tile-action>
               <v-icon>group</v-icon>
             </v-list-tile-action>
@@ -48,7 +48,7 @@
               <v-list-tile-title>Manage Users</v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
-          <v-list-tile to="/main/admin/users/create">
+          <v-list-tile to="/admin/main/admin/users/create">
             <v-list-tile-action>
               <v-icon>person_add</v-icon>
             </v-list-tile-action>
@@ -88,7 +88,7 @@
           <v-icon>more_vert</v-icon>
         </v-btn>
         <v-list>
-          <v-list-tile to="/main/profile">
+          <v-list-tile to="/admin/main/profile">
             <v-list-tile-content>
               <v-list-tile-title>Profile</v-list-tile-title>
             </v-list-tile-content>

@@ -11,8 +11,11 @@ export default new Router({
   routes: [
     {
       path: '/',
-      component: () => import(/* webpackChunkName: "start" */ './views/main/Start.vue'),
-      name: 'home',
+      component: () => import(/* webpackChunkName: "map" */ './views/Map.vue'),
+    },
+    {
+      path: '/admin',
+      component: () => import(/* webpackChunkName: "admin" */ './views/main/Start.vue'),
       children: [
         {
           path: 'login',
