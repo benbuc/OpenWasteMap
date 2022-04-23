@@ -1,38 +1,26 @@
 <template>
-  <router-view></router-view>
+  <div>
+    <v-content v-if="showMap">
+      <l-map style="height: 500px">
+        <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
+        <l-tile-layer :url="urlOwm" :attribution="attributionOwm"></l-tile-layer>
+      </l-map>
+    </v-content>
+    <router-view v-else></router-view>
+  </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { store } from '@/store';
-import { dispatchCheckLoggedIn } from '@/store/main/actions';
-import { readIsLoggedIn } from '@/store/main/getters';
-
-const startRouteGuard = async (to, from, next) => {
-  await dispatchCheckLoggedIn(store);
-  if (readIsLoggedIn(store)) {
-    if (to.path === '/login' || to.path === '/') {
-      next('/main');
-    } else {
-      next();
-    }
-  } else if (readIsLoggedIn(store) === false) {
-    if (to.path === '/' || (to.path as string).startsWith('/main')) {
-      next('/login');
-    } else {
-      next();
-    }
-  }
-};
 
 @Component
 export default class Start extends Vue {
-  public beforeRouteEnter(to, from, next) {
-    startRouteGuard(to, from, next);
+  get showMap() {
+    return this.$route.name === 'home';
   }
-
-  public beforeRouteUpdate(to, from, next) {
-    startRouteGuard(to, from, next);
-  }
+  public url = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+  public urlOwm = 'http://localhost/api/v1/tiles/{z}/{x}/{y}.png';
+  public attribution = '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
+  public attributionOwm = 'TODO';
 }
 </script>
