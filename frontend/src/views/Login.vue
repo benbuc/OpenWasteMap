@@ -1,9 +1,5 @@
 <template>
   <v-card class="elevation-12">
-    <v-toolbar dark color="primary">
-      <v-toolbar-title>{{appName}}</v-toolbar-title>
-      <v-spacer></v-spacer>
-    </v-toolbar>
     <v-card-text>
       <v-form @keyup.enter="submit">
         <v-text-field @keyup.enter="submit" v-model="email" prepend-icon="person" name="login" label="Login" type="text"></v-text-field>

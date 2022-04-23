@@ -1,13 +1,15 @@
 <template>
     <v-content>
-    <l-map style="z-index: 0">
-        <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
-        <l-tile-layer :url="urlOwm" :attribution="attributionOwm"></l-tile-layer>
-    </l-map>
-    <Nav />
-    <v-dialog v-model="showDialog" width="500">
-      <router-view></router-view>
-    </v-dialog>
+      <l-map style="z-index: 0">
+          <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
+          <l-tile-layer :url="urlOwm" :attribution="attributionOwm"></l-tile-layer>
+      </l-map>
+      <div class="menu-wrapper">
+        <Nav />
+        <v-scale-transition>
+          <router-view v-if="showDialog"></router-view>
+        </v-scale-transition>
+      </div>
     </v-content>
 </template>
 
@@ -33,3 +35,11 @@ export default class Map extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.menu-wrapper {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+}
+</style>
