@@ -21,3 +21,23 @@ export interface IUserProfileCreate {
     is_active?: boolean;
     is_superuser?: boolean;
 }
+
+export interface IWasteSample {
+    waste_level: number;
+    latitude: number;
+    longitude: number;
+    id: number;
+    owner_id: number;
+}
+
+export interface IWasteSampleUpdate {
+    waste_level?: number;
+    latitude?: number;
+    longitude?: number;
+}
+
+export interface IWasteSampleCreate {
+    waste_level: number;
+    latitude: number;
+    longitude: number;
+}
