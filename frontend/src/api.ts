@@ -47,5 +47,5 @@ export const api = {
   },
   async getWasteSamples(token: string) {
     return axios.get<IWasteSample[]>(`${apiUrl}/api/v1/waste_samples/`, authHeaders(token));
-  }
+  },
 };

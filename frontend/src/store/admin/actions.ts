@@ -60,7 +60,7 @@ export const actions = {
         } catch (error) {
             await dispatchCheckApiError(context, error);
         }
-    }
+    },
 };
 
 const { dispatch } = getStoreAccessors<AdminState, State>('');

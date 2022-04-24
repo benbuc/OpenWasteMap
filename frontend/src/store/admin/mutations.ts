@@ -14,7 +14,7 @@ export const mutations = {
     },
     setWasteSamples(state: AdminState, payload: IWasteSample[]) {
         state.waste_samples = payload;
-    }
+    },
 };
 
 const { commit } = getStoreAccessors<AdminState, State>('');
