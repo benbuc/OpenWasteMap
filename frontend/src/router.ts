@@ -104,18 +104,6 @@ export default new Router({
                   component: () => import(
                     /* webpackChunkName: "main-admin-waste-samples" */ './views/main/admin/AdminWasteSamples.vue'),
                 },
-                {
-                  path: 'waste-samples/edit/:id',
-                  name: 'main-admin-waste-samples-edit',
-                  component: () => import(
-                    /* webpackChunkName: "main-admin-waste-samples-edit" */ './views/main/admin/EditWasteSample.vue'),
-                },
-                {
-                  path: 'waste-samples/create',
-                  name: 'main-admin-waste-samples-create',
-                  component: () => import(
-                    /* webpackChunkName: "main-admin-waste-samples-create" */ './views/main/admin/CreateWasteSample.vue'),
-                },
               ],
             },
           ],
