@@ -16,6 +16,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { readIsLoggedIn } from '@/store/main/getters';
+import { dispatchCheckLoggedIn } from '@/store/main/actions';
 
 @Component
 export default class Nav extends Vue {
@@ -33,6 +34,9 @@ export default class Nav extends Vue {
     }
     get loggedIn() {
         return readIsLoggedIn(this.$store);
+    }
+    public async mounted() {
+        dispatchCheckLoggedIn(this.$store);
     }
 }
 </script>
