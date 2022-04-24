@@ -24,18 +24,17 @@ export default class Nav extends Vue {
     }
     public get buttonColor() {
         if (readIsLoggedIn(this.$store)) {
-            return "green";
+            return 'green';
         }
         if (this.$route.path === '/login') {
-            return "primary";
+            return 'primary';
         }
-        return "grey";
+        return 'grey';
     }
     get loggedIn() {
         return readIsLoggedIn(this.$store);
     }
 }
-
 </script>
 
 <style scoped>
