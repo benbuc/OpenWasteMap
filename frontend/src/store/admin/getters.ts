@@ -10,9 +10,11 @@ export const getters = {
             return { ...filteredUsers[0] };
         }
     },
+    adminWasteSamples: (state: AdminState) => state.waste_samples,
 };
 
 const { read } = getStoreAccessors<AdminState, State>('');
 
 export const readAdminOneUser = read(getters.adminOneUser);
 export const readAdminUsers = read(getters.adminUsers);
+export const readAdminWasteSamples = read(getters.adminWasteSamples);

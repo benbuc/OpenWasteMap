@@ -4,7 +4,7 @@ import { IUserProfileCreate, IUserProfileUpdate } from '@/interfaces';
 import { State } from '../state';
 import { AdminState } from './state';
 import { getStoreAccessors } from 'typesafe-vuex';
-import { commitSetUsers, commitSetUser } from './mutations';
+import { commitSetUsers, commitSetUser, commitSetWasteSamples } from './mutations';
 import { dispatchCheckApiError } from '../main/actions';
 import { commitAddNotification, commitRemoveNotification } from '../main/mutations';
 
@@ -51,6 +51,16 @@ export const actions = {
             await dispatchCheckApiError(context, error);
         }
     },
+    async actionGetWasteSamples(context: MainContext) {
+        try {
+            const response = await api.getWasteSamples(context.rootState.main.token);
+            if (response) {
+                commitSetWasteSamples(context, response.data);
+            }
+        } catch (error) {
+            await dispatchCheckApiError(context, error);
+        }
+    }
 };
 
 const { dispatch } = getStoreAccessors<AdminState, State>('');
@@ -58,3 +68,4 @@ const { dispatch } = getStoreAccessors<AdminState, State>('');
 export const dispatchCreateUser = dispatch(actions.actionCreateUser);
 export const dispatchGetUsers = dispatch(actions.actionGetUsers);
 export const dispatchUpdateUser = dispatch(actions.actionUpdateUser);
+export const dispatchGetWasteSamples = dispatch(actions.actionGetWasteSamples);

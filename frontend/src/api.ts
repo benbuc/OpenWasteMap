@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { apiUrl } from '@/env';
-import { IUserProfile, IUserProfileUpdate, IUserProfileCreate } from './interfaces';
+import { IUserProfile, IUserProfileUpdate, IUserProfileCreate, IWasteSample } from './interfaces';
 
 function authHeaders(token: string) {
   return {
@@ -45,4 +45,7 @@ export const api = {
   getTilesEndpoint() {
     return `${apiUrl}/api/v1/tiles/{z}/{x}/{y}.png`;
   },
+  async getWasteSamples(token: string) {
+    return axios.get<IWasteSample[]>(`${apiUrl}/api/v1/waste_samples/`, authHeaders(token));
+  }
 };
