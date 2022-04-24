@@ -1,4 +1,5 @@
 import { api } from '@/api';
+import { IWasteSampleCreate } from '@/interfaces';
 import router from '@/router';
 import { getLocalToken, removeLocalToken, saveLocalToken } from '@/utils';
 import { AxiosError } from 'axios';
@@ -154,6 +155,20 @@ export const actions = {
             commitAddNotification(context, { color: 'error', content: 'Error resetting password' });
         }
     },
+    async actionCreateWasteSample(context: MainContext, payload: IWasteSampleCreate) {
+        try {
+            const loadingNotification = { content: 'saving', showProgress: true };
+            commitAddNotification(context, loadingNotification);
+            const response = (await Promise.all([
+                api.createWasteSample(context.rootState.main.token, payload),
+                await new Promise((resolve, reject) => setTimeout(() => resolve(), 500)),
+            ]))[0];
+            commitRemoveNotification(context, loadingNotification);
+            commitAddNotification(context, { content: 'Sample successfully created', color: 'success' });
+        } catch (error) {
+            await dispatchCheckApiError(context, error);
+        }
+    },
 };
 
 const { dispatch } = getStoreAccessors<MainState | any, State>('');
@@ -171,3 +186,4 @@ export const dispatchUpdateUserProfile = dispatch(actions.actionUpdateUserProfil
 export const dispatchRemoveNotification = dispatch(actions.removeNotification);
 export const dispatchPasswordRecovery = dispatch(actions.passwordRecovery);
 export const dispatchResetPassword = dispatch(actions.resetPassword);
+export const dispatchCreateWasteSample = dispatch(actions.actionCreateWasteSample);

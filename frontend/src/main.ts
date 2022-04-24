@@ -12,6 +12,15 @@ import 'vuetify/dist/vuetify.min.css';
 import L from 'leaflet';
 import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
 import 'leaflet/dist/leaflet.css';
+import VuexGeolocation from 'vuex-geolocation';
+
+// Compilation failed because $vuexGeolocation could not be found for this
+// in the components. This installs the correct type.
+declare module 'vue/types/vue' {
+  interface Vue {
+    $vuexGeolocation: VuexGeolocation;
+  }
+}
 
 Vue.component('l-map', LMap);
 Vue.component('l-tile-layer', LTileLayer);
