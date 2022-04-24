@@ -1,6 +1,6 @@
 <template>
     <div class="buttons-wrapper">
-        <v-btn v-if="loggedIn" class="mx-2" fab>
+        <v-btn v-if="loggedIn" class="mx-2" fab :to="createButtonLink">
             <v-icon>
                 add                
             </v-icon>
@@ -22,6 +22,9 @@ import { dispatchCheckLoggedIn } from '@/store/main/actions';
 export default class Nav extends Vue {
     public get buttonLink() {
         return (this.$route.path !== '/login') ? '/login' : '/';
+    }
+    public get createButtonLink() {
+        return (this.$route.path !== '/create') ? '/create' : '/';
     }
     public get buttonColor() {
         if (readIsLoggedIn(this.$store)) {
