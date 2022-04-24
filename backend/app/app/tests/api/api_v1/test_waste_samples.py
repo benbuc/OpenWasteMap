@@ -38,3 +38,18 @@ def test_read_waste_sample(
     assert content["longitude"] == waste_sample.longitude
     assert content["id"] == waste_sample.id
     assert content["owner_id"] == waste_sample.owner_id
+
+
+def test_read_waste_sample_without_owner(
+    client: TestClient, superuser_token_headers: dict, db: Session
+) -> None:
+    waste_sample = create_random_waste_sample(db, create_owner=False)
+    assert waste_sample.owner_id is None
+    response = client.get(
+        f"{settings.API_V1_STR}/waste_samples/{waste_sample.id}",
+        headers=superuser_token_headers,
+    )
+    assert response.status_code == 200
+    content = response.json()
+    assert content["owner_id"] is None
+    assert content["waste_level"] == waste_sample.waste_level

@@ -25,7 +25,7 @@ class WasteSampleUpdate(WasteSampleBase):
 # Properties shared by models stored in DB
 class WasteSampleInDBBase(WasteSampleBase):
     id: int
-    owner_id: int
+    owner_id: Optional[int]
 
     class Config:
         orm_mode = True

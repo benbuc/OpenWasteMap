@@ -9,9 +9,9 @@ from app.tests.utils.user import create_random_user
 
 
 def create_random_waste_sample(
-    db: Session, *, owner_id: Optional[int] = None
+    db: Session, *, owner_id: Optional[int] = None, create_owner: bool = True
 ) -> models.WasteSample:
-    if owner_id is None:
+    if owner_id is None and create_owner:
         user = create_random_user(db)
         owner_id = user.id
 
