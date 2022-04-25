@@ -7,7 +7,7 @@
       <div class="menu-wrapper">
         <Nav />
         <v-scale-transition>
-          <router-view v-if="showDialog"></router-view>
+          <router-view class="router-view" v-if="showDialog"></router-view>
         </v-scale-transition>
       </div>
     </v-content>
@@ -41,5 +41,10 @@ export default class Map extends Vue {
     position: fixed;
     top: 15px;
     right: 15px;
+}
+.router-view {
+  position: absolute;
+  right: 0;
+  width: min(400px, calc(100vw - 30px));
 }
 </style>
