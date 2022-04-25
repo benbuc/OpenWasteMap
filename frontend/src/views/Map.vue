@@ -3,6 +3,7 @@
       <l-map style="z-index: 0">
           <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
           <l-tile-layer :url="urlOwm" :attribution="attributionOwm"></l-tile-layer>
+          <l-marker v-if="currentPosition" :lat-lng="currentPosition"></l-marker>
       </l-map>
       <div class="menu-wrapper">
         <Nav />
@@ -32,6 +33,13 @@ export default class Map extends Vue {
   public attributionOwm = 'TODO';
   public get showDialog() {
     return this.$route.name !== 'home';
+  }
+  public get currentPosition() {
+    if (this.$store.state.geolocation.lat && this.$store.state.geolocation.lng) {
+      return [this.$store.state.geolocation.lat, this.$store.state.geolocation.lng];
+    } else {
+      return null;
+    }
   }
 }
 </script>
