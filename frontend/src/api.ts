@@ -46,9 +46,9 @@ export const api = {
     return `${apiUrl}/api/v1/tiles/{z}/{x}/{y}.png`;
   },
   async getWasteSamples(token: string) {
-    return axios.get<IWasteSample[]>(`${apiUrl}/api/v1/waste_samples/`, authHeaders(token));
+    return axios.get<IWasteSample[]>(`${apiUrl}/api/v1/waste-samples/`, authHeaders(token));
   },
   async createWasteSample(token: string, data: IWasteSampleCreate) {
-    return axios.post(`${apiUrl}/api/v1/waste_samples/`, data, authHeaders(token));
+    return axios.post(`${apiUrl}/api/v1/waste-samples/`, data, authHeaders(token));
   },
 };

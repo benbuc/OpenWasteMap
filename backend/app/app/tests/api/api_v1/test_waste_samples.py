@@ -10,7 +10,7 @@ def test_create_waste_sample(
 ) -> None:
     data = {"waste_level": 3, "latitude": 12.345, "longitude": 23.456}
     response = client.post(
-        f"{settings.API_V1_STR}/waste_samples/",
+        f"{settings.API_V1_STR}/waste-samples/",
         headers=superuser_token_headers,
         json=data,
     )
@@ -28,7 +28,7 @@ def test_read_waste_sample(
 ) -> None:
     waste_sample = create_random_waste_sample(db)
     response = client.get(
-        f"{settings.API_V1_STR}/waste_samples/{waste_sample.id}",
+        f"{settings.API_V1_STR}/waste-samples/{waste_sample.id}",
         headers=superuser_token_headers,
     )
     assert response.status_code == 200
@@ -46,7 +46,7 @@ def test_read_waste_sample_without_owner(
     waste_sample = create_random_waste_sample(db, create_owner=False)
     assert waste_sample.owner_id is None
     response = client.get(
-        f"{settings.API_V1_STR}/waste_samples/{waste_sample.id}",
+        f"{settings.API_V1_STR}/waste-samples/{waste_sample.id}",
         headers=superuser_token_headers,
     )
     assert response.status_code == 200
