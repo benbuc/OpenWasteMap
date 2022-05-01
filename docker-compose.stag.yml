@@ -4,7 +4,7 @@ services:
   backend:
     deploy:
       labels:
-        - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http-no-auth.rule=PathPrefix(`/api/v1/users`, `/api/v1/utils`, `/api/v1/waste_samples`) && !PathPrefix(`/api/v1/users/open`)
+        - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http-no-auth.rule=PathPrefix(`/api/v1/users`, `/api/v1/utils`, `/api/v1/waste-samples`) && !PathPrefix(`/api/v1/users/open`)
         - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http-no-auth.priority=3
         - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.priority=2
         - traefik.http.middlewares.${STACK_NAME?Variable not set}-backend-basic-auth.basicauth.users=${BA_USER?Variable not set}:${BA_HASHED_PASSWORD?Variable not set}
