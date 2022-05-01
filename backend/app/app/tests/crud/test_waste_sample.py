@@ -23,6 +23,7 @@ def test_create_waste_sample(db: Session) -> None:
     assert waste_sample.latitude == latitude
     assert waste_sample.longitude == longitude
     assert waste_sample.owner_id == user.id
+    assert waste_sample.sampling_date
 
 
 def test_get_waste_sample(db: Session) -> None:
