@@ -13,4 +13,6 @@ services:
   frontend:
     deploy:
       labels:
+        - traefik.http.middlewares.${STACK_NAME?Variable not set}-frontend-basic-auth.basicauth.users=${BA_USER?Variable not set}:${BA_HASHED_PASSWORD?Variable not set}
         - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.priority=1
+        - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.middlewares=${STACK_NAME?Variable not set}-frontend-basic-auth
