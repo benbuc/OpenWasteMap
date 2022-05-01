@@ -23,6 +23,8 @@ services:
       - --api
       # Enable the Dashboard and API in insecure mode for local development
       - --api.insecure=true
+      # Disable usage of Pilot
+      - --pilot.dashboard=false
     labels:
       - traefik.enable=true
       - traefik.http.routers.${STACK_NAME?Variable not set}-traefik-public-http.rule=Host(`${DOMAIN?Variable not set}`)
