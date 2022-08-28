@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Column, Float, ForeignKey, Integer
+from sqlalchemy import Column, Float, ForeignKey, Integer, DateTime
 from sqlalchemy.orm import relationship
 
 from app.db.base_class import Base
@@ -16,3 +16,4 @@ class WasteSample(Base):
     longitude = Column(Float)
     owner_id = Column(Integer, ForeignKey("user.id"))
     owner = relationship("User", back_populates="waste_samples")
+    sampling_date = Column(DateTime)  # stored in UTC

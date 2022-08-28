@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List, Optional
 
 from fastapi.encoders import jsonable_encoder
@@ -11,10 +12,17 @@ from app.schemas.waste_sample import WasteSampleCreate, WasteSampleUpdate
 
 class CRUDWasteSample(CRUDBase[WasteSample, WasteSampleCreate, WasteSampleUpdate]):
     def create_with_owner(
-        self, db: Session, *, obj_in: WasteSampleCreate, owner_id: int
+        self,
+        db: Session,
+        *,
+        obj_in: WasteSampleCreate,
+        owner_id: int,
+        sampling_date: datetime
     ) -> WasteSample:
         obj_in_data = jsonable_encoder(obj_in)
-        db_obj = self.model(**obj_in_data, owner_id=owner_id)
+        db_obj = self.model(
+            **obj_in_data, owner_id=owner_id, sampling_date=sampling_date
+        )
         db.add(db_obj)
         db.commit()
         db.refresh(db_obj)

@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any, List
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -37,9 +38,14 @@ def create_waste_sample(
 ) -> Any:
     """
     Create new waste sample.
+
+    The date is automatically determined by the server.
     """
     waste_sample = crud.waste_sample.create_with_owner(
-        db=db, obj_in=waste_sample_in, owner_id=current_user.id
+        db=db,
+        obj_in=waste_sample_in,
+        owner_id=current_user.id,
+        sampling_date=datetime.utcnow(),
     )
     return waste_sample
 
@@ -96,7 +102,7 @@ def delete_waste_sample(
     current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
     """
-    Delete an waste sample.
+    Delete a waste sample.
     """
     waste_sample = crud.waste_sample.get(db=db, id=id)
     if not waste_sample:

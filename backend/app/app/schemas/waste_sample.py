@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel
@@ -26,6 +27,7 @@ class WasteSampleUpdate(WasteSampleBase):
 class WasteSampleInDBBase(WasteSampleBase):
     id: int
     owner_id: Optional[int]
+    sampling_date: datetime
 
     class Config:
         orm_mode = True

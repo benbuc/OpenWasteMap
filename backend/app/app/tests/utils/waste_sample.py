@@ -1,3 +1,4 @@
+from datetime import datetime
 from random import randint, random
 from typing import Optional
 
@@ -15,12 +16,14 @@ def create_random_waste_sample(
         user = create_random_user(db)
         owner_id = user.id
 
+    sampling_date = datetime.utcnow()
     waste_level = randint(0, 10)
     latitude = random() * 90
     longitude = random() * 90
     return create_waste_sample(
         db,
         owner_id=owner_id,
+        sampling_date=sampling_date,
         waste_level=waste_level,
         latitude=latitude,
         longitude=longitude,
@@ -31,6 +34,7 @@ def create_waste_sample(
     db: Session,
     *,
     owner_id: Optional[int] = None,
+    sampling_date: datetime = datetime.utcnow(),
     waste_level: int,
     latitude: float,
     longitude: float
@@ -39,5 +43,5 @@ def create_waste_sample(
         waste_level=waste_level, latitude=latitude, longitude=longitude, id=id
     )
     return crud.waste_sample.create_with_owner(
-        db=db, obj_in=waste_sample_in, owner_id=owner_id
+        db=db, obj_in=waste_sample_in, owner_id=owner_id, sampling_date=sampling_date
     )
