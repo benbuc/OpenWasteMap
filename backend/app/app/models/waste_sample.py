@@ -16,4 +16,4 @@ class WasteSample(Base):
     longitude = Column(Float)
     owner_id = Column(Integer, ForeignKey("user.id"))
     owner = relationship("User", back_populates="waste_samples")
-    sampling_date = Column(DateTime)
+    sampling_date = Column(DateTime)  # stored in UTC
