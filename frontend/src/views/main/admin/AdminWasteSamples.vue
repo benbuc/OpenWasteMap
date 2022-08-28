@@ -10,6 +10,7 @@
         <td>{{ props.item.waste_level }}</td>
         <td>{{ props.item.latitude.toFixed(5) }}</td>
         <td>{{ props.item.longitude.toFixed(5) }}</td>
+        <td>{{ props.item.sampling_date|formatDate }}</td>
       </template>
     </v-data-table>
   </div>
@@ -39,6 +40,12 @@ export default class AdminWasteSamples extends Vue {
       text: 'Longitude',
       sortable: true,
       value: 'longitude',
+      align: 'left',
+    },
+    {
+      text: 'Sampling Date',
+      sortable: true,
+      value: 'sampling_date',
       align: 'left',
     },
   ];

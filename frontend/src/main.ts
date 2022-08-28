@@ -14,6 +14,7 @@ import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Icon } from 'leaflet';
 import VuexGeolocation from 'vuex-geolocation';
+import moment from 'moment';
 
 // Compilation failed because $vuexGeolocation could not be found for this
 // in the components. This installs the correct type.
@@ -26,6 +27,11 @@ declare module 'vue/types/vue' {
 Vue.component('l-map', LMap);
 Vue.component('l-tile-layer', LTileLayer);
 Vue.component('l-marker', LMarker);
+Vue.filter('formatDate', function (value) {
+  if (value) {
+    return moment(String(value)).format('YYYY-MM-DD HH:mm');
+  }
+});
 
 Vue.config.productionTip = false;
 
