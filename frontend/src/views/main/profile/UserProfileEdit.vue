@@ -12,6 +12,12 @@
             lazy-validation
           >
             <v-text-field
+              label="Nickname"
+              v-model="nickname"
+              v-validate="'required'"
+              :error-messages="errors.collect('nickname')"
+              required></v-text-field>
+            <v-text-field
               label="Full Name"
               v-model="fullName"
               required
@@ -53,12 +59,14 @@ import { dispatchUpdateUserProfile } from '@/store/main/actions';
 @Component
 export default class UserProfileEdit extends Vue {
   public valid = true;
+  public nickname: string = '';
   public fullName: string = '';
   public email: string = '';
 
   public created() {
     const userProfile = readUserProfile(this.$store);
     if (userProfile) {
+      this.nickname = userProfile.nickname;
       this.fullName = userProfile.full_name;
       this.email = userProfile.email;
     }
@@ -71,6 +79,7 @@ export default class UserProfileEdit extends Vue {
   public reset() {
     const userProfile = readUserProfile(this.$store);
     if (userProfile) {
+      this.nickname = userProfile.nickname;
       this.fullName = userProfile.full_name;
       this.email = userProfile.email;
     }
@@ -83,6 +92,9 @@ export default class UserProfileEdit extends Vue {
   public async submit() {
     if ((this.$refs.form as any).validate()) {
       const updatedProfile: IUserProfileUpdate = {};
+      if (this.nickname) {
+        updatedProfile.nickname = this.nickname;
+      }
       if (this.fullName) {
         updatedProfile.full_name = this.fullName;
       }
