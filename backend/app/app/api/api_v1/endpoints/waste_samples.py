@@ -50,6 +50,22 @@ def create_waste_sample(
     return waste_sample
 
 
+@router.post("/bulk", response_model=List[int])
+def create_waste_samples_bulk(
+    *,
+    db: Session = Depends(deps.get_db),
+    waste_samples_in: List[schemas.WasteSampleCreateBulk],
+    current_user: models.User = Depends(deps.get_current_active_superuser),
+) -> Any:
+    """
+    Create new waste samples bulk.
+
+    The sampling date and owner(optional) have to be specified.
+    """
+    waste_samples = crud.waste_sample.create_multi(db, obj_in=waste_samples_in)
+    return waste_samples
+
+
 @router.put("/{id}", response_model=schemas.WasteSample)
 def update_waste_sample(
     *,

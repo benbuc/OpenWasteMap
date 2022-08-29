@@ -4,6 +4,7 @@ from .user import User, UserCreate, UserInDB, UserUpdate
 from .waste_sample import (
     WasteSample,
     WasteSampleCreate,
+    WasteSampleCreateBulk,
     WasteSampleInDB,
     WasteSampleUpdate,
 )
