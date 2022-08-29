@@ -1,6 +1,6 @@
 import { api } from '@/api';
 import { ActionContext } from 'vuex';
-import { IUserProfileCreate, IUserProfileUpdate } from '@/interfaces';
+import { IUserProfileCreate, IUserProfileUpdate, IWasteSampleCreateBulk } from '@/interfaces';
 import { State } from '../state';
 import { AdminState } from './state';
 import { getStoreAccessors } from 'typesafe-vuex';
@@ -61,6 +61,17 @@ export const actions = {
             await dispatchCheckApiError(context, error);
         }
     },
+    async actionCreateWasteSamplesBulk(context: MainContext, payload: IWasteSampleCreateBulk[]) {
+        try {
+            const loadingNotification = { content: 'uploading', showProgress: true };
+            commitAddNotification(context, loadingNotification);
+            const response = await api.createWasteSamplesBulk(context.rootState.main.token, payload);
+            commitRemoveNotification(context, loadingNotification);
+            commitAddNotification(context, { content: 'Successfully imported', color: 'success' });
+        } catch (error) {
+            await dispatchCheckApiError(context, error);
+        }
+    }
 };
 
 const { dispatch } = getStoreAccessors<AdminState, State>('');
@@ -69,3 +80,4 @@ export const dispatchCreateUser = dispatch(actions.actionCreateUser);
 export const dispatchGetUsers = dispatch(actions.actionGetUsers);
 export const dispatchUpdateUser = dispatch(actions.actionUpdateUser);
 export const dispatchGetWasteSamples = dispatch(actions.actionGetWasteSamples);
+export const dispatchCreateWasteSamplesBulk = dispatch(actions.actionCreateWasteSamplesBulk);

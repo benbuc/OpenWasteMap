@@ -4,6 +4,8 @@
       <v-toolbar-title>
         Manage Waste Samples
       </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn color="primary" to="/admin/main/admin/waste-samples/create-bulk">Bulk Import</v-btn>
     </v-toolbar>
     <v-data-table :headers="headers" :items="waste_samples">
       <template slot="items" slot-scope="props">
