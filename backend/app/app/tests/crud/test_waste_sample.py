@@ -186,4 +186,3 @@ def test_get_all_waste_samples(db: Session) -> None:
     all_waste_samples = crud.waste_sample.get_all(db)
     for waste_sample in waste_samples:
         assert waste_sample in all_waste_samples
-

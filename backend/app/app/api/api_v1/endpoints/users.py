@@ -22,8 +22,13 @@ def read_users(
 ) -> Any:
     """
     Retrieve users.
+
+    Set limit to 0 to retrieve all users.
     """
-    users = crud.user.get_multi(db, skip=skip, limit=limit)
+    if limit:
+        users = crud.user.get_multi(db, skip=skip, limit=limit)
+    else:
+        users = crud.user.get_all(db)
     return users
 
 

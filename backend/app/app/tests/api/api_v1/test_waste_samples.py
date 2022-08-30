@@ -88,3 +88,17 @@ def test_read_waste_sample_without_owner(
     content = response.json()
     assert content["owner_id"] is None
     assert content["waste_level"] == waste_sample.waste_level
+
+
+def test_get_all_waste_samples(
+    client: TestClient, superuser_token_headers: dict, db: Session
+) -> None:
+    waste_samples = [
+        create_random_waste_sample(db, create_owner=False) for _ in range(5)
+    ]
+    response = client.get(
+        f"{settings.API_V1_STR}/waste-samples/all", headers=superuser_token_headers,
+    )
+    assert response.status_code == 200
+    content = response.json()
+    assert len(content) >= len(waste_samples)
