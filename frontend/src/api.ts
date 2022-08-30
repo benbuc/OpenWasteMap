@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { apiUrl } from '@/env';
-import { IUserProfile, IUserProfileUpdate, IUserProfileCreate, IWasteSample, IWasteSampleCreate, IWasteSampleCreateBulk } from './interfaces';
+import { IUserProfile, IUserProfileUpdate, IUserProfileCreate, IWasteSample, IWasteSampleCreate, IWasteSampleImportExport } from './interfaces';
 
 function authHeaders(token: string) {
   return {
@@ -62,7 +62,7 @@ export const api = {
   async createWasteSample(token: string, data: IWasteSampleCreate) {
     return axios.post(`${apiUrl}/api/v1/waste-samples/`, data, authHeaders(token));
   },
-  async createWasteSamplesBulk(token: string, data: IWasteSampleCreateBulk[]) {
+  async createWasteSamplesBulk(token: string, data: IWasteSampleImportExport[]) {
     return axios.post(`${apiUrl}/api/v1/waste-samples/bulk`, data, authHeaders(token));
   },
 };

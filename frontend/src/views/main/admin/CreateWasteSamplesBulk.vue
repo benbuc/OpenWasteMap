@@ -36,7 +36,7 @@ import {
   IUserProfile,
   IUserProfileUpdate,
   IUserProfileCreate,
-  IWasteSampleCreateBulk,
+  IWasteSampleImportExport,
 } from '@/interfaces';
 import { dispatchGetUsers, dispatchCreateUser, dispatchCreateWasteSamplesBulk } from '@/store/admin/actions';
 
@@ -45,10 +45,10 @@ export default class CreateUser extends Vue {
   public valid = false;
   public inputJSON: string = '';
   public statusMessage: string = 'No Content';
-  public processedJSON: IWasteSampleCreateBulk[] = [];
+  public processedJSON: IWasteSampleImportExport[] = [];
 
   public jsonUpdated(event: InputEvent) {
-    let obj = JSON.parse(this.inputJSON) as IWasteSampleCreateBulk[];
+    let obj = JSON.parse(this.inputJSON) as IWasteSampleImportExport[];
     this.statusMessage = "Found " + obj.length + " objects";
     this.processedJSON = obj;
   }

@@ -45,7 +45,7 @@ export interface IWasteSampleCreate {
     longitude: number;
 }
 
-export interface IWasteSampleCreateBulk {
+export interface IWasteSampleImportExport {
     waste_level: number;
     latitude: number;
     longitude: number;

@@ -1,6 +1,6 @@
 import { api } from '@/api';
 import { ActionContext } from 'vuex';
-import { IUserProfileCreate, IUserProfileUpdate, IWasteSampleCreateBulk } from '@/interfaces';
+import { IUserProfileCreate, IUserProfileUpdate, IWasteSampleImportExport } from '@/interfaces';
 import { State } from '../state';
 import { AdminState } from './state';
 import { getStoreAccessors } from 'typesafe-vuex';
@@ -103,7 +103,7 @@ export const actions = {
             await dispatchCheckApiError(context, error);
         }
     },
-    async actionCreateWasteSamplesBulk(context: MainContext, payload: IWasteSampleCreateBulk[]) {
+    async actionCreateWasteSamplesBulk(context: MainContext, payload: IWasteSampleImportExport[]) {
         try {
             const loadingNotification = { content: 'uploading', showProgress: true };
             commitAddNotification(context, loadingNotification);
