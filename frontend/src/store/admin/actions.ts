@@ -21,6 +21,27 @@ export const actions = {
             await dispatchCheckApiError(context, error);
         }
     },
+    async actionExportAllUsers(context: MainContext) {
+        try {
+            const response = await api.getAllUsers(context.rootState.main.token);
+            if (response) {
+                const data = JSON.stringify(response.data);
+                const blob = new Blob([data], { type: 'text/json' })
+                const objectUrl = URL.createObjectURL(blob);
+                const a = document.createElement('a') as HTMLAnchorElement;
+
+                a.href = objectUrl;
+                a.download = "users.json";
+                document.body.appendChild(a);
+                a.click();
+
+                document.body.removeChild(a);
+                URL.revokeObjectURL(objectUrl);
+            }
+        } catch (error) {
+            await dispatchCheckApiError(context, error);
+        }
+    },
     async actionUpdateUser(context: MainContext, payload: { id: number, user: IUserProfileUpdate }) {
         try {
             const loadingNotification = { content: 'saving', showProgress: true };
@@ -61,6 +82,27 @@ export const actions = {
             await dispatchCheckApiError(context, error);
         }
     },
+    async actionExportAllWasteSamples(context: MainContext) {
+        try {
+            const response = await api.getAllWasteSamples(context.rootState.main.token);
+            if (response) {
+                const data = JSON.stringify(response.data);
+                const blob = new Blob([data], { type: 'text/json' })
+                const objectUrl = URL.createObjectURL(blob);
+                const a = document.createElement('a') as HTMLAnchorElement;
+
+                a.href = objectUrl;
+                a.download = "wastesamples.json";
+                document.body.appendChild(a);
+                a.click();
+
+                document.body.removeChild(a);
+                URL.revokeObjectURL(objectUrl);
+            }
+        } catch (error) {
+            await dispatchCheckApiError(context, error);
+        }
+    },
     async actionCreateWasteSamplesBulk(context: MainContext, payload: IWasteSampleCreateBulk[]) {
         try {
             const loadingNotification = { content: 'uploading', showProgress: true };
@@ -78,6 +120,8 @@ const { dispatch } = getStoreAccessors<AdminState, State>('');
 
 export const dispatchCreateUser = dispatch(actions.actionCreateUser);
 export const dispatchGetUsers = dispatch(actions.actionGetUsers);
+export const dispatchExportAllUsers = dispatch(actions.actionExportAllUsers);
 export const dispatchUpdateUser = dispatch(actions.actionUpdateUser);
 export const dispatchGetWasteSamples = dispatch(actions.actionGetWasteSamples);
+export const dispatchExportAllWasteSamples = dispatch(actions.actionExportAllWasteSamples);
 export const dispatchCreateWasteSamplesBulk = dispatch(actions.actionCreateWasteSamplesBulk);

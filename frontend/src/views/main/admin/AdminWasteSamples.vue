@@ -5,6 +5,7 @@
         Manage Waste Samples
       </v-toolbar-title>
       <v-spacer></v-spacer>
+      <v-btn color="primary" v-on:click="exportWasteSamplesPressed">Export All</v-btn>
       <v-btn color="primary" to="/admin/main/admin/waste-samples/create-bulk">Bulk Import</v-btn>
     </v-toolbar>
     <v-data-table :headers="headers" :items="waste_samples">
@@ -21,7 +22,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { readAdminWasteSamples } from '@/store/admin/getters';
-import { dispatchGetWasteSamples } from '@/store/admin/actions';
+import { dispatchExportAllWasteSamples, dispatchGetWasteSamples } from '@/store/admin/actions';
 
 @Component
 export default class AdminWasteSamples extends Vue {
@@ -57,6 +58,10 @@ export default class AdminWasteSamples extends Vue {
 
   public async mounted() {
     await dispatchGetWasteSamples(this.$store);
+  }
+
+  public async exportWasteSamplesPressed() {
+    await dispatchExportAllWasteSamples(this.$store);
   }
 }
 </script>

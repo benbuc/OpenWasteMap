@@ -27,6 +27,14 @@ export const api = {
   async getUsers(token: string) {
     return axios.get<IUserProfile[]>(`${apiUrl}/api/v1/users/`, authHeaders(token));
   },
+  async getAllUsers(token: string) {
+    return axios.get<IUserProfile[]>(`${apiUrl}/api/v1/users/`, {
+      headers: authHeaders(token).headers,
+      params: {
+        limit: 0,
+      }
+    });
+  },
   async updateUser(token: string, userId: number, data: IUserProfileUpdate) {
     return axios.put(`${apiUrl}/api/v1/users/${userId}`, data, authHeaders(token));
   },
@@ -47,6 +55,9 @@ export const api = {
   },
   async getWasteSamples(token: string) {
     return axios.get<IWasteSample[]>(`${apiUrl}/api/v1/waste-samples/`, authHeaders(token));
+  },
+  async getAllWasteSamples(token: string) {
+    return axios.get<IWasteSample[]>(`${apiUrl}/api/v1/waste-samples/all`, authHeaders(token));
   },
   async createWasteSample(token: string, data: IWasteSampleCreate) {
     return axios.post(`${apiUrl}/api/v1/waste-samples/`, data, authHeaders(token));
