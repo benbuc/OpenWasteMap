@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 import random
 import string
 from typing import Dict
@@ -13,6 +14,14 @@ def random_lower_string() -> str:
 
 def random_email() -> str:
     return f"{random_lower_string()}@{random_lower_string()}.com"
+
+
+def random_datetime() -> datetime:
+    now = datetime.utcnow()
+    epoch = datetime(1970, 1, 1)
+    delta = now - epoch
+    random_delta = random.randint(0, int(delta.total_seconds()))
+    return now - timedelta(seconds=random_delta)
 
 
 def get_superuser_token_headers(client: TestClient) -> Dict[str, str]:

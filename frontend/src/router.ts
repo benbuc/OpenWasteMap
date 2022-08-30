@@ -108,6 +108,11 @@ export default new Router({
                   component: () => import(
                     /* webpackChunkName: "main-admin-waste-samples" */ './views/main/admin/AdminWasteSamples.vue'),
                 },
+                {
+                  path: 'waste-samples/create-bulk',
+                  component: () => import(
+                    /* webpackChunkName: "main-admin-waste-sampkes-create-bulk" */ './views/main/admin/CreateWasteSamplesBulk.vue'),
+                },
               ],
             },
           ],

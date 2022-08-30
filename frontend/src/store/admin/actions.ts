@@ -1,6 +1,6 @@
 import { api } from '@/api';
 import { ActionContext } from 'vuex';
-import { IUserProfileCreate, IUserProfileUpdate } from '@/interfaces';
+import { IUserProfileCreate, IUserProfileUpdate, IWasteSampleImportExport } from '@/interfaces';
 import { State } from '../state';
 import { AdminState } from './state';
 import { getStoreAccessors } from 'typesafe-vuex';
@@ -16,6 +16,27 @@ export const actions = {
             const response = await api.getUsers(context.rootState.main.token);
             if (response) {
                 commitSetUsers(context, response.data);
+            }
+        } catch (error) {
+            await dispatchCheckApiError(context, error);
+        }
+    },
+    async actionExportAllUsers(context: MainContext) {
+        try {
+            const response = await api.getAllUsers(context.rootState.main.token);
+            if (response) {
+                const data = JSON.stringify(response.data);
+                const blob = new Blob([data], { type: 'text/json' })
+                const objectUrl = URL.createObjectURL(blob);
+                const a = document.createElement('a') as HTMLAnchorElement;
+
+                a.href = objectUrl;
+                a.download = "users.json";
+                document.body.appendChild(a);
+                a.click();
+
+                document.body.removeChild(a);
+                URL.revokeObjectURL(objectUrl);
             }
         } catch (error) {
             await dispatchCheckApiError(context, error);
@@ -61,11 +82,46 @@ export const actions = {
             await dispatchCheckApiError(context, error);
         }
     },
+    async actionExportAllWasteSamples(context: MainContext) {
+        try {
+            const response = await api.getAllWasteSamples(context.rootState.main.token);
+            if (response) {
+                const data = JSON.stringify(response.data);
+                const blob = new Blob([data], { type: 'text/json' })
+                const objectUrl = URL.createObjectURL(blob);
+                const a = document.createElement('a') as HTMLAnchorElement;
+
+                a.href = objectUrl;
+                a.download = "wastesamples.json";
+                document.body.appendChild(a);
+                a.click();
+
+                document.body.removeChild(a);
+                URL.revokeObjectURL(objectUrl);
+            }
+        } catch (error) {
+            await dispatchCheckApiError(context, error);
+        }
+    },
+    async actionCreateWasteSamplesBulk(context: MainContext, payload: IWasteSampleImportExport[]) {
+        try {
+            const loadingNotification = { content: 'uploading', showProgress: true };
+            commitAddNotification(context, loadingNotification);
+            const response = await api.createWasteSamplesBulk(context.rootState.main.token, payload);
+            commitRemoveNotification(context, loadingNotification);
+            commitAddNotification(context, { content: 'Successfully imported', color: 'success' });
+        } catch (error) {
+            await dispatchCheckApiError(context, error);
+        }
+    }
 };
 
 const { dispatch } = getStoreAccessors<AdminState, State>('');
 
 export const dispatchCreateUser = dispatch(actions.actionCreateUser);
 export const dispatchGetUsers = dispatch(actions.actionGetUsers);
+export const dispatchExportAllUsers = dispatch(actions.actionExportAllUsers);
 export const dispatchUpdateUser = dispatch(actions.actionUpdateUser);
 export const dispatchGetWasteSamples = dispatch(actions.actionGetWasteSamples);
+export const dispatchExportAllWasteSamples = dispatch(actions.actionExportAllWasteSamples);
+export const dispatchCreateWasteSamplesBulk = dispatch(actions.actionCreateWasteSamplesBulk);

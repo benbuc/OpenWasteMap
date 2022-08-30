@@ -18,6 +18,12 @@ class WasteSampleCreate(WasteSampleBase):
     longitude: float
 
 
+# Properties for import and export of multiple samples
+class WasteSampleImportExport(WasteSampleCreate):
+    owner_nickname: Optional[str]
+    sampling_date: datetime
+
+
 # Properties to receive on waste sample update
 class WasteSampleUpdate(WasteSampleBase):
     pass

@@ -29,6 +29,17 @@ def read_waste_samples(
     return waste_samples
 
 
+@router.get("/all", response_model=List[schemas.WasteSampleImportExport])
+def read_all_waste_samples(
+    db: Session = Depends(deps.get_db),
+    current_user: models.User = Depends(deps.get_current_active_superuser),
+) -> Any:
+    """
+    Retrieve all waste samples.
+    """
+    return crud.waste_sample.get_all(db)
+
+
 @router.post("/", response_model=schemas.WasteSample)
 def create_waste_sample(
     *,
@@ -48,6 +59,22 @@ def create_waste_sample(
         sampling_date=datetime.utcnow(),
     )
     return waste_sample
+
+
+@router.post("/bulk", response_model=List[int])
+def create_waste_samples_bulk(
+    *,
+    db: Session = Depends(deps.get_db),
+    waste_samples_in: List[schemas.WasteSampleImportExport],
+    current_user: models.User = Depends(deps.get_current_active_superuser),
+) -> Any:
+    """
+    Create new waste samples bulk.
+
+    The sampling date and owner(optional) have to be specified.
+    """
+    waste_samples = crud.waste_sample.create_multi(db, obj_in=waste_samples_in)
+    return waste_samples
 
 
 @router.put("/{id}", response_model=schemas.WasteSample)

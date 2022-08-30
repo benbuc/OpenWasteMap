@@ -44,3 +44,11 @@ export interface IWasteSampleCreate {
     latitude: number;
     longitude: number;
 }
+
+export interface IWasteSampleImportExport {
+    waste_level: number;
+    latitude: number;
+    longitude: number;
+    owner_nickname: string;
+    sampling_date: string;
+}

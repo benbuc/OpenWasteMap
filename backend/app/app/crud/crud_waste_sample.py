@@ -5,9 +5,15 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy import and_, or_
 from sqlalchemy.orm import Session
 
+from app import crud
 from app.crud.base import CRUDBase
 from app.models.waste_sample import WasteSample
-from app.schemas.waste_sample import WasteSampleCreate, WasteSampleUpdate
+from app.models.user import User
+from app.schemas.waste_sample import (
+    WasteSampleCreate,
+    WasteSampleUpdate,
+    WasteSampleImportExport,
+)
 
 
 class CRUDWasteSample(CRUDBase[WasteSample, WasteSampleCreate, WasteSampleUpdate]):
@@ -17,7 +23,7 @@ class CRUDWasteSample(CRUDBase[WasteSample, WasteSampleCreate, WasteSampleUpdate
         *,
         obj_in: WasteSampleCreate,
         owner_id: int,
-        sampling_date: datetime
+        sampling_date: datetime,
     ) -> WasteSample:
         obj_in_data = jsonable_encoder(obj_in)
         db_obj = self.model(
@@ -27,6 +33,25 @@ class CRUDWasteSample(CRUDBase[WasteSample, WasteSampleCreate, WasteSampleUpdate
         db.commit()
         db.refresh(db_obj)
         return db_obj
+
+    def create_multi(
+        self, db: Session, *, obj_in: List[WasteSampleImportExport],
+    ) -> List[int]:
+        db_objs = []
+        for sample_obj in obj_in:
+            obj_in_data = jsonable_encoder(sample_obj)
+            # exchange owner nickname with correct id from DB
+            del obj_in_data["owner_nickname"]
+            stored_owner = crud.user.get_by_nickname(
+                db, nickname=sample_obj.owner_nickname
+            )
+            owner_id = stored_owner.id if stored_owner else None
+            db_obj = self.model(**obj_in_data, owner_id=owner_id)
+            db.add(db_obj)
+            db_objs.append(db_obj)
+        db.commit()
+        [db.refresh(db_obj) for db_obj in db_objs]
+        return [db_obj.id for db_obj in db_objs]
 
     def get_multi_by_owner(
         self, db: Session, *, owner_id: int, skip: int = 0, limit: int = 100
@@ -47,7 +72,7 @@ class CRUDWasteSample(CRUDBase[WasteSample, WasteSampleCreate, WasteSampleUpdate
         max_lat: float,
         min_lon: float,
         max_lon: float,
-        owner_id: Optional[int] = None
+        owner_id: Optional[int] = None,
     ) -> List[WasteSample]:
         """
         Find all samples in the specified range.
@@ -71,6 +96,19 @@ class CRUDWasteSample(CRUDBase[WasteSample, WasteSampleCreate, WasteSampleUpdate
                     WasteSample.longitude <= -180 + max_overflow,
                 ),
             )
+            .all()
+        )
+
+    def get_all(self, db: Session) -> List[WasteSampleImportExport]:
+        return (
+            db.query(
+                WasteSample.waste_level,
+                WasteSample.latitude,
+                WasteSample.longitude,
+                WasteSample.sampling_date,
+                User.nickname.label("owner_nickname"),
+            )
+            .outerjoin(User)
             .all()
         )
 

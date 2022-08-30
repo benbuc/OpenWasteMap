@@ -5,6 +5,7 @@
         Manage Users
       </v-toolbar-title>
       <v-spacer></v-spacer>
+      <v-btn color="primary" v-on:click="exportButtonClicked">Export All</v-btn>
       <v-btn color="primary" to="/admin/main/admin/users/create">Create User</v-btn>
     </v-toolbar>
     <v-data-table :headers="headers" :items="users">
@@ -32,7 +33,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import { Store } from 'vuex';
 import { IUserProfile } from '@/interfaces';
 import { readAdminUsers } from '@/store/admin/getters';
-import { dispatchGetUsers } from '@/store/admin/actions';
+import { dispatchExportAllUsers, dispatchGetUsers } from '@/store/admin/actions';
 
 @Component
 export default class AdminUsers extends Vue {
@@ -78,6 +79,10 @@ export default class AdminUsers extends Vue {
 
   public async mounted() {
     await dispatchGetUsers(this.$store);
+  }
+
+  public async exportButtonClicked() {
+    await dispatchExportAllUsers(this.$store);
   }
 }
 </script>
