@@ -8,10 +8,11 @@ from sqlalchemy.orm import Session
 from app import crud
 from app.crud.base import CRUDBase
 from app.models.waste_sample import WasteSample
+from app.models.user import User
 from app.schemas.waste_sample import (
     WasteSampleCreate,
     WasteSampleUpdate,
-    WasteSampleCreateBulk,
+    WasteSampleImportExport,
 )
 
 
@@ -34,7 +35,7 @@ class CRUDWasteSample(CRUDBase[WasteSample, WasteSampleCreate, WasteSampleUpdate
         return db_obj
 
     def create_multi(
-        self, db: Session, *, obj_in: List[WasteSampleCreateBulk],
+        self, db: Session, *, obj_in: List[WasteSampleImportExport],
     ) -> List[int]:
         db_objs = []
         for sample_obj in obj_in:
@@ -98,8 +99,18 @@ class CRUDWasteSample(CRUDBase[WasteSample, WasteSampleCreate, WasteSampleUpdate
             .all()
         )
 
-    def get_all(self, db: Session) -> List[WasteSample]:
-        return db.query(self.model).all()
+    def get_all(self, db: Session) -> List[WasteSampleImportExport]:
+        return (
+            db.query(
+                WasteSample.waste_level,
+                WasteSample.latitude,
+                WasteSample.longitude,
+                WasteSample.sampling_date,
+                User.nickname.label("owner_nickname"),
+            )
+            .outerjoin(User)
+            .all()
+        )
 
 
 waste_sample = CRUDWasteSample(WasteSample)

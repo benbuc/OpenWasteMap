@@ -18,8 +18,8 @@ class WasteSampleCreate(WasteSampleBase):
     longitude: float
 
 
-# Properties to receive on waste sample bulk creation
-class WasteSampleCreateBulk(WasteSampleCreate):
+# Properties for import and export of multiple samples
+class WasteSampleImportExport(WasteSampleCreate):
     owner_nickname: Optional[str]
     sampling_date: datetime
 

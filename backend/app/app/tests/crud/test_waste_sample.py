@@ -7,7 +7,7 @@ from app import crud
 from app.schemas.waste_sample import (
     WasteSampleCreate,
     WasteSampleUpdate,
-    WasteSampleCreateBulk,
+    WasteSampleImportExport,
 )
 from app.tests.utils.user import create_random_user
 from app.tests.utils.utils import random_datetime
@@ -37,7 +37,7 @@ def test_create_waste_sample(db: Session) -> None:
 def test_create_waste_samples_multi(db: Session) -> None:
     users = [create_random_user(db) for _ in range(2)]
     waste_samples_in = [
-        WasteSampleCreateBulk(
+        WasteSampleImportExport(
             waste_level=randint(0, 10),
             latitude=random() * 90,
             longitude=random() * 90,
@@ -181,8 +181,18 @@ def test_get_waste_sample_outside_range(db: Session) -> None:
 
 def test_get_all_waste_samples(db: Session) -> None:
     waste_samples = [
-        create_random_waste_sample(db, create_owner=False) for _ in range(10)
+        WasteSampleImportExport(
+            waste_level=ws.waste_level,
+            latitude=ws.latitude,
+            longitude=ws.longitude,
+            sampling_date=ws.sampling_date,
+            owner_nickname=ws.owner.nickname,
+        )
+        for ws in [create_random_waste_sample(db) for _ in range(10)]
     ]
-    all_waste_samples = crud.waste_sample.get_all(db)
+    all_waste_samples = [
+        WasteSampleImportExport(**s) for s in crud.waste_sample.get_all(db)
+    ]
     for waste_sample in waste_samples:
         assert waste_sample in all_waste_samples
+

@@ -29,7 +29,7 @@ def read_waste_samples(
     return waste_samples
 
 
-@router.get("/all", response_model=List[schemas.WasteSample])
+@router.get("/all", response_model=List[schemas.WasteSampleImportExport])
 def read_all_waste_samples(
     db: Session = Depends(deps.get_db),
     current_user: models.User = Depends(deps.get_current_active_superuser),
@@ -65,7 +65,7 @@ def create_waste_sample(
 def create_waste_samples_bulk(
     *,
     db: Session = Depends(deps.get_db),
-    waste_samples_in: List[schemas.WasteSampleCreateBulk],
+    waste_samples_in: List[schemas.WasteSampleImportExport],
     current_user: models.User = Depends(deps.get_current_active_superuser),
 ) -> Any:
     """
