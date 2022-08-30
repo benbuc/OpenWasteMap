@@ -11,6 +11,7 @@ from app.schemas.waste_sample import (
 )
 from app.tests.utils.user import create_random_user
 from app.tests.utils.utils import random_datetime
+from app.tests.utils.waste_sample import create_random_waste_sample
 
 
 def test_create_waste_sample(db: Session) -> None:
@@ -176,3 +177,13 @@ def test_get_waste_sample_outside_range(db: Session) -> None:
         max_lon=longitude + 1,
     )
     assert not stored_waste_samples
+
+
+def test_get_all_waste_samples(db: Session) -> None:
+    waste_samples = [
+        create_random_waste_sample(db, create_owner=False) for _ in range(10)
+    ]
+    all_waste_samples = crud.waste_sample.get_all(db)
+    for waste_sample in waste_samples:
+        assert waste_sample in all_waste_samples
+

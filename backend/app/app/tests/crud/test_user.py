@@ -5,6 +5,7 @@ from app import crud
 from app.core.security import verify_password
 from app.schemas.user import UserCreate, UserUpdate
 from app.tests.utils.utils import random_email, random_lower_string
+from app.tests.utils.user import create_random_user
 
 
 def test_create_user(db: Session) -> None:
@@ -112,3 +113,10 @@ def test_update_user(db: Session) -> None:
     assert user.email == user_2.email
     assert user.nickname == user_2.nickname
     assert verify_password(new_password, user_2.hashed_password)
+
+
+def test_get_all_users(db: Session) -> None:
+    users = [create_random_user(db) for _ in range(3)]
+    all_users = crud.user.get_all(db)
+    for user in users:
+        assert user in all_users

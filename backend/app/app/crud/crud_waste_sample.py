@@ -98,5 +98,8 @@ class CRUDWasteSample(CRUDBase[WasteSample, WasteSampleCreate, WasteSampleUpdate
             .all()
         )
 
+    def get_all(self, db: Session) -> List[WasteSample]:
+        return db.query(self.model).all()
+
 
 waste_sample = CRUDWasteSample(WasteSample)

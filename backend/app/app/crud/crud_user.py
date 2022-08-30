@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional, Union, List
 
 from sqlalchemy.orm import Session
 
@@ -54,6 +54,9 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
 
     def is_superuser(self, user: User) -> bool:
         return user.is_superuser
+
+    def get_all(self, db: Session) -> List[User]:
+        return db.query(User).all()
 
 
 user = CRUDUser(User)
