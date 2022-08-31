@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Boolean, Column, Integer, String
+from sqlalchemy import Boolean, Column, Integer, String, DateTime
 from sqlalchemy.orm import relationship
 
 from app.db.base_class import Base
@@ -18,3 +18,4 @@ class User(Base):
     is_active = Column(Boolean(), default=True)
     is_superuser = Column(Boolean(), default=False)
     waste_samples = relationship("WasteSample", back_populates="owner")
+    date_joined = Column(DateTime)  # stored in UTC

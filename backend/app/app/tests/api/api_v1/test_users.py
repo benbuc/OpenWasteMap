@@ -19,6 +19,7 @@ def test_get_users_superuser_me(
     assert current_user["is_superuser"]
     assert current_user["email"] == settings.FIRST_SUPERUSER
     assert current_user["nickname"] == settings.FIRST_SUPERUSER_NICKNAME
+    assert current_user["date_joined"]
 
 
 def test_get_users_normal_user_me(
@@ -30,6 +31,7 @@ def test_get_users_normal_user_me(
     assert current_user["is_active"] is True
     assert current_user["is_superuser"] is False
     assert current_user["email"] == settings.EMAIL_TEST_USER
+    assert current_user["date_joined"]
 
 
 def test_create_user_new_email(
@@ -48,6 +50,7 @@ def test_create_user_new_email(
     assert user
     assert user.email == created_user["email"]
     assert user.nickname == created_user["nickname"]
+    assert user.date_joined.isoformat() == created_user["date_joined"]
 
 
 def test_get_existing_user(
@@ -68,6 +71,7 @@ def test_get_existing_user(
     assert existing_user
     assert existing_user.email == api_user["email"]
     assert existing_user.nickname == api_user["nickname"]
+    assert existing_user.date_joined.isoformat() == api_user["date_joined"]
 
 
 def test_get_existing_user_nickname(
@@ -88,6 +92,7 @@ def test_get_existing_user_nickname(
     assert existing_user
     assert existing_user.email == api_user["email"]
     assert existing_user.nickname == api_user["nickname"]
+    assert existing_user.date_joined.isoformat() == api_user["date_joined"]
 
 
 def test_create_user_existing_username(
@@ -162,3 +167,4 @@ def test_retrieve_users(
     for item in all_users:
         assert "email" in item
         assert "nickname" in item
+        assert "date_joined" in item

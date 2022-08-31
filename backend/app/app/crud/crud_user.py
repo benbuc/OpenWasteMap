@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any, Dict, Optional, Union, List
 
 from sqlalchemy.orm import Session
@@ -22,6 +23,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
             hashed_password=get_password_hash(obj_in.password),
             full_name=obj_in.full_name,
             is_superuser=obj_in.is_superuser,
+            date_joined=datetime.utcnow(),
         )
         db.add(db_obj)
         db.commit()

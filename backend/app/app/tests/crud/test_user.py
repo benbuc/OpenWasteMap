@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
@@ -13,10 +15,13 @@ def test_create_user(db: Session) -> None:
     nickname = random_lower_string()
     password = random_lower_string()
     user_in = UserCreate(email=email, nickname=nickname, password=password)
+    datetime_before = datetime.utcnow()
     user = crud.user.create(db, obj_in=user_in)
     assert user.email == email
     assert user.nickname == nickname
     assert hasattr(user, "hashed_password")
+    # Check the join date is reasonably close
+    assert 0 < (user.date_joined - datetime_before).total_seconds() <= 1
 
 
 def test_authenticate_user(db: Session) -> None:
@@ -39,11 +44,7 @@ def test_not_authenticate_user(db: Session) -> None:
 
 
 def test_check_if_user_is_active(db: Session) -> None:
-    email = random_email()
-    nickname = random_lower_string()
-    password = random_lower_string()
-    user_in = UserCreate(email=email, nickname=nickname, password=password)
-    user = crud.user.create(db, obj_in=user_in)
+    user = create_random_user(db)
     is_active = crud.user.is_active(user)
     assert is_active is True
 
@@ -73,11 +74,7 @@ def test_check_if_user_is_superuser(db: Session) -> None:
 
 
 def test_check_if_user_is_superuser_normal_user(db: Session) -> None:
-    username = random_email()
-    nickname = random_lower_string()
-    password = random_lower_string()
-    user_in = UserCreate(email=username, nickname=nickname, password=password)
-    user = crud.user.create(db, obj_in=user_in)
+    user = create_random_user(db)
     is_superuser = crud.user.is_superuser(user)
     assert is_superuser is False
 
@@ -94,6 +91,7 @@ def test_get_user(db: Session) -> None:
     assert user_2
     assert user.email == user_2.email
     assert user.nickname == user_2.nickname
+    assert user.date_joined == user_2.date_joined
     assert jsonable_encoder(user) == jsonable_encoder(user_2)
 
 
@@ -112,6 +110,7 @@ def test_update_user(db: Session) -> None:
     assert user_2
     assert user.email == user_2.email
     assert user.nickname == user_2.nickname
+    assert user.date_joined == user_2.date_joined
     assert verify_password(new_password, user_2.hashed_password)
 
 
