@@ -1,21 +1,21 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, conint, confloat
 
 
 # Shared properties
 class WasteSampleBase(BaseModel):
-    waste_level: Optional[int] = None
-    latitude: Optional[float] = None
-    longitude: Optional[float] = None
+    waste_level: Optional[conint(ge=0, le=10)] = None
+    latitude: Optional[confloat(ge=-90.0, le=90.0)] = None
+    longitude: Optional[confloat(ge=-180.0, le=180.0)] = None
 
 
 # Properties to receive on waste sample creation
 class WasteSampleCreate(WasteSampleBase):
-    waste_level: int
-    latitude: float
-    longitude: float
+    waste_level: conint(ge=0, le=10)
+    latitude: confloat(ge=-90.0, le=90.0)
+    longitude: confloat(ge=-180.0, le=180.0)
 
 
 # Properties for import and export of multiple samples

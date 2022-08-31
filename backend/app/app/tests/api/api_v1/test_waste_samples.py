@@ -27,6 +27,29 @@ def test_create_waste_sample(
     assert "owner_id" in content
 
 
+def test_create_invalid_waste_sample(
+    client: TestClient, superuser_token_headers: dict, db: Session
+) -> None:
+    data = [
+        {"waste_level": -1, "latitude": 12.345, "longitude": 23.456},
+        {"waste_level": 11, "latitude": 12.345, "longitude": 23.456},
+        {"waste_level": 5, "latitude": -91.0, "longitude": 23.456},
+        {"waste_level": 5, "latitude": 91.0, "longitude": 23.456},
+        {"waste_level": 5, "latitude": 12.345, "longitude": -181.0},
+        {"waste_level": 5, "latitude": 12.345, "longitude": 181.0},
+    ]
+    responses = [
+        client.post(
+            f"{settings.API_V1_STR}/waste-samples/",
+            headers=superuser_token_headers,
+            json=d,
+        )
+        for d in data
+    ]
+    for i, response in enumerate(responses):
+        assert response.status_code == 422, f"Index {i} failed"
+
+
 def test_create_waste_samples_bulk(
     client: TestClient, superuser_token_headers: dict, db: Session
 ) -> None:
