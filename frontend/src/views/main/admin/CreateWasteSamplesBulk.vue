@@ -48,8 +48,8 @@ export default class CreateUser extends Vue {
   public processedJSON: IWasteSampleImportExport[] = [];
 
   public jsonUpdated(event: InputEvent) {
-    let obj = JSON.parse(this.inputJSON) as IWasteSampleImportExport[];
-    this.statusMessage = "Found " + obj.length + " objects";
+    const obj = JSON.parse(this.inputJSON) as IWasteSampleImportExport[];
+    this.statusMessage = 'Found ' + obj.length + ' objects';
     this.processedJSON = obj;
   }
 

@@ -7,6 +7,7 @@ import { getStoreAccessors } from 'typesafe-vuex';
 import { commitSetUsers, commitSetUser, commitSetWasteSamples } from './mutations';
 import { dispatchCheckApiError } from '../main/actions';
 import { commitAddNotification, commitRemoveNotification } from '../main/mutations';
+import { AxiosError } from 'axios';
 
 type MainContext = ActionContext<AdminState, State>;
 
@@ -18,7 +19,7 @@ export const actions = {
                 commitSetUsers(context, response.data);
             }
         } catch (error) {
-            await dispatchCheckApiError(context, error);
+            await dispatchCheckApiError(context, error as AxiosError);
         }
     },
     async actionExportAllUsers(context: MainContext) {
@@ -26,12 +27,12 @@ export const actions = {
             const response = await api.getAllUsers(context.rootState.main.token);
             if (response) {
                 const data = JSON.stringify(response.data);
-                const blob = new Blob([data], { type: 'text/json' })
+                const blob = new Blob([data], { type: 'text/json' });
                 const objectUrl = URL.createObjectURL(blob);
                 const a = document.createElement('a') as HTMLAnchorElement;
 
                 a.href = objectUrl;
-                a.download = "users.json";
+                a.download = 'users.json';
                 document.body.appendChild(a);
                 a.click();
 
@@ -39,7 +40,7 @@ export const actions = {
                 URL.revokeObjectURL(objectUrl);
             }
         } catch (error) {
-            await dispatchCheckApiError(context, error);
+            await dispatchCheckApiError(context, error as AxiosError);
         }
     },
     async actionUpdateUser(context: MainContext, payload: { id: number, user: IUserProfileUpdate }) {
@@ -48,13 +49,13 @@ export const actions = {
             commitAddNotification(context, loadingNotification);
             const response = (await Promise.all([
                 api.updateUser(context.rootState.main.token, payload.id, payload.user),
-                await new Promise((resolve, reject) => setTimeout(() => resolve(), 500)),
+                await new Promise<void>((resolve, reject) => setTimeout(() => resolve(), 500)),
             ]))[0];
             commitSetUser(context, response.data);
             commitRemoveNotification(context, loadingNotification);
             commitAddNotification(context, { content: 'User successfully updated', color: 'success' });
         } catch (error) {
-            await dispatchCheckApiError(context, error);
+            await dispatchCheckApiError(context, error as AxiosError);
         }
     },
     async actionCreateUser(context: MainContext, payload: IUserProfileCreate) {
@@ -63,13 +64,13 @@ export const actions = {
             commitAddNotification(context, loadingNotification);
             const response = (await Promise.all([
                 api.createUser(context.rootState.main.token, payload),
-                await new Promise((resolve, reject) => setTimeout(() => resolve(), 500)),
+                await new Promise<void>((resolve, reject) => setTimeout(() => resolve(), 500)),
             ]))[0];
             commitSetUser(context, response.data);
             commitRemoveNotification(context, loadingNotification);
             commitAddNotification(context, { content: 'User successfully created', color: 'success' });
         } catch (error) {
-            await dispatchCheckApiError(context, error);
+            await dispatchCheckApiError(context, error as AxiosError);
         }
     },
     async actionGetWasteSamples(context: MainContext) {
@@ -79,7 +80,7 @@ export const actions = {
                 commitSetWasteSamples(context, response.data);
             }
         } catch (error) {
-            await dispatchCheckApiError(context, error);
+            await dispatchCheckApiError(context, error as AxiosError);
         }
     },
     async actionExportAllWasteSamples(context: MainContext) {
@@ -87,12 +88,12 @@ export const actions = {
             const response = await api.getAllWasteSamples(context.rootState.main.token);
             if (response) {
                 const data = JSON.stringify(response.data);
-                const blob = new Blob([data], { type: 'text/json' })
+                const blob = new Blob([data], { type: 'text/json' });
                 const objectUrl = URL.createObjectURL(blob);
                 const a = document.createElement('a') as HTMLAnchorElement;
 
                 a.href = objectUrl;
-                a.download = "wastesamples.json";
+                a.download = 'wastesamples.json';
                 document.body.appendChild(a);
                 a.click();
 
@@ -100,7 +101,7 @@ export const actions = {
                 URL.revokeObjectURL(objectUrl);
             }
         } catch (error) {
-            await dispatchCheckApiError(context, error);
+            await dispatchCheckApiError(context, error as AxiosError);
         }
     },
     async actionCreateWasteSamplesBulk(context: MainContext, payload: IWasteSampleImportExport[]) {
@@ -111,9 +112,9 @@ export const actions = {
             commitRemoveNotification(context, loadingNotification);
             commitAddNotification(context, { content: 'Successfully imported', color: 'success' });
         } catch (error) {
-            await dispatchCheckApiError(context, error);
+            await dispatchCheckApiError(context, error as AxiosError);
         }
-    }
+    },
 };
 
 const { dispatch } = getStoreAccessors<AdminState, State>('');

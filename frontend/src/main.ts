@@ -27,7 +27,7 @@ declare module 'vue/types/vue' {
 Vue.component('l-map', LMap);
 Vue.component('l-tile-layer', LTileLayer);
 Vue.component('l-marker', LMarker);
-Vue.filter('formatDate', function (value: string) {
+Vue.filter('formatDate', (value: string) => {
   if (value) {
     return moment(String(value)).format('YYYY-MM-DD HH:mm');
   }

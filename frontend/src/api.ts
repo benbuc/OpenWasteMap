@@ -1,6 +1,13 @@
 import axios from 'axios';
 import { apiUrl } from '@/env';
-import { IUserProfile, IUserProfileUpdate, IUserProfileCreate, IWasteSample, IWasteSampleCreate, IWasteSampleImportExport } from './interfaces';
+import {
+  IUserProfile,
+  IUserProfileUpdate,
+  IUserProfileCreate,
+  IWasteSample,
+  IWasteSampleCreate,
+  IWasteSampleImportExport,
+} from './interfaces';
 
 function authHeaders(token: string) {
   return {
@@ -32,7 +39,7 @@ export const api = {
       headers: authHeaders(token).headers,
       params: {
         limit: 0,
-      }
+      },
     });
   },
   async updateUser(token: string, userId: number, data: IUserProfileUpdate) {
