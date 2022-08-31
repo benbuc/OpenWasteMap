@@ -60,18 +60,7 @@ def test_create_waste_samples_multi(db: Session) -> None:
 
 
 def test_get_waste_sample(db: Session) -> None:
-    waste_level = randint(0, 10)
-    latitude = random() * 90
-    longitude = random() * 90
-    sampling_date = datetime.utcnow()
-
-    waste_sample_in = WasteSampleCreate(
-        waste_level=waste_level, latitude=latitude, longitude=longitude
-    )
-    user = create_random_user(db)
-    waste_sample = crud.waste_sample.create_with_owner(
-        db=db, obj_in=waste_sample_in, owner_id=user.id, sampling_date=sampling_date
-    )
+    waste_sample = create_random_waste_sample(db)
     stored_waste_sample = crud.waste_sample.get(db=db, id=waste_sample.id)
     assert stored_waste_sample
     assert waste_sample.waste_level == stored_waste_sample.waste_level
@@ -83,18 +72,7 @@ def test_get_waste_sample(db: Session) -> None:
 
 
 def test_update_waste_sample(db: Session) -> None:
-    waste_level = randint(0, 10)
-    latitude = random() * 90
-    longitude = random() * 90
-    sampling_date = datetime.utcnow()
-
-    waste_sample_in = WasteSampleCreate(
-        waste_level=waste_level, latitude=latitude, longitude=longitude
-    )
-    user = create_random_user(db)
-    waste_sample = crud.waste_sample.create_with_owner(
-        db=db, obj_in=waste_sample_in, owner_id=user.id, sampling_date=sampling_date
-    )
+    waste_sample = create_random_waste_sample(db)
     waste_level2 = randint(0, 10)
     waste_sample_update = WasteSampleUpdate(waste_level=waste_level2)
     waste_sample2 = crud.waste_sample.update(
@@ -195,4 +173,3 @@ def test_get_all_waste_samples(db: Session) -> None:
     ]
     for waste_sample in waste_samples:
         assert waste_sample in all_waste_samples
-
