@@ -1,6 +1,6 @@
 import { api } from '@/api';
 import { IWasteSampleCreate } from '@/interfaces';
-import router from '@/router';
+import router from '@/router/routes';
 import { getLocalToken, removeLocalToken, saveLocalToken } from '@/utils';
 import { AxiosError } from 'axios';
 import { getStoreAccessors } from 'typesafe-vuex';
