@@ -26,7 +26,7 @@ export default new Router({
     },
     {
       path: '/profile',
-      // component: () => import(/* webpackChunkName: "profile" */ './views/main/Profile.vue'),
+      component: () => import(/* webpackChunkName: "profile" */ '../views/ProfileIndex.vue'),
       children: [
 
       ],
