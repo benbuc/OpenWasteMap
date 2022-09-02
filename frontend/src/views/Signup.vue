@@ -8,6 +8,7 @@
               <v-toolbar-title>Create Account - {{ appName }}</v-toolbar-title>
             </v-toolbar>
             <v-card-text>
+              <p>{{ errorMessage }}</p>
               <v-form v-model="valid" ref="form" lazy-validation>
                 <v-text-field
                   label="Nickname"
@@ -71,7 +72,6 @@ import { dispatchCreateUser } from "@/store/admin/actions";
 
 @Component
 export default class Signup extends Vue {
-  public errors = this.$validator.errors;
   public valid = false;
   public appName = appName;
   public nickname: string = "";
@@ -80,6 +80,7 @@ export default class Signup extends Vue {
   public setPassword = false;
   public password1: string = "";
   public password2: string = "";
+  public errorMessage: string = "";
 
   public async submit() {
     if (await this.$validator.validateAll()) {
@@ -91,7 +92,10 @@ export default class Signup extends Vue {
         userProfile.full_name = this.fullName;
       }
       userProfile.password = this.password1;
-      await dispatchCreateUser(this.$store, userProfile);
+      const error = await dispatchCreateUser(this.$store, userProfile);
+      if (error) {
+        this.errorMessage = error.response!.data.detail;
+      }
       // this.$router.push('/profile');
     }
   }

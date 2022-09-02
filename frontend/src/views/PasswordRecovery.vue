@@ -54,7 +54,6 @@ import { dispatchPasswordRecovery } from "@/store/main/actions";
 
 @Component
 export default class Login extends Vue {
-  public errors = this.$validator.errors;
   public valid = true;
   public username: string = "";
   public appName = appName;

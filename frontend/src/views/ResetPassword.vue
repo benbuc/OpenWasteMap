@@ -65,7 +65,6 @@ import { dispatchResetPassword } from "@/store/main/actions";
 
 @Component
 export default class UserProfileEdit extends Vue {
-  public errors = this.$validator.errors;
   public appName = appName;
   public valid = true;
   public password1 = "";

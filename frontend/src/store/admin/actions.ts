@@ -102,7 +102,11 @@ export const actions = {
         color: "success",
       });
     } catch (error) {
-      await dispatchCheckApiError(context, error as AxiosError);
+      const aError = error as AxiosError;
+      if (aError.response!.status === 400) {
+        return aError;
+      }
+      await dispatchCheckApiError(context, aError);
     }
   },
   async actionGetWasteSamples(context: MainContext) {

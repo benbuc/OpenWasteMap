@@ -87,7 +87,6 @@ import { dispatchGetUsers, dispatchCreateUser } from "@/store/admin/actions";
 
 @Component
 export default class CreateUser extends Vue {
-  public errors = this.$validator.errors;
   public valid = false;
   public nickname: string = "";
   public fullName: string = "";
