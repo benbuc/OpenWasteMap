@@ -9,11 +9,15 @@
       <v-btn color="primary" to="/admin/main/admin/waste-samples/create-bulk">Bulk Import</v-btn>
     </v-toolbar>
     <v-data-table :headers="headers" :items="waste_samples">
-      <template slot="items" slot-scope="props">
-        <td>{{ props.item.waste_level }}</td>
-        <td>{{ props.item.latitude.toFixed(5) }}</td>
-        <td>{{ props.item.longitude.toFixed(5) }}</td>
-        <td>{{ props.item.sampling_date|formatDate }}</td>
+      <template v-slot:body="{ items }">
+        <tbody>
+          <tr v-for="item in items" :key="item.name">
+            <td>{{ item.waste_level }}</td>
+            <td>{{ item.latitude.toFixed(5) }}</td>
+            <td>{{ item.longitude.toFixed(5) }}</td>
+            <td>{{ item.sampling_date|formatDate }}</td>
+          </tr>
+        </tbody>
       </template>
     </v-data-table>
   </div>

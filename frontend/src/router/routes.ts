@@ -69,6 +69,7 @@ export default new Router({
                 {
                   path: 'password',
                   component: () => import(
+                    // tslint:disable-next-line:max-line-length
                     /* webpackChunkName: "main-profile-password" */ '../views/main/profile/UserProfileEditPassword.vue'),
                 },
               ],

@@ -30,13 +30,14 @@ export default class Home extends Vue {
 
 <style scoped>
 .menu-wrapper {
-    position: fixed;
-    top: 15px;
-    right: 15px;
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  width: min(400px, 100vw);
 }
 .router-view {
   position: absolute;
   right: 0;
-  width: min(400px, calc(100vw - 30px));
+  width: calc(100% - 45px);
 }
 </style>

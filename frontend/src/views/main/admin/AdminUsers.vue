@@ -8,21 +8,21 @@
       <v-btn color="primary" v-on:click="exportButtonClicked">Export All</v-btn>
       <v-btn color="primary" to="/admin/main/admin/users/create">Create User</v-btn>
     </v-toolbar>
+    <p>Hallo</p>
     <v-data-table :headers="headers" :items="users">
-      <template slot="items" slot-scope="props">
-        <td>{{ props.item.nickname }}</td>
-        <td>{{ props.item.email }}</td>
-        <td>{{ props.item.full_name }}</td>
-        <td><v-icon v-if="props.item.is_active">checkmark</v-icon></td>
-        <td><v-icon v-if="props.item.is_superuser">checkmark</v-icon></td>
-        <td class="justify-center layout px-0">
-          <v-tooltip top>
-            <span>Edit</span>
-            <v-btn slot="activator" flat :to="{name: 'main-admin-users-edit', params: {id: props.item.id}}">
+      <template v-slot:body="{ items }">
+        <tbody>
+          <tr v-for="item in items" :key="item.name">
+            <td>{{ item.nickname }}</td>
+            <td>{{ item.email }}</td>
+            <td>{{ item.full_name}}</td>
+            <td><v-icon v-if="item.is_active">checkmark</v-icon></td>
+            <td><v-icon v-if="item.is_superuser">checkmark</v-icon></td>
+            <td><v-btn text :to="{name: 'main-admin-users-edit', params: {id: item.id}}">
               <v-icon>edit</v-icon>
-            </v-btn>
-          </v-tooltip>
-        </td>
+            </v-btn></td>
+          </tr>
+        </tbody>
       </template>
     </v-data-table>
   </div>
