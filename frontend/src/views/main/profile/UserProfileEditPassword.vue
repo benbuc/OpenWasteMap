@@ -50,18 +50,19 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { Store } from 'vuex';
-import { IUserProfileUpdate } from '@/interfaces';
+import { IUserProfile, IUserProfileUpdate } from '@/interfaces';
 import { readUserProfile } from '@/store/main/getters';
 import { dispatchUpdateUserProfile } from '@/store/main/actions';
 
 @Component
 export default class UserProfileEdit extends Vue {
+  public errors = this.$validator.errors; 
   public valid = true;
   public password1 = '';
   public password2 = '';
 
   get userProfile() {
-    return readUserProfile(this.$store);
+    return readUserProfile(this.$store) as IUserProfile;
   }
 
   public reset() {

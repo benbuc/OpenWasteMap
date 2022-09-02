@@ -1,6 +1,12 @@
 <template>
   <div>
-    <v-navigation-drawer persistent :mini-variant="miniDrawer" v-model="showDrawer" fixed app>
+    <v-navigation-drawer
+      persistent
+      :mini-variant="miniDrawer"
+      v-model="showDrawer"
+      fixed
+      app
+    >
       <v-layout column fill-height>
         <v-list>
           <v-subheader>Main menu</v-subheader>
@@ -78,7 +84,9 @@
           <v-divider></v-divider>
           <v-list-item @click="switchMiniDrawer">
             <v-list-item-action>
-              <v-icon v-html="miniDrawer ? 'chevron_right' : 'chevron_left'"></v-icon>
+              <v-icon
+                v-html="miniDrawer ? 'chevron_right' : 'chevron_left'"
+              ></v-icon>
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title>Collapse</v-list-item-title>
@@ -122,24 +130,35 @@
     </v-main>
     <v-footer class="pa-3" fixed app>
       <v-spacer></v-spacer>
-      <span>&copy; {{appName}}</span>
+      <span>&copy; {{ appName }}</span>
     </v-footer>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
+import { Vue, Component } from "vue-property-decorator";
 
-import { appName } from '@/env';
-import { store } from '@/store';
-import { readDashboardMiniDrawer, readDashboardShowDrawer, readHasAdminAccess, readIsLoggedIn } from '@/store/main/getters';
-import { commitSetDashboardShowDrawer, commitSetDashboardMiniDrawer } from '@/store/main/mutations';
-import { dispatchCheckLoggedIn, dispatchUserLogOut } from '@/store/main/actions';
+import { appName } from "@/env";
+import { store } from "@/store";
+import {
+  readDashboardMiniDrawer,
+  readDashboardShowDrawer,
+  readHasAdminAccess,
+  readIsLoggedIn,
+} from "@/store/main/getters";
+import {
+  commitSetDashboardShowDrawer,
+  commitSetDashboardMiniDrawer,
+} from "@/store/main/mutations";
+import {
+  dispatchCheckLoggedIn,
+  dispatchUserLogOut,
+} from "@/store/main/actions";
 
 const routeGuardMain = async (to, from, next) => {
   await dispatchCheckLoggedIn(store);
   if (!readIsLoggedIn(store) || !readHasAdminAccess(store)) {
-    next('/');
+    next("/");
   } else {
     next();
   }
@@ -172,14 +191,14 @@ export default class Main extends Vue {
   public switchShowDrawer() {
     commitSetDashboardShowDrawer(
       this.$store,
-      !readDashboardShowDrawer(this.$store),
+      !readDashboardShowDrawer(this.$store)
     );
   }
 
   public switchMiniDrawer() {
     commitSetDashboardMiniDrawer(
       this.$store,
-      !readDashboardMiniDrawer(this.$store),
+      !readDashboardMiniDrawer(this.$store)
     );
   }
 

@@ -58,6 +58,7 @@ import { dispatchUpdateUserProfile } from '@/store/main/actions';
 
 @Component
 export default class UserProfileEdit extends Vue {
+  public errors = this.$validator.errors; 
   public valid = true;
   public nickname: string = '';
   public fullName: string = '';

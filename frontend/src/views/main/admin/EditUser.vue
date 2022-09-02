@@ -106,6 +106,7 @@ import { readAdminOneUser } from '@/store/admin/getters';
 
 @Component
 export default class EditUser extends Vue {
+  public errors = this.$validator.errors; 
   public valid = true;
   public fullName: string = '';
   public email: string = '';
