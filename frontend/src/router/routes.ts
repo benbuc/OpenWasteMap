@@ -45,12 +45,12 @@ export default new Router({
     },
     {
       path: '/admin',
-      component: () => import(/* webpackChunkName: "admin" */ '../views/main/Main.vue'),
+      component: () => import(/* webpackChunkName: "admin" */ '../views/main/admin/Admin.vue'),
       redirect: '/admin/dashboard',
       children: [
         {
           path: 'dashboard',
-          component: () => import(/* webpackChunkName: "main-dashboard" */ '../views/main/Dashboard.vue'),
+          component: () => import(/* webpackChunkName: "main-dashboard" */ '../views/main/admin/Dashboard.vue'),
         },
         {
           path: 'profile',
@@ -77,21 +77,22 @@ export default new Router({
         },
         {
           path: 'users',
+          component: RouterComponent,
           redirect: 'users/all',
           children: [
             {
-              path: 'users/all',
+              path: 'all',
               component: () => import(
                 /* webpackChunkName: "main-admin-users" */ '../views/main/admin/AdminUsers.vue'),
             },
             {
-              path: 'users/edit/:id',
+              path: 'edit/:id',
               name: 'main-admin-users-edit',
               component: () => import(
                 /* webpackChunkName: "main-admin-users-edit" */ '../views/main/admin/EditUser.vue'),
             },
             {
-              path: 'users/create',
+              path: 'create',
               name: 'main-admin-users-create',
               component: () => import(
                 /* webpackChunkName: "main-admin-users-create" */ '../views/main/admin/CreateUser.vue'),
@@ -103,12 +104,12 @@ export default new Router({
           redirect: 'waste-samples/all',
           children: [
             {
-              path: 'waste-samples/all',
+              path: 'all',
               component: () => import(
                     /* webpackChunkName: "main-admin-waste-samples" */ '../views/main/admin/AdminWasteSamples.vue'),
             },
             {
-              path: 'waste-samples/create-bulk',
+              path: 'create-bulk',
               component: () => import(
                     /* webpackChunkName: "main-admin-waste-sampkes-create-bulk" */ '../views/main/admin/CreateWasteSamplesBulk.vue'),
             },
@@ -116,8 +117,8 @@ export default new Router({
         },
       ],
     },
-    {
+    /*{
       path: '/*', redirect: '/',
-    },
+    },*/
   ],
 });
