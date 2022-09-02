@@ -70,7 +70,7 @@ export default class CreateUser extends Vue {
   public async submit() {
     if (await this.$validator.validateAll()) {
       await dispatchCreateWasteSamplesBulk(this.$store, this.processedJSON);
-      this.$router.push('/admin/main/admin/waste-samples');
+      this.$router.push('/admin/waste-samples');
     }
   }
 }

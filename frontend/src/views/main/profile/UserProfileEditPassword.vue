@@ -79,7 +79,7 @@ export default class UserProfileEdit extends Vue {
       const updatedProfile: IUserProfileUpdate = {};
       updatedProfile.password = this.password1;
       await dispatchUpdateUserProfile(this.$store, updatedProfile);
-      this.$router.push('/main/profile');
+      this.$router.push('/profile');
     }
   }
 }

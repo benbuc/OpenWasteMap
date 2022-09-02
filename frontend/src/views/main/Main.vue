@@ -4,7 +4,7 @@
       <v-layout column fill-height>
         <v-list>
           <v-subheader>Main menu</v-subheader>
-          <v-list-item to="/admin/main/dashboard">
+          <v-list-item to="/admin/dashboard">
             <v-list-item-action>
               <v-icon>web</v-icon>
             </v-list-item-action>
@@ -12,7 +12,7 @@
               <v-list-item-title>Dashboard</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item to="/admin/main/profile/view">
+          <v-list-item to="/admin/profile/view">
             <v-list-item-action>
               <v-icon>person</v-icon>
             </v-list-item-action>
@@ -20,7 +20,7 @@
               <v-list-item-title>Profile</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item to="/admin/main/profile/edit">
+          <v-list-item to="/admin/profile/edit">
             <v-list-item-action>
               <v-icon>edit</v-icon>
             </v-list-item-action>
@@ -28,7 +28,7 @@
               <v-list-item-title>Edit Profile</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item to="/admin/main/profile/password">
+          <v-list-item to="/admin/profile/password">
             <v-list-item-action>
               <v-icon>vpn_key</v-icon>
             </v-list-item-action>
@@ -40,7 +40,7 @@
         <v-divider></v-divider>
         <v-list subheader v-show="hasAdminAccess">
           <v-subheader>Admin</v-subheader>
-          <v-list-item to="/admin/main/admin/users/all">
+          <v-list-item to="/admin/users/all">
             <v-list-item-action>
               <v-icon>group</v-icon>
             </v-list-item-action>
@@ -48,7 +48,7 @@
               <v-list-item-title>Manage Users</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item to="/admin/main/admin/users/create">
+          <v-list-item to="/admin/users/create">
             <v-list-item-action>
               <v-icon>person_add</v-icon>
             </v-list-item-action>
@@ -56,7 +56,7 @@
               <v-list-item-title>Create User</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item to="/admin/main/admin/waste-samples/all">
+          <v-list-item to="/admin/waste-samples/all">
             <v-list-item-action>
               <v-icon>group</v-icon>
             </v-list-item-action>
@@ -87,16 +87,18 @@
         </v-list>
       </v-layout>
     </v-navigation-drawer>
-    <v-toolbar dark color="primary" app>
-      <v-toolbar-side-icon @click.stop="switchShowDrawer"></v-toolbar-side-icon>
+    <v-app-bar dark color="primary" app>
+      <v-app-bar-nav-icon @click.stop="switchShowDrawer"></v-app-bar-nav-icon>
       <v-toolbar-title v-text="appName"></v-toolbar-title>
       <v-spacer></v-spacer>
       <v-menu bottom left offset-y>
-        <v-btn slot="activator" icon>
-          <v-icon>more_vert</v-icon>
-        </v-btn>
+        <template v-slot:activator="{ on }">
+          <v-btn v-on="on" icon>
+            <v-icon>more_vert</v-icon>
+          </v-btn>
+        </template>
         <v-list>
-          <v-list-item to="/admin/main/profile">
+          <v-list-item to="/admin/profile">
             <v-list-item-content>
               <v-list-item-title>Profile</v-list-item-title>
             </v-list-item-content>
@@ -114,10 +116,10 @@
           </v-list-item>
         </v-list>
       </v-menu>
-    </v-toolbar>
-    <v-content>
+    </v-app-bar>
+    <v-main>
       <router-view></router-view>
-    </v-content>
+    </v-main>
     <v-footer class="pa-3" fixed app>
       <v-spacer></v-spacer>
       <span>&copy; {{appName}}</span>
@@ -129,13 +131,15 @@
 import { Vue, Component } from 'vue-property-decorator';
 
 import { appName } from '@/env';
-import { readDashboardMiniDrawer, readDashboardShowDrawer, readHasAdminAccess } from '@/store/main/getters';
+import { store } from '@/store';
+import { readDashboardMiniDrawer, readDashboardShowDrawer, readHasAdminAccess, readIsLoggedIn } from '@/store/main/getters';
 import { commitSetDashboardShowDrawer, commitSetDashboardMiniDrawer } from '@/store/main/mutations';
-import { dispatchUserLogOut } from '@/store/main/actions';
+import { dispatchCheckLoggedIn, dispatchUserLogOut } from '@/store/main/actions';
 
 const routeGuardMain = async (to, from, next) => {
-  if (to.path === '/main') {
-    next('/main/dashboard');
+  await dispatchCheckLoggedIn(store);
+  if (!readIsLoggedIn(store)) {
+    next('/login');
   } else {
     next();
   }

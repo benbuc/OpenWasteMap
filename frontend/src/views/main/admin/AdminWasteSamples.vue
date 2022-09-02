@@ -6,7 +6,7 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn color="primary" v-on:click="exportWasteSamplesPressed">Export All</v-btn>
-      <v-btn color="primary" to="/admin/main/admin/waste-samples/create-bulk">Bulk Import</v-btn>
+      <v-btn color="primary" to="/admin/waste-samples/create-bulk">Bulk Import</v-btn>
     </v-toolbar>
     <v-data-table :headers="headers" :items="waste_samples">
       <template v-slot:body="{ items }">

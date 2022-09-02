@@ -152,7 +152,7 @@ export default class EditUser extends Vue {
         updatedProfile.password = this.password1;
       }
       await dispatchUpdateUser(this.$store, { id: this.user!.id, user: updatedProfile });
-      this.$router.push('/main/admin/users');
+      this.$router.push('/admin/users');
     }
   }
 

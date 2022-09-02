@@ -8,9 +8,9 @@
         <div class="headline font-weight-light ma-5">Welcome {{greetedUser}}</div>
       </v-card-text>
       <v-card-actions>
-        <v-btn to="/admin/main/profile/view">View Profile</v-btn>
-        <v-btn to="/admin/main/profile/edit">Edit Profile</v-btn>
-        <v-btn to="/admin/main/profile/password">Change Password</v-btn>
+        <v-btn to="/admin/profile/view">View Profile</v-btn>
+        <v-btn to="/admin/profile/edit">Edit Profile</v-btn>
+        <v-btn to="/admin/profile/password">Change Password</v-btn>
       </v-card-actions>
     </v-card>
   </v-container>

@@ -6,7 +6,7 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn color="primary" v-on:click="exportButtonClicked">Export All</v-btn>
-      <v-btn color="primary" to="/admin/main/admin/users/create">Create User</v-btn>
+      <v-btn color="primary" to="/admin/users/create">Create User</v-btn>
     </v-toolbar>
     <p>Hallo</p>
     <v-data-table :headers="headers" :items="users">

@@ -1,5 +1,5 @@
 <template>
-    <v-content>
+    <v-main>
       <OwmMap />
       <div class="menu-wrapper">
         <Nav />
@@ -7,7 +7,7 @@
           <router-view class="router-view" v-if="showDialog"></router-view>
         </v-scale-transition>
       </div>
-    </v-content>
+    </v-main>
 </template>
 
 <script lang="ts">
