@@ -7,17 +7,34 @@
       <v-card-text>
         <div class="my-4">
           <div class="subheading secondary--text text--lighten-3">Nickname</div>
-          <div class="title primary--text text--darken-2" v-if="userProfile && userProfile.nickname">{{userProfile.nickname}}</div>
+          <div
+            class="title primary--text text--darken-2"
+            v-if="userProfile && userProfile.nickname"
+          >
+            {{ userProfile.nickname }}
+          </div>
           <div class="title primary--text text--darken-2" v-else>-----</div>
         </div>
         <div class="my-4">
-          <div class="subheading secondary--text text--lighten-3">Full Name</div>
-          <div class="title primary--text text--darken-2" v-if="userProfile && userProfile.full_name">{{userProfile.full_name}}</div>
+          <div class="subheading secondary--text text--lighten-3">
+            Full Name
+          </div>
+          <div
+            class="title primary--text text--darken-2"
+            v-if="userProfile && userProfile.full_name"
+          >
+            {{ userProfile.full_name }}
+          </div>
           <div class="title primary--text text--darken-2" v-else>-----</div>
         </div>
         <div class="my-3">
           <div class="subheading secondary--text text--lighten-3">Email</div>
-          <div class="title primary--text text--darken-2" v-if="userProfile && userProfile.email">{{userProfile.email}}</div>
+          <div
+            class="title primary--text text--darken-2"
+            v-if="userProfile && userProfile.email"
+          >
+            {{ userProfile.email }}
+          </div>
           <div class="title primary--text text--darken-2" v-else>-----</div>
         </div>
       </v-card-text>
@@ -30,9 +47,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { Store } from 'vuex';
-import { readUserProfile } from '@/store/main/getters';
+import { Component, Vue } from "vue-property-decorator";
+import { Store } from "vuex";
+import { readUserProfile } from "@/store/main/getters";
 
 @Component
 export default class UserProfile extends Vue {
@@ -41,11 +58,11 @@ export default class UserProfile extends Vue {
   }
 
   public goToEdit() {
-    this.$router.push('/main/profile/edit');
+    this.$router.push("/main/profile/edit");
   }
 
   public goToPassword() {
-    this.$router.push('/main/profile/password');
+    this.$router.push("/main/profile/password");
   }
 }
 </script>

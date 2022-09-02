@@ -1,9 +1,7 @@
 <template>
   <div>
     <v-toolbar light>
-      <v-toolbar-title>
-        Manage Users
-      </v-toolbar-title>
+      <v-toolbar-title> Manage Users </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn color="primary" v-on:click="exportButtonClicked">Export All</v-btn>
       <v-btn color="primary" to="/admin/users/create">Create User</v-btn>
@@ -15,12 +13,17 @@
           <tr v-for="item in items" :key="item.name">
             <td>{{ item.nickname }}</td>
             <td>{{ item.email }}</td>
-            <td>{{ item.full_name}}</td>
+            <td>{{ item.full_name }}</td>
             <td><v-icon v-if="item.is_active">checkmark</v-icon></td>
             <td><v-icon v-if="item.is_superuser">checkmark</v-icon></td>
-            <td><v-btn text :to="{name: 'main-admin-users-edit', params: {id: item.id}}">
-              <v-icon>edit</v-icon>
-            </v-btn></td>
+            <td>
+              <v-btn
+                text
+                :to="{ name: 'main-admin-users-edit', params: { id: item.id } }"
+              >
+                <v-icon>edit</v-icon>
+              </v-btn>
+            </td>
           </tr>
         </tbody>
       </template>
@@ -29,48 +32,51 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { Store } from 'vuex';
-import { IUserProfile } from '@/interfaces';
-import { readAdminUsers } from '@/store/admin/getters';
-import { dispatchExportAllUsers, dispatchGetUsers } from '@/store/admin/actions';
+import { Component, Vue } from "vue-property-decorator";
+import { Store } from "vuex";
+import { IUserProfile } from "@/interfaces";
+import { readAdminUsers } from "@/store/admin/getters";
+import {
+  dispatchExportAllUsers,
+  dispatchGetUsers,
+} from "@/store/admin/actions";
 
 @Component
 export default class AdminUsers extends Vue {
   public headers = [
     {
-      text: 'Nickname',
+      text: "Nickname",
       sortable: true,
-      value: 'nickname',
-      align: 'left',
+      value: "nickname",
+      align: "left",
     },
     {
-      text: 'Email',
+      text: "Email",
       sortable: true,
-      value: 'email',
-      align: 'left',
+      value: "email",
+      align: "left",
     },
     {
-      text: 'Full Name',
+      text: "Full Name",
       sortable: true,
-      value: 'full_name',
-      align: 'left',
+      value: "full_name",
+      align: "left",
     },
     {
-      text: 'Is Active',
+      text: "Is Active",
       sortable: true,
-      value: 'isActive',
-      align: 'left',
+      value: "isActive",
+      align: "left",
     },
     {
-      text: 'Is Superuser',
+      text: "Is Superuser",
       sortable: true,
-      value: 'isSuperuser',
-      align: 'left',
+      value: "isSuperuser",
+      align: "left",
     },
     {
-      text: 'Actions',
-      value: 'id',
+      text: "Actions",
+      value: "id",
     },
   ];
   get users() {

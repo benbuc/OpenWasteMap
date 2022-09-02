@@ -1,19 +1,19 @@
 <template>
-    <v-main>
-      <OwmMap />
-      <div class="menu-wrapper">
-        <Nav />
-        <v-scale-transition>
-          <router-view class="router-view" v-if="showDialog"></router-view>
-        </v-scale-transition>
-      </div>
-    </v-main>
+  <v-main>
+    <OwmMap />
+    <div class="menu-wrapper">
+      <Nav />
+      <v-scale-transition>
+        <router-view class="router-view" v-if="showDialog"></router-view>
+      </v-scale-transition>
+    </div>
+  </v-main>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import Nav from '@/components/Nav.vue';
-import OwmMap from '../components/OwmMap.vue';
+import { Component, Vue } from "vue-property-decorator";
+import Nav from "@/components/Nav.vue";
+import OwmMap from "../components/OwmMap.vue";
 
 @Component({
   components: {
@@ -23,7 +23,7 @@ import OwmMap from '../components/OwmMap.vue';
 })
 export default class Home extends Vue {
   public get showDialog() {
-    return this.$route.name !== 'home';
+    return this.$route.name !== "home";
   }
 }
 </script>

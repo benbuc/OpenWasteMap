@@ -87,10 +87,12 @@ export default class Signup extends Vue {
         email: this.email,
         nickname: this.nickname,
       };
-      if (this.fullName) userProfile.full_name = this.fullName;
+      if (this.fullName) {
+        userProfile.full_name = this.fullName;
+      }
       userProfile.password = this.password1;
       await dispatchCreateUser(this.$store, userProfile);
-      //this.$router.push('/profile');
+      // this.$router.push('/profile');
     }
   }
 }
