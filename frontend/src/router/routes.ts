@@ -11,7 +11,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      component: () => import(/* webpackChunkName: "map" */ '../views/Map.vue'),
+      component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue'),
       name: 'home',
       children: [
         {
