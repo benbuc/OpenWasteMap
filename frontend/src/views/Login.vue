@@ -30,6 +30,9 @@
           >Forgot your password?</router-link
         ></v-flex
       >
+      <v-flex class="caption text-xs-right">
+        <router-link to="/signup">Signup new account</router-link>
+      </v-flex>
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>

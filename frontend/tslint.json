@@ -11,7 +11,8 @@
   "rules": {
     "quotemark": [
       true,
-      "double"
+      "double",
+      "avoid-escape"
     ],
     "indent": [
       true,

@@ -57,6 +57,13 @@
               <v-btn @click="submit" :disabled="!valid"> Create Account </v-btn>
             </v-card-actions>
           </v-card>
+          <v-container style="margin-top: 10px">
+            <v-row justify="center">
+              <router-link to="/login"
+                >Already have an account? Login</router-link
+              >
+            </v-row>
+          </v-container>
         </v-flex>
       </v-layout>
     </v-container>
@@ -92,7 +99,7 @@ export default class Signup extends Vue {
       userProfile.password = this.password1;
       const error = await dispatchCreateUser(this.$store, userProfile);
       if (!error) {
-        this.$router.push('/profile');
+        this.$router.push("/profile");
       }
     }
   }

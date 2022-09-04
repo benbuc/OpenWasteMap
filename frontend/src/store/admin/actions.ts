@@ -108,7 +108,7 @@ export const actions = {
         commitAddNotification(context, {
           content: aError.response!.data.detail,
           color: "error",
-        })
+        });
         return aError;
       }
       await dispatchCheckApiError(context, aError);

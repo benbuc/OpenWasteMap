@@ -17,7 +17,7 @@ export default class Map extends Vue {
     return api.getTilesEndpoint();
   }
   public attributionOSM =
-    "&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors";
+    '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
   public attributionOWM = "TODO";
   public get currentPosition() {
     if (
