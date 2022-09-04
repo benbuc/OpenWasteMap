@@ -84,8 +84,8 @@ export const actions = {
     }
   },
   async actionCreateUser(context: MainContext, payload: IUserProfileCreate) {
+    const loadingNotification = { content: "saving", showProgress: true };
     try {
-      const loadingNotification = { content: "saving", showProgress: true };
       commitAddNotification(context, loadingNotification);
       const response = (
         await Promise.all([
@@ -104,6 +104,11 @@ export const actions = {
     } catch (error) {
       const aError = error as AxiosError;
       if (aError.response!.status === 400) {
+        commitRemoveNotification(context, loadingNotification);
+        commitAddNotification(context, {
+          content: aError.response!.data.detail,
+          color: "error",
+        })
         return aError;
       }
       await dispatchCheckApiError(context, aError);
