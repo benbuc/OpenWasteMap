@@ -56,7 +56,7 @@ const routeGuardMain = async (to, from, next) => {
   } else {
     next();
   }
-}
+};
 
 @Component
 export default class Login extends Vue {
