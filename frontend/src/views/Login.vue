@@ -45,14 +45,32 @@
 import { Component, Vue } from "vue-property-decorator";
 import { api } from "@/api";
 import { appName } from "@/env";
-import { readLoginError } from "@/store/main/getters";
-import { dispatchLogIn } from "@/store/main/actions";
+import { readIsLoggedIn, readLoginError } from "@/store/main/getters";
+import { dispatchCheckLoggedIn, dispatchLogIn } from "@/store/main/actions";
+import store from "@/store";
+
+const routeGuardMain = async (to, from, next) => {
+  await dispatchCheckLoggedIn(store);
+  if (readIsLoggedIn(store)) {
+    next("/");
+  } else {
+    next();
+  }
+}
 
 @Component
 export default class Login extends Vue {
   public email: string = "";
   public password: string = "";
   public appName = appName;
+
+  public beforeRouteEnter(to, from, next) {
+    routeGuardMain(to, from, next);
+  }
+
+  public beforeRouteUpdate(to, from, next) {
+    routeGuardMain(to, from, next);
+  }
 
   public get loginError() {
     return readLoginError(this.$store);

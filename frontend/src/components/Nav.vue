@@ -17,7 +17,11 @@ import { dispatchCheckLoggedIn } from "@/store/main/actions";
 @Component
 export default class Nav extends Vue {
   public get buttonLink() {
-    return this.$route.path !== "/login" ? "/login" : "/";
+    if (readIsLoggedIn(this.$store)) {
+      return "/profile";
+    } else {
+      return this.$route.path !== "/login" ? "/login" : "/";
+    }
   }
   public get createButtonLink() {
     return this.$route.path !== "/create" ? "/create" : "/";
