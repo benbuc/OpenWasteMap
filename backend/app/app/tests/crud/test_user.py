@@ -19,6 +19,7 @@ def test_create_user(db: Session) -> None:
     user = crud.user.create(db, obj_in=user_in)
     assert user.email == email
     assert user.nickname == nickname
+    assert user.email_verified is False
     assert hasattr(user, "hashed_password")
     # Check the join date is reasonably close
     assert 0 < (user.date_joined - datetime_before).total_seconds() <= 1
@@ -34,6 +35,7 @@ def test_authenticate_user(db: Session) -> None:
     assert authenticated_user
     assert user.email == authenticated_user.email
     assert user.nickname == authenticated_user.nickname
+    assert authenticated_user.email_verified is False
 
 
 def test_not_authenticate_user(db: Session) -> None:
@@ -92,6 +94,7 @@ def test_get_user(db: Session) -> None:
     assert user.email == user_2.email
     assert user.nickname == user_2.nickname
     assert user.date_joined == user_2.date_joined
+    assert user.email_verified == user_2.email_verified
     assert jsonable_encoder(user) == jsonable_encoder(user_2)
 
 
@@ -119,3 +122,24 @@ def test_get_all_users(db: Session) -> None:
     all_users = crud.user.get_all(db)
     for user in users:
         assert user in all_users
+
+
+def test_check_if_user_email_verified(db: Session) -> None:
+    user = create_random_user(db)
+    is_email_verified = crud.user.is_email_verified(user)
+    assert is_email_verified is True
+
+
+def test_check_if_user_not_email_verified(db: Session) -> None:
+    user = create_random_user(db, verify_email=False)
+    is_email_verified = crud.user.is_email_verified(user)
+    assert is_email_verified is False
+
+
+def test_update_user_email_verified(db: Session) -> None:
+    user = create_random_user(db, verify_email=False)
+    stored_user_1 = crud.user.get(db, id=user.id)
+    assert stored_user_1.email_verified is False
+    crud.user.update_email_verified(db, db_obj=user, new_email_verified=True)
+    stored_user_2 = crud.user.get(db, id=user.id)
+    assert stored_user_2.email_verified is True

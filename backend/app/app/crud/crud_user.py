@@ -43,6 +43,12 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
             update_data["hashed_password"] = hashed_password
         return super().update(db, db_obj=db_obj, obj_in=update_data)
 
+    def update_email_verified(
+        self, db: Session, *, db_obj: User, new_email_verified: bool
+    ) -> User:
+        update_data = {"email_verified": new_email_verified}
+        return super().update(db, db_obj=db_obj, obj_in=update_data)
+
     def authenticate(self, db: Session, *, email: str, password: str) -> Optional[User]:
         user = self.get_by_email(db, email=email)
         if not user:
@@ -56,6 +62,9 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
 
     def is_superuser(self, user: User) -> bool:
         return user.is_superuser
+
+    def is_email_verified(self, user: User) -> bool:
+        return user.email_verified
 
     def get_all(self, db: Session) -> List[User]:
         return db.query(User).all()
