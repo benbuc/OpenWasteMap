@@ -12,8 +12,8 @@ from app.core.config import settings
 from app.utils import (
     generate_password_reset_token,
     send_reset_password_email,
-    verify_password_reset_token,
     verify_email_verification_token,
+    verify_password_reset_token,
 )
 
 router = APIRouter()

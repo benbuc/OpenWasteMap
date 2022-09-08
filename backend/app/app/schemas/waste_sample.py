@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, conint, confloat
+from pydantic import BaseModel, confloat, conint
 
 
 # Shared properties

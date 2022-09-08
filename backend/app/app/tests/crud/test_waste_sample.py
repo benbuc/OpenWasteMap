@@ -6,8 +6,8 @@ from sqlalchemy.orm import Session
 from app import crud
 from app.schemas.waste_sample import (
     WasteSampleCreate,
-    WasteSampleUpdate,
     WasteSampleImportExport,
+    WasteSampleUpdate,
 )
 from app.tests.utils.user import create_random_user
 from app.tests.utils.utils import random_datetime

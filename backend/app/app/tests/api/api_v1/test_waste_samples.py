@@ -1,12 +1,13 @@
-from fastapi.testclient import TestClient
 from random import randint, random
+
+from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
 from app import crud
 from app.core.config import settings
-from app.tests.utils.waste_sample import create_random_waste_sample
 from app.tests.utils.user import create_random_user
 from app.tests.utils.utils import random_datetime
+from app.tests.utils.waste_sample import create_random_waste_sample
 
 
 def test_create_waste_sample(

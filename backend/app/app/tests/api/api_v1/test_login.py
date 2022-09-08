@@ -6,8 +6,8 @@ from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.core.security import verify_password
 from app.tests.utils.user import create_random_user
-from app.utils import generate_password_reset_token, generate_email_verification_token
 from app.tests.utils.utils import random_lower_string
+from app.utils import generate_email_verification_token, generate_password_reset_token
 
 
 def test_get_access_token(client: TestClient) -> None:

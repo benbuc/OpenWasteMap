@@ -8,10 +8,7 @@ from sqlalchemy.orm import Session
 from app import crud, models, schemas
 from app.api import deps
 from app.core.config import settings
-from app.utils import (
-    send_email_verification,
-    generate_email_verification_token,
-)
+from app.utils import generate_email_verification_token, send_email_verification
 
 router = APIRouter()
 
