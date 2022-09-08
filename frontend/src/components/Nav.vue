@@ -1,6 +1,12 @@
 <template>
   <div class="buttons-wrapper">
-    <v-btn v-if="loggedIn" class="mx-2" fab :to="createButtonLink">
+    <v-btn
+      v-if="loggedIn"
+      class="mx-2"
+      :style="{ transform: `rotate(${createButtonDeg}deg)` }"
+      fab
+      :to="createButtonLink"
+    >
       <v-icon> add </v-icon>
     </v-btn>
     <v-btn class="mx-2" fab dark :color="buttonColor" :to="buttonLink">
@@ -37,6 +43,9 @@ export default class Nav extends Vue {
   }
   get loggedIn() {
     return readIsLoggedIn(this.$store);
+  }
+  get createButtonDeg() {
+    return this.$route.path === "/create" ? "45" : "0";
   }
   public async mounted() {
     dispatchCheckLoggedIn(this.$store);
