@@ -92,7 +92,7 @@ def verify_password_reset_token(token: str) -> Optional[str]:
 
 def send_email_verification(email_to: str, nickname: str, token: str) -> None:
     project_name = settings.PROJECT_NAME
-    subject = f"{project_name} - Verifiy e-mail"
+    subject = f"{project_name} - Verify e-mail"
     with open(Path(settings.EMAIL_TEMPLATES_DIR) / "verify_email.html") as f:
         template_str = f.read()
     server_host = settings.SERVER_HOST
@@ -120,3 +120,16 @@ def generate_email_verification_token(email: str) -> str:
         algorithm="HS256",
     )
     return encoded_jwt
+
+
+def verify_email_verification_token(token: str) -> Optional[str]:
+    try:
+        decoded_token = jwt.decode(
+            token,
+            settings.SECRET_KEY,
+            algorithms=["HS256"],
+            audience="email_verification",
+        )
+        return decoded_token["sub"]
+    except jwt.JWTError:
+        return None

@@ -13,6 +13,7 @@ from app.utils import (
     generate_password_reset_token,
     send_reset_password_email,
     verify_password_reset_token,
+    verify_email_verification_token,
 )
 
 router = APIRouter()
@@ -90,3 +91,26 @@ def reset_password(
         raise HTTPException(status_code=400, detail="Inactive user")
     crud.user.update(db, db_obj=user, obj_in=schemas.UserUpdate(password=new_password))
     return {"msg": "Password updated successfully"}
+
+
+@router.post("/verify-email", response_model=schemas.Msg)
+def verify_email(
+    token: str = Body(..., embed=True), db: Session = Depends(deps.get_db)
+) -> Any:
+    """
+    Verify e-mail address
+    """
+    print("STARTING")
+    email = verify_email_verification_token(token)
+    if not email:
+        raise HTTPException(status_code=400, detail="Invalid token")
+    user = crud.user.get_by_email(db, email=email)
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="The user with this username does not exist in the system.",
+        )
+    elif not crud.user.is_active(user):
+        raise HTTPException(status_code=400, detail="Inactive user")
+    crud.user.update_email_verified(db, db_obj=user, new_email_verified=True)
+    return {"msg": "E-mail verified"}
