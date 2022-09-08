@@ -71,6 +71,11 @@ export const api = {
       token,
     });
   },
+  async verifyEmail(token: string) {
+    return axios.post(`${apiUrl}/api/v1/verify-email`, {
+      token,
+    });
+  },
   getTilesEndpoint() {
     return `${apiUrl}/api/v1/tiles/{z}/{x}/{y}.png`;
   },

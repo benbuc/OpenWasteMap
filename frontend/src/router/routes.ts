@@ -53,6 +53,13 @@ export default new Router({
         ),
     },
     {
+      path: "/verify-email",
+      component: () =>
+        import(
+          /* webpackChunkName: "verify-email" */ "../views/VerifyEmail.vue"
+        ),
+    },
+    {
       path: "/admin",
       component: () =>
         import(/* webpackChunkName: "admin" */ "../views/main/admin/Admin.vue"),

@@ -206,6 +206,34 @@ export const actions = {
       });
     }
   },
+  async verifyEmail(context: MainContext, payload: { token: string }) {
+    const loadingNotification = {
+      content: "Verifying e-mail",
+      showProgress: true,
+    };
+    try {
+      commitAddNotification(context, loadingNotification);
+      const response = (
+        await Promise.all([
+          api.verifyEmail(payload.token),
+          await new Promise((resolve, reject) =>
+            setTimeout(() => resolve(), 500)
+          ),
+        ])
+      )[0];
+      commitRemoveNotification(context, loadingNotification);
+      commitAddNotification(context, {
+        content: "E-mail successfuly verified",
+        color: "success",
+      });
+    } catch (error) {
+      commitRemoveNotification(context, loadingNotification);
+      commitAddNotification(context, {
+        content: "Error verifying e-mail",
+        color: "error",
+      });
+    }
+  },
   async actionCreateWasteSample(
     context: MainContext,
     payload: IWasteSampleCreate
@@ -249,6 +277,7 @@ export const dispatchUpdateUserProfile = dispatch(
 export const dispatchRemoveNotification = dispatch(actions.removeNotification);
 export const dispatchPasswordRecovery = dispatch(actions.passwordRecovery);
 export const dispatchResetPassword = dispatch(actions.resetPassword);
+export const dispatchVerifyEmail = dispatch(actions.verifyEmail);
 export const dispatchCreateWasteSample = dispatch(
   actions.actionCreateWasteSample
 );
