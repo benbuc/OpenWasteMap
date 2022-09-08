@@ -1,22 +1,23 @@
 <template>
-  <v-card class="elevation-12" :style="cardStyle">
-    <v-card-text>
-      <v-form v-model="valid" ref="form">
-        Position accuracy: {{ coordinates.accuracy }} m
-        <v-slider
-          min="0"
-          max="10"
-          label="Waste Level"
-          v-model="wasteLevel"
-        ></v-slider>
-        Level: {{ wasteLevel }}
-      </v-form>
-    </v-card-text>
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn @click="submit" :disabled="!valid || !gpsReady"> Save </v-btn>
-    </v-card-actions>
-  </v-card>
+  <v-container>
+    <v-row>
+      <v-col class="text-right">
+        <v-btn
+          fab
+          block
+          v-for="i in 11"
+          :style="{
+            color: buttonStyle(i - 1),
+            border: '1px solid ' + buttonStyle(i - 1),
+          }"
+          :key="i - 1"
+          :disabled="!gpsReady"
+          v-on:click="submit(i - 1)"
+          >{{ i - 1 }}</v-btn
+        >
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -49,17 +50,17 @@ export default class Create extends Vue {
       accuracy: this.$store.state.geolocation.acc,
     };
   }
-  get cardStyle() {
+  public buttonStyle(wasteLevel: number) {
     let r = 0;
     let g = 0;
     let b = 0;
     for (let i = 0; i < this.colors.length - 1; i++) {
       if (
-        this.wasteLevel / 10 >= this.colors[i][0] &&
-        this.wasteLevel / 10 <= this.colors[i + 1][0]
+        wasteLevel / 10 >= this.colors[i][0] &&
+        wasteLevel / 10 <= this.colors[i + 1][0]
       ) {
         const mix =
-          (this.wasteLevel / 10 - this.colors[i][0]) /
+          (wasteLevel / 10 - this.colors[i][0]) /
           (this.colors[i + 1][0] - this.colors[i][0]);
 
         r = this.colors[i][1] * (1 - mix) + this.colors[i + 1][1] * mix;
@@ -67,13 +68,13 @@ export default class Create extends Vue {
         b = this.colors[i][3] * (1 - mix) + this.colors[i + 1][3] * mix;
       }
     }
-    return `background: rgba(${r}, ${g}, ${b}, 1)`;
+    return `rgba(${r}, ${g}, ${b}, 1)`;
   }
 
-  public async submit() {
+  public async submit(wasteLevel: number) {
     if (this.gpsReady) {
       const newSample: IWasteSampleCreate = {
-        waste_level: this.wasteLevel,
+        waste_level: wasteLevel,
         latitude: this.coordinates.latitude,
         longitude: this.coordinates.longitude,
       };

@@ -38,6 +38,7 @@ export default class Home extends Vue {
 .router-view {
   position: absolute;
   right: 0;
-  width: calc(100% - 45px);
+  /*width: calc(100% - 45px);*/
+  width: unset;
 }
 </style>
