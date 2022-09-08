@@ -20,6 +20,7 @@ def test_get_users_superuser_me(
     assert current_user["email"] == settings.FIRST_SUPERUSER
     assert current_user["nickname"] == settings.FIRST_SUPERUSER_NICKNAME
     assert current_user["date_joined"]
+    assert current_user["email_verified"] is True
 
 
 def test_get_users_normal_user_me(
@@ -32,18 +33,15 @@ def test_get_users_normal_user_me(
     assert current_user["is_superuser"] is False
     assert current_user["email"] == settings.EMAIL_TEST_USER
     assert current_user["date_joined"]
+    assert current_user["email_verified"] is True
 
 
-def test_create_user_new_email(
-    client: TestClient, superuser_token_headers: dict, db: Session
-) -> None:
+def test_create_user_new_email(client: TestClient, db: Session) -> None:
     username = random_email()
     nickname = random_lower_string()
     password = random_lower_string()
     data = {"email": username, "nickname": nickname, "password": password}
-    r = client.post(
-        f"{settings.API_V1_STR}/users/", headers=superuser_token_headers, json=data,
-    )
+    r = client.post(f"{settings.API_V1_STR}/users/", json=data)
     assert 200 <= r.status_code < 300
     created_user = r.json()
     user = crud.user.get_by_email(db, email=username)
@@ -51,6 +49,7 @@ def test_create_user_new_email(
     assert user.email == created_user["email"]
     assert user.nickname == created_user["nickname"]
     assert user.date_joined.isoformat() == created_user["date_joined"]
+    assert user.email_verified is False
 
 
 def test_get_existing_user(
@@ -72,6 +71,7 @@ def test_get_existing_user(
     assert existing_user.email == api_user["email"]
     assert existing_user.nickname == api_user["nickname"]
     assert existing_user.date_joined.isoformat() == api_user["date_joined"]
+    assert existing_user.email_verified is False
 
 
 def test_get_existing_user_nickname(
@@ -95,28 +95,21 @@ def test_get_existing_user_nickname(
     assert existing_user.date_joined.isoformat() == api_user["date_joined"]
 
 
-def test_create_user_existing_username(
-    client: TestClient, superuser_token_headers: dict, db: Session
-) -> None:
+def test_create_user_existing_username(client: TestClient, db: Session) -> None:
     username = random_email()
-    # username = email
     nickname1 = random_lower_string()
     nickname2 = random_lower_string()
     password = random_lower_string()
     user_in = UserCreate(email=username, nickname=nickname1, password=password)
     crud.user.create(db, obj_in=user_in)
     data = {"email": username, "nickname": nickname2, "password": password}
-    r = client.post(
-        f"{settings.API_V1_STR}/users/", headers=superuser_token_headers, json=data,
-    )
+    r = client.post(f"{settings.API_V1_STR}/users/", json=data)
     created_user = r.json()
     assert r.status_code == 400
     assert "_id" not in created_user
 
 
-def test_create_user_existing_nickname(
-    client: TestClient, superuser_token_headers: dict, db: Session
-) -> None:
+def test_create_user_existing_nickname(client: TestClient, db: Session) -> None:
     username1 = random_email()
     username2 = random_email()
     nickname = random_lower_string()
@@ -124,25 +117,10 @@ def test_create_user_existing_nickname(
     user_in = UserCreate(email=username1, nickname=nickname, password=password)
     crud.user.create(db, obj_in=user_in)
     data = {"email": username2, "nickname": nickname, "password": password}
-    r = client.post(
-        f"{settings.API_V1_STR}/users/", headers=superuser_token_headers, json=data,
-    )
+    r = client.post(f"{settings.API_V1_STR}/users/", json=data)
     created_user = r.json()
     assert r.status_code == 400
     assert "_id" not in created_user
-
-
-def test_create_user_by_normal_user(
-    client: TestClient, normal_user_token_headers: Dict[str, str]
-) -> None:
-    username = random_email()
-    nickname = random_lower_string()
-    password = random_lower_string()
-    data = {"email": username, "nickname": nickname, "password": password}
-    r = client.post(
-        f"{settings.API_V1_STR}/users/", headers=normal_user_token_headers, json=data,
-    )
-    assert r.status_code == 400
 
 
 def test_retrieve_users(
@@ -168,3 +146,4 @@ def test_retrieve_users(
         assert "email" in item
         assert "nickname" in item
         assert "date_joined" in item
+        assert "email_verified" in item

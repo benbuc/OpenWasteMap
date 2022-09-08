@@ -28,6 +28,7 @@ class UserUpdate(UserBase):
 class UserInDBBase(UserBase):
     id: Optional[int] = None
     date_joined: datetime
+    email_verified: bool = False
 
     class Config:
         orm_mode = True

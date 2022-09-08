@@ -6,17 +6,14 @@
       </v-card-title>
       <v-card-text>
         <template>
-          <v-form
-            v-model="valid"
-            ref="form"
-            lazy-validation
-          >
+          <v-form v-model="valid" ref="form" lazy-validation>
             <v-text-field
               label="Nickname"
               v-model="nickname"
               v-validate="'required'"
               :error-messages="errors.collect('nickname')"
-              required></v-text-field>
+              required
+            ></v-text-field>
             <v-text-field
               label="Full Name"
               v-model="fullName"
@@ -38,30 +35,25 @@
         <v-spacer></v-spacer>
         <v-btn @click="cancel">Cancel</v-btn>
         <v-btn @click="reset">Reset</v-btn>
-        <v-btn
-          @click="submit"
-          :disabled="!valid"
-        >
-          Save
-        </v-btn>
+        <v-btn @click="submit" :disabled="!valid"> Save </v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { Store } from 'vuex';
-import { IUserProfileUpdate } from '@/interfaces';
-import { readUserProfile } from '@/store/main/getters';
-import { dispatchUpdateUserProfile } from '@/store/main/actions';
+import { Component, Vue } from "vue-property-decorator";
+import { Store } from "vuex";
+import { IUserProfileUpdate } from "@/interfaces";
+import { readUserProfile } from "@/store/main/getters";
+import { dispatchUpdateUserProfile } from "@/store/main/actions";
 
 @Component
 export default class UserProfileEdit extends Vue {
   public valid = true;
-  public nickname: string = '';
-  public fullName: string = '';
-  public email: string = '';
+  public nickname: string = "";
+  public fullName: string = "";
+  public email: string = "";
 
   public created() {
     const userProfile = readUserProfile(this.$store);
@@ -102,7 +94,7 @@ export default class UserProfileEdit extends Vue {
         updatedProfile.email = this.email;
       }
       await dispatchUpdateUserProfile(this.$store, updatedProfile);
-      this.$router.push('/main/profile');
+      this.$router.push("/profile");
     }
   }
 }

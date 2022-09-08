@@ -1,6 +1,6 @@
-import { IUserProfile, IWasteSample } from '@/interfaces';
+import { IUserProfile, IWasteSample } from "@/interfaces";
 
 export interface AdminState {
-    users: IUserProfile[];
-    waste_samples: IWasteSample[];
+  users: IUserProfile[];
+  waste_samples: IWasteSample[];
 }
