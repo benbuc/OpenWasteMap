@@ -25,7 +25,7 @@ def test_create_waste_sample(
     assert content["latitude"] == data["latitude"]
     assert content["longitude"] == data["longitude"]
     assert "id" in content
-    assert "owner_id" in content
+    assert "owner_id" not in content
 
 
 def test_create_invalid_waste_sample(
@@ -96,7 +96,7 @@ def test_read_waste_sample(
     assert content["latitude"] == waste_sample.latitude
     assert content["longitude"] == waste_sample.longitude
     assert content["id"] == waste_sample.id
-    assert content["owner_id"] == waste_sample.owner_id
+    assert "owner_id" not in content
 
 
 def test_read_waste_sample_without_owner(
@@ -110,8 +110,8 @@ def test_read_waste_sample_without_owner(
     )
     assert response.status_code == 200
     content = response.json()
-    assert content["owner_id"] is None
     assert content["waste_level"] == waste_sample.waste_level
+    assert "owner_id" not in content
 
 
 def test_get_all_waste_samples(

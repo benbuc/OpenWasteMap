@@ -32,7 +32,6 @@ class WasteSampleUpdate(WasteSampleBase):
 # Properties shared by models stored in DB
 class WasteSampleInDBBase(WasteSampleBase):
     id: int
-    owner_id: Optional[int]
     sampling_date: datetime
 
     class Config:
@@ -46,4 +45,4 @@ class WasteSample(WasteSampleInDBBase):
 
 # Properties properties stored in DB
 class WasteSampleInDB(WasteSampleInDBBase):
-    pass
+    owner_id: Optional[int]
