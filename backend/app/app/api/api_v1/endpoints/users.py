@@ -8,7 +8,11 @@ from sqlalchemy.orm import Session
 from app import crud, models, schemas
 from app.api import deps
 from app.core.config import settings
-from app.utils import send_new_account_email
+from app.utils import (
+    send_new_account_email,
+    send_email_verification,
+    generate_email_verification_token,
+)
 
 router = APIRouter()
 
@@ -56,6 +60,15 @@ def create_user(
         send_new_account_email(
             email_to=user_in.email, username=user_in.email, password=user_in.password
         )
+        email_verification_token = generate_email_verification_token(
+            email=user_in.email
+        )
+        send_email_verification(
+            email_to=user_in.email,
+            nickname=user_in.nickname,
+            token=email_verification_token,
+        )
+
     return user
 
 
