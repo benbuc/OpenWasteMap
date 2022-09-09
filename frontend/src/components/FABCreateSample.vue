@@ -12,6 +12,7 @@
 
     <v-btn
       fab
+      :disabled="createButtonsDisabled"
       :style="{
         color: buttonColor(i - 1),
         border: `1px solid ${buttonColor(i - 1)}`,
@@ -41,6 +42,7 @@ export default class FABCreateSample extends Vue {
   ];
   public active = false;
   public showCreateButtons = false;
+  public createButtonsDisabled = false;
   public showGPSWaiting = true;
   public showGPSTooltip = false;
   public async mounted() {
@@ -128,12 +130,14 @@ export default class FABCreateSample extends Vue {
   }
   public async createSample(wasteLevel: number) {
     if (this.gpsReady) {
+      this.createButtonsDisabled = true;
       const newSample: IWasteSampleCreate = {
         waste_level: wasteLevel,
         latitude: this.coordinates.latitude,
         longitude: this.coordinates.longitude,
       };
       await dispatchCreateWasteSample(this.$store, newSample);
+      this.createButtonsDisabled = false;
       this.$root.$emit("refresh_owm_map");
       this.active = false;
     }
