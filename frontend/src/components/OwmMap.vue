@@ -24,6 +24,9 @@ export default class OwmMap extends Vue {
   public zoom = 11;
   public center = [52.5183, 13.4006];
   public urlOSM = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+  public attributionOSM =
+    '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
+  public attributionOWM = "TODO";
   public urlOWM() {
     // adding random characters to the end
     // will prevent browser from caching tiles
@@ -31,9 +34,6 @@ export default class OwmMap extends Vue {
     // to force a reload of the tiles
     return `${api.getTilesEndpoint()}?${Math.random()}`;
   }
-  public attributionOSM =
-    '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
-  public attributionOWM = "TODO";
   public refreshOwmMap() {
     this.owmTileLayer?.setUrl(this.urlOWM());
   }
