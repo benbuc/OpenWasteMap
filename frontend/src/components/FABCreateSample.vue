@@ -6,8 +6,9 @@
       </v-btn>
     </template>
     <v-tooltip v-model="showGPSTooltip" right v-if="showGPSWaiting">
-      <v-btn fab disabled loading slot="activator"> </v-btn>
-      <span>Waiting for GPS...{{ coordinates.accuracy.toFixed(2) }}m</span>
+      <template v-slot:activator="{ on }">
+      <v-btn fab disabled loading v-on="on"> </v-btn></template>
+      <span>Waiting for GPS...{{ coordinates.accuracy ? coordinates.accuracy.toFixed(2) : "" }}m</span>
     </v-tooltip>
 
     <v-btn
@@ -52,7 +53,6 @@ export default class FABCreateSample extends Vue {
       .addEventListener("click", (e) => {
         e.stopPropagation();
       });
-    this.$vuexGeolocation.watchPosition();
     if (this.gpsReady) {
       this.showCreateButtons = true;
       this.showGPSWaiting = false;
@@ -89,8 +89,10 @@ export default class FABCreateSample extends Vue {
   public activeChanged() {
     // see gpsStatusChanged for further information
     if (!this.active) {
+      this.$vuexGeolocation.clearWatch();
       return;
     }
+    this.$vuexGeolocation.watchPosition();
     if (!this.gpsReady) {
       this.showGPSTooltip = false;
       setTimeout(() => {
