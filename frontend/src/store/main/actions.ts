@@ -55,7 +55,7 @@ export const actions = {
         commitSetUserProfile(context, response.data);
       }
     } catch (error) {
-      await dispatchCheckApiError(context, error);
+      await dispatchCheckApiError(context, error as AxiosError);
     }
   },
   async actionUpdateUserProfile(context: MainContext, payload) {
@@ -65,7 +65,7 @@ export const actions = {
       const response = (
         await Promise.all([
           api.updateMe(context.state.token, payload),
-          await new Promise((resolve, reject) =>
+          await new Promise<void>((resolve, reject) =>
             setTimeout(() => resolve(), 500)
           ),
         ])
@@ -77,7 +77,7 @@ export const actions = {
         color: "success",
       });
     } catch (error) {
-      await dispatchCheckApiError(context, error);
+      await dispatchCheckApiError(context, error as AxiosError);
     }
   },
   async actionCheckLoggedIn(context: MainContext) {
@@ -122,8 +122,13 @@ export const actions = {
     }
   },
   async actionCheckApiError(context: MainContext, payload: AxiosError) {
-    if (payload.response!.status === 401) {
+    if (payload.response && payload.response!.status === 401) {
       await dispatchLogOut(context);
+    } else {
+      commitAddNotification(context, {
+        content: payload.message,
+        color: "error",
+      });
     }
   },
   actionRouteLoggedIn(context: MainContext) {
@@ -155,7 +160,7 @@ export const actions = {
       const response = (
         await Promise.all([
           api.passwordRecovery(payload.username),
-          await new Promise((resolve, reject) =>
+          await new Promise<void>((resolve, reject) =>
             setTimeout(() => resolve(), 500)
           ),
         ])
@@ -187,7 +192,7 @@ export const actions = {
       const response = (
         await Promise.all([
           api.resetPassword(payload.password, payload.token),
-          await new Promise((resolve, reject) =>
+          await new Promise<void>((resolve, reject) =>
             setTimeout(() => resolve(), 500)
           ),
         ])
@@ -216,7 +221,7 @@ export const actions = {
       const response = (
         await Promise.all([
           api.verifyEmail(payload.token),
-          await new Promise((resolve, reject) =>
+          await new Promise<void>((resolve, reject) =>
             setTimeout(() => resolve(), 500)
           ),
         ])
@@ -238,13 +243,13 @@ export const actions = {
     context: MainContext,
     payload: IWasteSampleCreate
   ) {
+    const loadingNotification = { content: "saving", showProgress: true };
     try {
-      const loadingNotification = { content: "saving", showProgress: true };
       commitAddNotification(context, loadingNotification);
       const response = (
         await Promise.all([
           api.createWasteSample(context.rootState.main.token, payload),
-          await new Promise((resolve, reject) =>
+          await new Promise<void>((resolve, reject) =>
             setTimeout(() => resolve(), 500)
           ),
         ])
@@ -255,7 +260,8 @@ export const actions = {
         color: "success",
       });
     } catch (error) {
-      await dispatchCheckApiError(context, error);
+      commitRemoveNotification(context, loadingNotification);
+      await dispatchCheckApiError(context, error as AxiosError);
     }
   },
 };
