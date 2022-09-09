@@ -1,32 +1,32 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col class="text-right">
-        <v-btn
-          fab
-          block
-          v-for="i in 11"
-          :style="{
-            color: buttonStyle(i - 1),
-            border: '1px solid ' + buttonStyle(i - 1),
-          }"
-          :key="i - 1"
-          :disabled="!gpsReady"
-          v-on:click="submit(i - 1)"
-          >{{ i - 1 }}</v-btn
-        >
-      </v-col>
-    </v-row>
-  </v-container>
+  <v-speed-dial id="create-sample" v-model="active">
+    <template v-slot:activator>
+      <v-btn fab :style="{ transform: `rotate(${active ? 45 : 0}deg)` }">
+        <v-icon>add</v-icon>
+      </v-btn>
+    </template>
+    <v-btn
+      fab
+      :disabled="!gpsReady"
+      :style="{
+        color: buttonColor(i - 1),
+        border: `1px solid ${buttonColor(i - 1)}`,
+      }"
+      v-for="i in 11"
+      :key="i - 1"
+      v-on:click="createSample(i - 1)"
+      >{{ i - 1 }}</v-btn
+    >
+  </v-speed-dial>
 </template>
 
 <script lang="ts">
 import { IWasteSampleCreate } from "@/interfaces";
 import { dispatchCreateWasteSample } from "@/store/main/actions";
-import { Component, Vue } from "vue-property-decorator";
+import { Vue, Component } from "vue-property-decorator";
 
 @Component
-export default class Create extends Vue {
+export default class FABCreateSample extends Vue {
   public colors = [
     [0.0, 0.0, 255.0, 0.0],
     [0.2, 255.0, 248.0, 0.0],
@@ -35,9 +35,14 @@ export default class Create extends Vue {
     [0.9, 255.0, 13.0, 111.0],
     [1.0, 166.0, 150.0, 255.0],
   ];
-  public valid = false;
-  public wasteLevel: number = 0;
+  public active = false;
   public async mounted() {
+    // prevent buttons from automatically closing the speed dial
+    this.$el
+      .querySelector(".v-speed-dial__list")!
+      .addEventListener("click", (e) => {
+        e.stopPropagation();
+      });
     this.$vuexGeolocation.watchPosition();
   }
   get gpsReady() {
@@ -50,7 +55,7 @@ export default class Create extends Vue {
       accuracy: this.$store.state.geolocation.acc,
     };
   }
-  public buttonStyle(wasteLevel: number) {
+  public buttonColor(wasteLevel: number) {
     let r = 0;
     let g = 0;
     let b = 0;
@@ -70,8 +75,7 @@ export default class Create extends Vue {
     }
     return `rgba(${r}, ${g}, ${b}, 1)`;
   }
-
-  public async submit(wasteLevel: number) {
+  public async createSample(wasteLevel: number) {
     if (this.gpsReady) {
       const newSample: IWasteSampleCreate = {
         waste_level: wasteLevel,
@@ -79,8 +83,19 @@ export default class Create extends Vue {
         longitude: this.coordinates.longitude,
       };
       await dispatchCreateWasteSample(this.$store, newSample);
-      this.$router.push("/");
+      this.active = false;
     }
   }
 }
 </script>
+
+<style>
+#create-sample {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+}
+#create-sample .v-speed-dial__list .v-btn {
+  margin: 0;
+}
+</style>
