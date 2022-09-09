@@ -136,7 +136,7 @@ export const actions = {
       router.currentRoute.path === "/login" ||
       router.currentRoute.path === "/"
     ) {
-      router.push("/main");
+      router.push("/");
     }
   },
   async removeNotification(
