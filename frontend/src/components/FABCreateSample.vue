@@ -7,7 +7,7 @@
     </template>
     <v-tooltip v-model="showGPSTooltip" right v-if="showGPSWaiting">
       <v-btn fab disabled loading slot="activator"> </v-btn>
-      <span>Waiting for GPS...</span>
+      <span>Waiting for GPS...{{ coordinates.accuracy.toFixed(2) }}m</span>
     </v-tooltip>
 
     <v-btn
@@ -97,7 +97,7 @@ export default class FABCreateSample extends Vue {
     }
   }
   get gpsReady() {
-    return this.$store.state.geolocation.lat && this.coordinates.accuracy < 200;
+    return this.$store.state.geolocation.lat && this.coordinates.accuracy < 10;
   }
   get coordinates() {
     return {
