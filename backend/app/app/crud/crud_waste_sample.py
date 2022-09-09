@@ -7,12 +7,12 @@ from sqlalchemy.orm import Session
 
 from app import crud
 from app.crud.base import CRUDBase
-from app.models.waste_sample import WasteSample
 from app.models.user import User
+from app.models.waste_sample import WasteSample
 from app.schemas.waste_sample import (
     WasteSampleCreate,
-    WasteSampleUpdate,
     WasteSampleImportExport,
+    WasteSampleUpdate,
 )
 
 

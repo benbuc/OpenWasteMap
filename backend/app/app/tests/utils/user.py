@@ -22,14 +22,14 @@ def user_authentication_headers(
     return headers
 
 
-def create_random_user(db: Session) -> User:
+def create_random_user(db: Session, verify_email=True) -> User:
     email = random_email()
     nickname = random_lower_string()
     password = random_lower_string()
-    user_in = UserCreate(  # TODO: is username really needed here? only email?
-        username=email, nickname=nickname, email=email, password=password
-    )
+    user_in = UserCreate(nickname=nickname, email=email, password=password)
     user = crud.user.create(db=db, obj_in=user_in)
+    if verify_email:
+        crud.user.update_email_verified(db, db_obj=user, new_email_verified=True)
     return user
 
 
@@ -45,13 +45,12 @@ def authentication_token_from_email(
     nickname = random_lower_string()
     user = crud.user.get_by_email(db, email=email)
     if not user:
-        # TODO: username needed?
-        user_in_create = UserCreate(
-            username=email, nickname=nickname, email=email, password=password
-        )
+        user_in_create = UserCreate(nickname=nickname, email=email, password=password)
         user = crud.user.create(db, obj_in=user_in_create)
+        crud.user.update_email_verified(db, db_obj=user, new_email_verified=True)
     else:
         user_in_update = UserUpdate(password=password)
         user = crud.user.update(db, db_obj=user, obj_in=user_in_update)
+        crud.user.update_email_verified(db, db_obj=user, new_email_verified=True)
 
     return user_authentication_headers(client=client, email=email, password=password)

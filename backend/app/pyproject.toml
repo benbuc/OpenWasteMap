@@ -26,6 +26,7 @@ pytest = "^5.4.1"
 python-jose = {extras = ["cryptography"], version = "^3.1.0"}
 Pillow = "^9.1.0"
 numpy = {version = "^1.22.3", python = ">=3.8,<3.11"}
+markupsafe = "==2.0.1" # pinned because new version breaks jinja2
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.770"

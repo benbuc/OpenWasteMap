@@ -1,12 +1,13 @@
-from fastapi.testclient import TestClient
 from random import randint, random
+
+from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
 from app import crud
 from app.core.config import settings
-from app.tests.utils.waste_sample import create_random_waste_sample
 from app.tests.utils.user import create_random_user
 from app.tests.utils.utils import random_datetime
+from app.tests.utils.waste_sample import create_random_waste_sample
 
 
 def test_create_waste_sample(
@@ -24,7 +25,30 @@ def test_create_waste_sample(
     assert content["latitude"] == data["latitude"]
     assert content["longitude"] == data["longitude"]
     assert "id" in content
-    assert "owner_id" in content
+    assert "owner_id" not in content
+
+
+def test_create_invalid_waste_sample(
+    client: TestClient, superuser_token_headers: dict, db: Session
+) -> None:
+    data = [
+        {"waste_level": -1, "latitude": 12.345, "longitude": 23.456},
+        {"waste_level": 11, "latitude": 12.345, "longitude": 23.456},
+        {"waste_level": 5, "latitude": -91.0, "longitude": 23.456},
+        {"waste_level": 5, "latitude": 91.0, "longitude": 23.456},
+        {"waste_level": 5, "latitude": 12.345, "longitude": -181.0},
+        {"waste_level": 5, "latitude": 12.345, "longitude": 181.0},
+    ]
+    responses = [
+        client.post(
+            f"{settings.API_V1_STR}/waste-samples/",
+            headers=superuser_token_headers,
+            json=d,
+        )
+        for d in data
+    ]
+    for i, response in enumerate(responses):
+        assert response.status_code == 422, f"Index {i} failed"
 
 
 def test_create_waste_samples_bulk(
@@ -72,7 +96,7 @@ def test_read_waste_sample(
     assert content["latitude"] == waste_sample.latitude
     assert content["longitude"] == waste_sample.longitude
     assert content["id"] == waste_sample.id
-    assert content["owner_id"] == waste_sample.owner_id
+    assert "owner_id" not in content
 
 
 def test_read_waste_sample_without_owner(
@@ -86,8 +110,8 @@ def test_read_waste_sample_without_owner(
     )
     assert response.status_code == 200
     content = response.json()
-    assert content["owner_id"] is None
     assert content["waste_level"] == waste_sample.waste_level
+    assert "owner_id" not in content
 
 
 def test_get_all_waste_samples(

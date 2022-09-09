@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from app import crud, models, schemas
 from app.api import deps
 from app.core.config import settings
-from app.utils import send_new_account_email
+from app.utils import generate_email_verification_token, send_email_verification
 
 router = APIRouter()
 
@@ -34,10 +34,7 @@ def read_users(
 
 @router.post("/", response_model=schemas.User)
 def create_user(
-    *,
-    db: Session = Depends(deps.get_db),
-    user_in: schemas.UserCreate,
-    current_user: models.User = Depends(deps.get_current_active_superuser),
+    *, db: Session = Depends(deps.get_db), user_in: schemas.UserCreate,
 ) -> Any:
     """
     Create new user.
@@ -56,9 +53,15 @@ def create_user(
         )
     user = crud.user.create(db, obj_in=user_in)
     if settings.EMAILS_ENABLED and user_in.email:
-        send_new_account_email(
-            email_to=user_in.email, username=user_in.email, password=user_in.password
+        email_verification_token = generate_email_verification_token(
+            email=user_in.email
         )
+        send_email_verification(
+            email_to=user_in.email,
+            nickname=user_in.nickname,
+            token=email_verification_token,
+        )
+
     return user
 
 
@@ -95,33 +98,6 @@ def read_user_me(
     Get current user.
     """
     return current_user
-
-
-@router.post("/open", response_model=schemas.User)
-def create_user_open(
-    *,
-    db: Session = Depends(deps.get_db),
-    password: str = Body(...),
-    email: EmailStr = Body(...),
-    full_name: str = Body(None),
-) -> Any:
-    """
-    Create new user without the need to be logged in.
-    """
-    if not settings.USERS_OPEN_REGISTRATION:
-        raise HTTPException(
-            status_code=403,
-            detail="Open user registration is forbidden on this server",
-        )
-    user = crud.user.get_by_email(db, email=email)
-    if user:
-        raise HTTPException(
-            status_code=400,
-            detail="The user with this username already exists in the system",
-        )
-    user_in = schemas.UserCreate(password=password, email=email, full_name=full_name)
-    user = crud.user.create(db, obj_in=user_in)
-    return user
 
 
 @router.get("/{user_id}", response_model=schemas.User)

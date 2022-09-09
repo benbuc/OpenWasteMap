@@ -22,33 +22,35 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn @click="cancel">Cancel</v-btn>
-        <v-btn @click="submit" :disabled="!valid">
-              Import
-            </v-btn>
+        <v-btn @click="submit" :disabled="!valid"> Import </v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue } from "vue-property-decorator";
 import {
   IUserProfile,
   IUserProfileUpdate,
   IUserProfileCreate,
   IWasteSampleImportExport,
-} from '@/interfaces';
-import { dispatchGetUsers, dispatchCreateUser, dispatchCreateWasteSamplesBulk } from '@/store/admin/actions';
+} from "@/interfaces";
+import {
+  dispatchGetUsers,
+  dispatchCreateUser,
+  dispatchCreateWasteSamplesBulk,
+} from "@/store/admin/actions";
 
 @Component
 export default class CreateUser extends Vue {
   public valid = false;
-  public inputJSON: string = '';
-  public statusMessage: string = 'No Content';
+  public inputJSON: string = "";
+  public statusMessage: string = "No Content";
   public processedJSON: IWasteSampleImportExport[] = [];
 
   public jsonUpdated(event: InputEvent) {
-    let obj = JSON.parse(this.inputJSON) as IWasteSampleImportExport[];
+    const obj = JSON.parse(this.inputJSON) as IWasteSampleImportExport[];
     this.statusMessage = "Found " + obj.length + " objects";
     this.processedJSON = obj;
   }
@@ -59,7 +61,7 @@ export default class CreateUser extends Vue {
   }
 
   public reset() {
-    this.inputJSON = '';
+    this.inputJSON = "";
     this.$validator.reset();
   }
 
@@ -70,7 +72,7 @@ export default class CreateUser extends Vue {
   public async submit() {
     if (await this.$validator.validateAll()) {
       await dispatchCreateWasteSamplesBulk(this.$store, this.processedJSON);
-      this.$router.push('/admin/main/admin/waste-samples');
+      this.$router.push("/admin/waste-samples");
     }
   }
 }

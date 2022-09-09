@@ -3,4 +3,9 @@
 set -e
 set -x
 
-pytest --cov=app --cov-report=term-missing app/tests "${@}"
+if [ $# -eq 0 ]
+then
+    pytest --cov=app --cov-report=term-missing app/tests
+else
+    pytest --cov=app --cov-report=term-missing "${@}"
+fi
