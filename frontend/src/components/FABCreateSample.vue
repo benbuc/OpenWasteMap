@@ -83,6 +83,7 @@ export default class FABCreateSample extends Vue {
         longitude: this.coordinates.longitude,
       };
       await dispatchCreateWasteSample(this.$store, newSample);
+      this.$root.$emit("refresh_owm_map");
       this.active = false;
     }
   }
