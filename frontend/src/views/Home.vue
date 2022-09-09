@@ -2,28 +2,39 @@
   <v-main>
     <OwmMap />
     <div class="menu-wrapper">
-      <Nav />
+      <FABProfile />
       <v-scale-transition>
         <router-view class="router-view" v-if="showDialog"></router-view>
       </v-scale-transition>
     </div>
+    <FABCreateSample v-if="loggedIn"></FABCreateSample>
   </v-main>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import Nav from "@/components/Nav.vue";
 import OwmMap from "../components/OwmMap.vue";
+import FABCreateSample from "../components/FABCreateSample.vue";
+import { readIsLoggedIn } from "@/store/main/getters";
+import { dispatchCheckLoggedIn } from "@/store/main/actions";
+import FABProfile from "../components/FABProfile.vue";
 
 @Component({
   components: {
-    Nav,
     OwmMap,
+    FABProfile,
+    FABCreateSample,
   },
 })
 export default class Home extends Vue {
   public get showDialog() {
     return this.$route.name !== "home";
+  }
+  get loggedIn() {
+    return readIsLoggedIn(this.$store);
+  }
+  public async mounted() {
+    dispatchCheckLoggedIn(this.$store);
   }
 }
 </script>
