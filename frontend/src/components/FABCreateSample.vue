@@ -5,14 +5,18 @@
         <v-icon>add</v-icon>
       </v-btn>
     </template>
+    <v-tooltip v-model="showGPSTooltip" right v-if="showGPSWaiting">
+      <v-btn fab disabled loading slot="activator"> </v-btn>
+      <span>Waiting for GPS...</span>
+    </v-tooltip>
+
     <v-btn
       fab
-      :disabled="!gpsReady"
       :style="{
         color: buttonColor(i - 1),
         border: `1px solid ${buttonColor(i - 1)}`,
       }"
-      v-for="i in 11"
+      v-for="i in showCreateButtons ? 11 : 0"
       :key="i - 1"
       v-on:click="createSample(i - 1)"
       >{{ i - 1 }}</v-btn
@@ -23,7 +27,7 @@
 <script lang="ts">
 import { IWasteSampleCreate } from "@/interfaces";
 import { dispatchCreateWasteSample } from "@/store/main/actions";
-import { Vue, Component } from "vue-property-decorator";
+import { Vue, Component, Watch } from "vue-property-decorator";
 
 @Component
 export default class FABCreateSample extends Vue {
@@ -36,6 +40,9 @@ export default class FABCreateSample extends Vue {
     [1.0, 166.0, 150.0, 255.0],
   ];
   public active = false;
+  public showCreateButtons = false;
+  public showGPSWaiting = true;
+  public showGPSTooltip = false;
   public async mounted() {
     // prevent buttons from automatically closing the speed dial
     this.$el
@@ -44,6 +51,50 @@ export default class FABCreateSample extends Vue {
         e.stopPropagation();
       });
     this.$vuexGeolocation.watchPosition();
+    if (this.gpsReady) {
+      this.showCreateButtons = true;
+      this.showGPSWaiting = false;
+      this.showGPSTooltip = false;
+    }
+  }
+  @Watch("gpsReady")
+  public gpsStatusChanged() {
+    // to prevent objects from jumping on the screen we have to wait
+    // for the old ones to disappear before we can add the new button
+    // that's why if the gps status changes, we have to use timeouts
+    // to exchange the button set
+    // also, the tooltip has to be added when the button has layouted
+    // therefore we wait for the animation to finish
+    if (this.gpsReady) {
+      // on ready, first remove the waiting notice and then add creation buttons
+      this.showGPSWaiting = false;
+      this.showGPSTooltip = false;
+      setTimeout(() => {
+        this.showCreateButtons = true;
+      }, 250);
+    } else {
+      this.showCreateButtons = false;
+      this.showGPSTooltip = false;
+      setTimeout(() => {
+        this.showGPSWaiting = true;
+        setTimeout(() => {
+          this.showGPSTooltip = true;
+        }, 250);
+      }, 250);
+    }
+  }
+  @Watch("active")
+  public activeChanged() {
+    // see gpsStatusChanged for further information
+    if (!this.active) {
+      return;
+    }
+    if (!this.gpsReady) {
+      this.showGPSTooltip = false;
+      setTimeout(() => {
+        this.showGPSTooltip = true;
+      }, 250);
+    }
   }
   get gpsReady() {
     return this.$store.state.geolocation.lat && this.coordinates.accuracy < 200;
@@ -98,5 +149,8 @@ export default class FABCreateSample extends Vue {
 }
 #create-sample .v-speed-dial__list .v-btn {
   margin: 0;
+}
+#create-sample .v-speed-dial__list .theme--dark.v-btn.v-btn--disabled {
+  background: #373737 !important;
 }
 </style>
