@@ -1,0 +1,8 @@
+name: Backend CI
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    #container: tiangolo/docker-with-compose
+    steps:
+      - run: sh ./scripts/test.sh
