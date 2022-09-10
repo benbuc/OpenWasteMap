@@ -9,4 +9,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Run test script
-        run: sh ./scripts/test.sh
+        env:
+          CI_ENV_FILE: ${{ secrets.CI_ENV_FILE }}
+        run: |
+          echo $CI_ENV_FILE | base64 --decode > .env
+          sh ./scripts/test.sh
