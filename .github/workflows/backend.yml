@@ -24,6 +24,7 @@ jobs:
       - name: Build Stack
         uses: docker/build-push-action@v3
         with:
+          context: .
           push: false
           file: docker-stack.yml
       - name: Run tests
