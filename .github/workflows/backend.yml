@@ -7,4 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     #container: tiangolo/docker-with-compose
     steps:
-      - run: sh scripts/test.sh
+      - name: Run test script
+        run: ./scripts/test.sh
+        shell: bash
