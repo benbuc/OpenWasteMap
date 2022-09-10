@@ -1,5 +1,7 @@
 name: Backend CI
 
+on: push
+
 jobs:
   tests:
     runs-on: ubuntu-latest
