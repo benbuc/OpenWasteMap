@@ -13,4 +13,4 @@ jobs:
           CI_ENV_FILE: ${{ secrets.CI_ENV_FILE }}
         run: |
           echo $CI_ENV_FILE | base64 --decode > .env
-          sh ./scripts/test.sh
+          DOCKER_BUILDKIT=1 sh ./scripts/test.sh
