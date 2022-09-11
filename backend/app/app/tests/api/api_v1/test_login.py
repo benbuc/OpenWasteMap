@@ -56,6 +56,3 @@ def test_verify_email_correct_token(client: TestClient, db: Session) -> None:
     assert r.status_code == 200
     db.refresh(user)
     assert user.email_verified is True
-
-def test_failing_for_ci(client: TestClient):
-    assert False
