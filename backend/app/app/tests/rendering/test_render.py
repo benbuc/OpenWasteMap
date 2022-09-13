@@ -23,7 +23,7 @@ def test_finds_samples_in_tile(db: Session) -> None:
     create_waste_sample(
         db, owner_id=user.id, waste_level=0, latitude=52.521226, longitude=13.684172
     )
-    renderer = render.TileRenderer(13, 4407, 2686, db, owner_id=user.id)
+    renderer = render.TileRenderer(13, 4407, 2686, owner_id=user.id)
     assert len(renderer.samples) == 1
 
 
@@ -32,7 +32,7 @@ def test_ignores_samples_outside_tile(db: Session) -> None:
     create_waste_sample(
         db, owner_id=user.id, waste_level=0, latitude=52.521226, longitude=13.684172
     )
-    renderer = render.TileRenderer(13, 0, 0, db, owner_id=user.id)
+    renderer = render.TileRenderer(13, 0, 0, owner_id=user.id)
     assert len(renderer.samples) == 0
 
 
@@ -41,7 +41,7 @@ def test_rendering_green(db: Session) -> None:
     create_waste_sample(
         db=db, owner_id=user.id, waste_level=0, latitude=52.521226, longitude=13.684172
     )
-    renderer = render.TileRenderer(13, 4407, 2686, db, owner_id=user.id)
+    renderer = render.TileRenderer(13, 4407, 2686, owner_id=user.id)
     rendered_image = np.array(renderer.render())
     assert (rendered_image[..., 0] == 0).all()
     assert (rendered_image[..., 1] == 255).any()
@@ -63,8 +63,8 @@ def test_loading_over_coordinate_edges(db: Session) -> None:
         for lon in [179.99999, -179.99999]
     ]
 
-    renderer_left = render.TileRenderer(*tile_left, db, owner_id=user.id)
-    renderer_right = render.TileRenderer(*tile_right, db, owner_id=user.id)
+    renderer_left = render.TileRenderer(*tile_left, owner_id=user.id)
+    renderer_right = render.TileRenderer(*tile_right, owner_id=user.id)
 
     assert len(renderer_left.samples) == 2
     assert len(renderer_right.samples) == 2
