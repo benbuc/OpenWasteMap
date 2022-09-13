@@ -58,7 +58,9 @@ export default class OwmMap extends Vue {
   }
   public mapReady() {
     this.owmMap = (this.$refs.owmMap as LMap).mapObject;
-    this.owmTileLayer = L.tileLayer(this.urlOWM(), {attribution: this.attributionOWM});
+    this.owmTileLayer = L.tileLayer(this.urlOWM(), {
+      attribution: this.attributionOWM,
+    });
     this.owmTileLayer.addTo(this.owmMap);
   }
 }
