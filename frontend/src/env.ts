@@ -12,3 +12,4 @@ if (env === "production") {
 
 export const apiUrl = envApiUrl;
 export const appName = process.env.VUE_APP_NAME;
+export const appVersion = process.env.VUE_APP_VERSION || "no version";

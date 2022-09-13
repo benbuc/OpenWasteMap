@@ -3,6 +3,7 @@
 # Exit in case of error
 set -e
 
+VERSION=$(git describe --tags) \
 DOMAIN=stag.openwastemap.org \
 TRAEFIK_TAG=stag.openwastemap.org \
 STACK_NAME=stag-openwastemap-org \

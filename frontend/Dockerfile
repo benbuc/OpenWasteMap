@@ -10,8 +10,10 @@ RUN npm install
 COPY ./ /app/
 
 ARG FRONTEND_ENV=production
+ARG VERSION
 
 ENV VUE_APP_ENV=${FRONTEND_ENV}
+ENV VUE_APP_VERSION=${VERSION}
 
 # Comment out the next line to disable tests
 RUN npm run test:unit
