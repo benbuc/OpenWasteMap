@@ -3,6 +3,7 @@
 # Exit in case of error
 set -e
 
+VERSION=$(git describe --tags) \
 DOMAIN=${DOMAIN?Variable not set} \
 TRAEFIK_TAG=${TRAEFIK_TAG?Variable not set} \
 STACK_NAME=${STACK_NAME?Variable not set} \
