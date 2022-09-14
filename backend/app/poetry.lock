@@ -316,7 +316,7 @@ idna = ">=2.0.0"
 
 [[package]]
 name = "emails"
-version = "0.5.15"
+version = "0.6"
 description = "Modern python library for emails."
 category = "main"
 optional = false
@@ -1066,7 +1066,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "21bc9d0ef79bdc006964b0971bd5e3266efb45f9d98e0d30e6cfba298b92f53e"
+content-hash = "e6437f15ff5c43fe91259298faa3d5acb9b487bbb88e0c14e0764784ef596863"
 
 [metadata.files]
 alembic = []
@@ -1117,10 +1117,7 @@ dnspython = [
 ]
 ecdsa = []
 email-validator = []
-emails = [
-    {file = "emails-0.5.15-py2.py3-none-any.whl", hash = "sha256:2d93bb09539d65a16cf1f68db4ffd0f7f45067633e950866e8a4ef89a7c290ec"},
-    {file = "emails-0.5.15.tar.gz", hash = "sha256:fcc02567a528eae6b66d2a5c20ce7a0326e4f6b201bc8ae302f89413164db06a"},
-]
+emails = []
 fastapi = [
     {file = "fastapi-0.54.2-py3-none-any.whl", hash = "sha256:c8651f8316956240c2ffe5bc05c334c8359a3887e642720a9b23319c51e82907"},
     {file = "fastapi-0.54.2.tar.gz", hash = "sha256:fff1b4a7fdf4812abb4507fb7aa30ef4206a0435839626ebe3b2871ec9aa367f"},
