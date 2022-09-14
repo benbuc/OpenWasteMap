@@ -7,7 +7,7 @@ if (env === "production") {
 } else if (env === "staging") {
   envApiUrl = `https://${process.env.VUE_APP_DOMAIN_STAG}`;
 } else {
-  envApiUrl = `http://${process.env.VUE_APP_DOMAIN_DEV}`;
+  envApiUrl = `https://${process.env.VUE_APP_DOMAIN_DEV}`;
 }
 
 export const apiUrl = envApiUrl;
