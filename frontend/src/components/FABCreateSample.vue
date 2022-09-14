@@ -154,7 +154,7 @@ export default class FABCreateSample extends Vue {
 
 <style>
 #create-sample {
-  position: absolute;
+  position: fixed;
   bottom: 15px;
   left: 15px;
 }
