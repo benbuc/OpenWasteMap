@@ -1,6 +1,6 @@
 from typing import Any, List
 
-from fastapi import APIRouter, Body, Depends, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Body, Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
 from pydantic.networks import EmailStr
 from sqlalchemy.orm import Session
@@ -34,7 +34,10 @@ def read_users(
 
 @router.post("/", response_model=schemas.User)
 def create_user(
-    *, db: Session = Depends(deps.get_db), user_in: schemas.UserCreate,
+    *,
+    db: Session = Depends(deps.get_db),
+    user_in: schemas.UserCreate,
+    background_tasks: BackgroundTasks,
 ) -> Any:
     """
     Create new user.
@@ -57,6 +60,7 @@ def create_user(
             email=user_in.email
         )
         send_email_verification(
+            background_tasks=background_tasks,
             email_to=user_in.email,
             nickname=user_in.nickname,
             token=email_verification_token,

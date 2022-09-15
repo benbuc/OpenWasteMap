@@ -3,66 +3,93 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-import emails
-from emails.template import JinjaTemplate
+from fastapi import BackgroundTasks, HTTPException
+from fastapi_mail import ConnectionConfig, FastMail, MessageSchema
+from fastapi_mail.errors import ConnectionErrors
 from jose import jwt
 
 from app.core.config import settings
 
+if settings.EMAILS_ENABLED:
+    email_conn_config = ConnectionConfig(
+        MAIL_USERNAME=settings.SMTP_USER,
+        MAIL_PASSWORD=settings.SMTP_PASSWORD,
+        MAIL_FROM=settings.SMTP_USER,
+        MAIL_PORT=settings.SMTP_PORT,
+        MAIL_SERVER=settings.SMTP_HOST,
+        MAIL_TLS=settings.SMTP_TLS,
+        MAIL_SSL=False,
+        VALIDATE_CERTS=False,
+        TEMPLATE_FOLDER=Path(settings.EMAIL_TEMPLATES_DIR),
+    )
 
-def send_email(
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+
+async def send_email_async(
     email_to: str,
-    subject_template: str = "",
-    html_template: str = "",
+    subject: str = "",
+    template_name: str = "",
     environment: Dict[str, Any] = {},
 ) -> None:
     assert settings.EMAILS_ENABLED, "no provided configuration for email variables"
-    message = emails.Message(
-        subject=JinjaTemplate(subject_template),
-        html=JinjaTemplate(html_template),
-        mail_from=(settings.EMAILS_FROM_NAME, settings.EMAILS_FROM_EMAIL),
+    message = MessageSchema(
+        subject=subject,
+        recipients=[email_to],
+        template_body=environment,
+        subtype="html",
     )
-    smtp_options = {"host": settings.SMTP_HOST, "port": settings.SMTP_PORT}
-    if settings.SMTP_TLS:
-        smtp_options["tls"] = True
-    if settings.SMTP_USER:
-        smtp_options["user"] = settings.SMTP_USER
-    if settings.SMTP_PASSWORD:
-        smtp_options["password"] = settings.SMTP_PASSWORD
-    response = message.send(to=email_to, render=environment, smtp=smtp_options)
-    if response.error:
-        logging.error(
-            f"send_email {settings.SMTP_USER}@{settings.SMTP_HOST}"
-            f":{settings.SMTP_PORT} - {response.error}"
-        )
-    else:
-        logging.info(f"send email result: {response}")
+    fm = FastMail(email_conn_config)
+    try:
+        await fm.send_message(message, template_name=template_name)
+    except ConnectionErrors as e:
+        logger.error(e)
+        raise HTTPException(status_code=500, detail="email sending failed")
 
 
-def send_test_email(email_to: str) -> None:
+def send_email_background(
+    background_tasks: BackgroundTasks,
+    email_to: str,
+    subject: str = "",
+    template_name: str = "",
+    environment: Dict[str, Any] = {},
+) -> None:
+    assert settings.EMAILS_ENABLED, "no provided configuration for email variables"
+    message = MessageSchema(
+        subject=subject,
+        recipients=[email_to],
+        template_body=environment,
+        subtype="html",
+    )
+    fm = FastMail(email_conn_config)
+    background_tasks.add_task(fm.send_message, message, template_name=template_name)
+
+
+def send_test_email(email_to: str, background_tasks: BackgroundTasks) -> None:
     project_name = settings.PROJECT_NAME
     subject = f"{project_name} - Test email"
-    with open(Path(settings.EMAIL_TEMPLATES_DIR) / "test_email.html") as f:
-        template_str = f.read()
-    send_email(
+
+    send_email_background(
+        background_tasks=background_tasks,
         email_to=email_to,
-        subject_template=subject,
-        html_template=template_str,
+        subject=subject,
+        template_name="test_email.html",
         environment={"project_name": settings.PROJECT_NAME, "email": email_to},
     )
 
+    return
 
-def send_reset_password_email(email_to: str, email: str, token: str) -> None:
+
+async def send_reset_password_email(email_to: str, email: str, token: str) -> None:
     project_name = settings.PROJECT_NAME
     subject = f"{project_name} - Password recovery for user {email}"
-    with open(Path(settings.EMAIL_TEMPLATES_DIR) / "reset_password.html") as f:
-        template_str = f.read()
     server_host = settings.SERVER_HOST
     link = f"{server_host}/reset-password?token={token}"
-    send_email(
+    await send_email_async(
         email_to=email_to,
-        subject_template=subject,
-        html_template=template_str,
+        subject=subject,
+        template_name="reset_password.html",
         environment={
             "project_name": settings.PROJECT_NAME,
             "username": email,
@@ -96,22 +123,19 @@ def verify_password_reset_token(token: str) -> Optional[str]:
         return None
 
 
-def send_email_verification(email_to: str, nickname: str, token: str) -> None:
+def send_email_verification(
+    email_to: str, nickname: str, token: str, background_tasks: BackgroundTasks
+) -> None:
     project_name = settings.PROJECT_NAME
     subject = f"{project_name} - Verify e-mail"
-    with open(Path(settings.EMAIL_TEMPLATES_DIR) / "verify_email.html") as f:
-        template_str = f.read()
     server_host = settings.SERVER_HOST
     link = f"{server_host}/verify-email?token={token}"
-    send_email(
+    send_email_background(
+        background_tasks=background_tasks,
         email_to=email_to,
-        subject_template=subject,
-        html_template=template_str,
-        environment={
-            "project_name": settings.PROJECT_NAME,
-            "nickname": nickname,
-            "link": link,
-        },
+        subject=subject,
+        template_name="verify_email.html",
+        environment={"project_name": project_name, "nickname": nickname, "link": link},
     )
 
 
