@@ -66,7 +66,7 @@ export const api = {
     return axios.post(`${apiUrl}/api/v1/password-recovery/${email}`);
   },
   async resetPassword(password: string, token: string) {
-    return axios.post(`${apiUrl}/api/v1/reset-password/`, {
+    return axios.post(`${apiUrl}/api/v1/reset-password`, {
       new_password: password,
       token,
     });
