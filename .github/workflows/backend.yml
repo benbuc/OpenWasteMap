@@ -1,42 +1,40 @@
-name: Backend CI
+name: Backend Build & Test
 
 on:
   push:
     branches:
       - master
-      - develop
-      - 'release-*'
+    paths-ignore:
+      - 'frontend/**'
+    tags:
+      - '*.*.*'
   pull_request:
     branches:
-      - 'dependabot/*'
+      - master
 
 jobs:
-  tests:
+  build-and-test-backend:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      
       - name: Setup .env
         env:
           CI_ENV_FILE: ${{ secrets.CI_ENV_FILE }}
         run: echo $CI_ENV_FILE | base64 --decode > .env
+      
       - uses: docker/setup-buildx-action@v2
-      - name: Setup stack
+        id: buildx
+
+      - name: Build Containers
         run: |
-          DOMAIN=backend \
-          SMTP_HOST="" \
-          TRAEFIK_PUBLIC_NETWORK_IS_EXTERNAL=false \
-          INSTALL_DEV=true \
-          docker-compose \
-          -f docker-compose.yml \
-          config > docker-stack.yml
-      - run: docker-compose -f docker-stack.yml pull
-      - uses: satackey/action-docker-layer-caching@v0.0.11
-        continue-on-error: true
-      - name: Build containers
-        run: docker-compose -f docker-stack.yml build
-      - name: Run tests
+          INSTALL_DEV=true docker-compose -f docker-comose.yml build
+
+      - name: Run and Test
+        env:
+          TRAEFIK_PUBLIC_NETWORK_IS_EXTERNAL: false
         run: |
-          docker-compose -f docker-stack.yml down -v --remove-orphans
-          docker-compose -f docker-stack.yml up -d
-          docker-compose -f docker-stack.yml exec -T backend bash /app/tests-start.sh "$@"
-          docker-compose -f docker-stack.yml down -v --remove-orphans
+          docker-compose -f docker-compose.yml up -d
+          docker-compose -f docker-compose.yml exec -T backend bash /app/tests-start.sh "$@"
+          docker-compose -f docker-compose.yml down -v
+      
