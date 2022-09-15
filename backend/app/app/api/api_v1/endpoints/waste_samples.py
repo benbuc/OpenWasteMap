@@ -77,30 +77,6 @@ def create_waste_samples_bulk(
     return waste_samples
 
 
-@router.put("/{id}", response_model=schemas.WasteSample)
-def update_waste_sample(
-    *,
-    db: Session = Depends(deps.get_db),
-    id: int,
-    waste_sample_in: schemas.WasteSampleUpdate,
-    current_user: models.User = Depends(deps.get_current_active_user),
-) -> Any:
-    """
-    Update a waste sample.
-    """
-    waste_sample = crud.waste_sample.get(db=db, id=id)
-    if not waste_sample:
-        raise HTTPException(status_code=404, detail="Waste Sample not found")
-    if not crud.user.is_superuser(current_user) and (
-        waste_sample.owner_id != current_user.id
-    ):
-        raise HTTPException(status_code=400, detail="Not enough permissions")
-    waste_sample = crud.waste_sample.update(
-        db=db, db_obj=waste_sample, obj_in=waste_sample_in
-    )
-    return waste_sample
-
-
 @router.get("/{id}", response_model=schemas.WasteSample)
 def read_waste_sample(
     *,

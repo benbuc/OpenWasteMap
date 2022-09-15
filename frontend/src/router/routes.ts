@@ -128,6 +128,7 @@ export default new Router({
         },
         {
           path: "waste-samples",
+          component: RouterComponent,
           redirect: "waste-samples/all",
           children: [
             {

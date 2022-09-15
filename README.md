@@ -671,6 +671,13 @@ GitLab CI is configured assuming 2 environments following GitLab flow:
 
 If you need to add more environments, for example, you could imagine using a client-approved `preprod` branch, you can just copy the configurations in `.gitlab-ci.yml` for `stag` and rename the corresponding variables. The Docker Compose file and environment variables are configured to support as many environments as you need, so that you only need to modify `.gitlab-ci.yml` (or whichever CI system configuration you are using).
 
+For GitHub Actions the .env file is included using a single github secret environment variable.
+To update the data in the .env file to be used by CI, create a new file containing the configuration (.e.g. `.ci.env`) and run the following to get the encoded github secret
+
+```bash
+cat .ci.env | base64
+```
+
 ## Docker Compose files and env vars
 
 There is a main `docker-compose.yml` file with all the configurations that apply to the whole stack, it is used automatically by `docker-compose`.

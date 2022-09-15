@@ -7,9 +7,9 @@ from typing import Optional
 
 import numpy as np
 from PIL import Image
-from sqlalchemy.orm import Session
 
 from app import crud
+from app.db.session import SessionLocal
 
 from .parameters import EARTH_RADIUS, SAMPLE_MAX_INFLUENCE, TILE_SIZE
 from .utilities import latitude_from_tilename, longitude_from_tilename
@@ -59,12 +59,11 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
     which influence every given pixel.
     """
 
-    def __init__(self, zoom, xnum, ynum, db: Session, owner_id: Optional[int] = None):
+    def __init__(self, zoom, xnum, ynum, owner_id: Optional[int] = None):
         """
         Initialize with zoom level and and x,y tile numbers.
         """
 
-        self.db = db
         self.owner_id = owner_id
 
         self.zoom = zoom
@@ -120,14 +119,15 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
 
         min_lat, max_lat, min_lon, max_lon = self.get_coordinate_boundaries()
 
-        sample_objects = crud.waste_sample.get_multi_in_range(
-            self.db,
-            min_lat=min_lat,
-            max_lat=max_lat,
-            min_lon=min_lon,
-            max_lon=max_lon,
-            owner_id=self.owner_id,
-        )
+        with SessionLocal() as db:
+            sample_objects = crud.waste_sample.get_multi_in_range(
+                db,
+                min_lat=min_lat,
+                max_lat=max_lat,
+                min_lon=min_lon,
+                max_lon=max_lon,
+                owner_id=self.owner_id,
+            )
 
         samples = np.zeros((len(sample_objects), 3), dtype=DATATYPE)
 

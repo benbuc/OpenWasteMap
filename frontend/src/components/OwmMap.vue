@@ -16,6 +16,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { api } from "@/api";
 import L from "leaflet";
 import { LMap } from "vue2-leaflet";
+import { appVersion } from "@/env";
 
 @Component
 export default class OwmMap extends Vue {
@@ -26,7 +27,7 @@ export default class OwmMap extends Vue {
   public urlOSM = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
   public attributionOSM =
     '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
-  public attributionOWM = "TODO";
+  public attributionOWM = "TODO " + appVersion;
   public urlOWM() {
     // adding random characters to the end
     // will prevent browser from caching tiles
@@ -57,7 +58,9 @@ export default class OwmMap extends Vue {
   }
   public mapReady() {
     this.owmMap = (this.$refs.owmMap as LMap).mapObject;
-    this.owmTileLayer = L.tileLayer(this.urlOWM());
+    this.owmTileLayer = L.tileLayer(this.urlOWM(), {
+      attribution: this.attributionOWM,
+    });
     this.owmTileLayer.addTo(this.owmMap);
   }
 }

@@ -1,6 +1,6 @@
 from typing import Any
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, BackgroundTasks, Depends
 from pydantic.networks import EmailStr
 
 from app import models, schemas
@@ -24,12 +24,13 @@ def test_celery(
 
 
 @router.post("/test-email/", response_model=schemas.Msg, status_code=201)
-def test_email(
+async def test_email(
+    background_tasks: BackgroundTasks,
     email_to: EmailStr,
     current_user: models.User = Depends(deps.get_current_active_superuser),
 ) -> Any:
     """
     Test emails.
     """
-    send_test_email(email_to=email_to)
-    return {"msg": "Test email sent"}
+    send_test_email(email_to=email_to, background_tasks=background_tasks)
+    return {"msg": "Test email queued"}

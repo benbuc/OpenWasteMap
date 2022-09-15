@@ -7,8 +7,13 @@
     </template>
     <v-tooltip v-model="showGPSTooltip" right v-if="showGPSWaiting">
       <template v-slot:activator="{ on }">
-      <v-btn fab disabled loading v-on="on"> </v-btn></template>
-      <span>Waiting for GPS...{{ coordinates.accuracy ? coordinates.accuracy.toFixed(2) : "" }}m</span>
+        <v-btn fab disabled loading v-on="on"> </v-btn
+      ></template>
+      <span
+        >Waiting for GPS...{{
+          coordinates.accuracy ? coordinates.accuracy.toFixed(2) : ""
+        }}m</span
+      >
     </v-tooltip>
 
     <v-btn
@@ -149,7 +154,7 @@ export default class FABCreateSample extends Vue {
 
 <style>
 #create-sample {
-  position: absolute;
+  position: fixed;
   bottom: 15px;
   left: 15px;
 }
