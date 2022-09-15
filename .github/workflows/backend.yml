@@ -28,7 +28,7 @@ jobs:
 
       - name: Build Containers
         run: |
-          INSTALL_DEV=true docker-compose -f docker-comose.yml build
+          INSTALL_DEV=true docker-compose -f docker-compose.yml build
 
       - name: Run and Test
         env:
