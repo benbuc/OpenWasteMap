@@ -100,7 +100,6 @@ def verify_email(
     """
     Verify e-mail address
     """
-    print("STARTING")
     email = verify_email_verification_token(token)
     if not email:
         raise HTTPException(status_code=400, detail="Invalid token")

@@ -30,8 +30,11 @@ def send_email(
     if settings.SMTP_PASSWORD:
         smtp_options["password"] = settings.SMTP_PASSWORD
     response = message.send(to=email_to, render=environment, smtp=smtp_options)
-    if response.status_code != 250:
-        logging.error(f"email could not be sent: {response}")
+    if response.error:
+        logging.error(
+            f"send_email {settings.SMTP_USER}@{settings.SMTP_HOST}"
+            f":{settings.SMTP_PORT} - {response.error}"
+        )
     else:
         logging.info(f"send email result: {response}")
 
