@@ -19,12 +19,8 @@ jobs:
       - uses: actions/checkout@v2
       
       - name: Setup .env
-        env:
-          CI_ENV_FILE: ${{ secrets.CI_ENV_FILE }}
-        run: echo $CI_ENV_FILE | base64 --decode > .env
+        run: cp .github/build_and_test.env .env
 
-      - run: echo $CI_ENV_FILE | base64 --decode
-      
       - uses: docker/setup-buildx-action@v2
         id: buildx
 
