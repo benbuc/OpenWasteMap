@@ -61,7 +61,7 @@ jobs:
         env:
           TRAEFIK_PUBLIC_NETWORK_IS_EXTERNAL: false
         run: |
-          docker-compose -f docker-compose.yml up -d
+          docker-compose -f docker-compose.yml up -d --no-build
           docker-compose -f docker-compose.yml exec -T backend bash /app/tests-start.sh "$@"
           docker-compose -f docker-compose.yml down -v
        
