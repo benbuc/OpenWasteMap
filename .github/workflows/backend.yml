@@ -24,15 +24,24 @@ jobs:
       - uses: docker/setup-buildx-action@v2
         id: buildx
 
-      - name: Build Containers
-        run: |
-          INSTALL_DEV=true docker-compose -f docker-compose.yml build
+      - name: Build Backend
+        uses: docker/build-push-action@v3
+        with:
+          context: ./backend
+          dockerfile: backend.dockerfile
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-      - name: Run and Test
-        env:
-          TRAEFIK_PUBLIC_NETWORK_IS_EXTERNAL: false
-        run: |
-          docker-compose -f docker-compose.yml up -d
-          docker-compose -f docker-compose.yml exec -T backend bash /app/tests-start.sh "$@"
-          docker-compose -f docker-compose.yml down -v
-      
+      #- name: Build Containers
+      #  run: |
+      #    INSTALL_DEV=true docker-compose -f docker-compose.yml build
+      #
+      #- name: Run and Test
+      #  env:
+      #    TRAEFIK_PUBLIC_NETWORK_IS_EXTERNAL: false
+      #  run: |
+      #    docker-compose -f docker-compose.yml up -d
+      #    docker-compose -f docker-compose.yml exec -T backend bash /app/tests-start.sh "$@"
+      #    docker-compose -f docker-compose.yml down -v
+      # 
