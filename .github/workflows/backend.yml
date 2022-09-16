@@ -31,6 +31,7 @@ jobs:
           file: ./backend/backend.dockerfile
           push: false
           load: true
+          tags: owm_backend
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -41,6 +42,7 @@ jobs:
           file: ./backend/celeryworker.dockerfile
           push: false
           load: true
+          tags: owm_celeryworker
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -51,6 +53,7 @@ jobs:
           file: ./frontend/Dockerfile
           push: false
           load: true
+          tags: owm_frontend
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
