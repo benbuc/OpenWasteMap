@@ -10,7 +10,7 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
-      path: "/",
+      path: "/:view_center_zoom(@\\d+\\.\\d+,\\d+\\.\\d+,\\d+z)?",
       component: () =>
         import(/* webpackChunkName: "home" */ "../views/Home.vue"),
       name: "home",
