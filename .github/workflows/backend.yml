@@ -57,11 +57,16 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Run and Test
+      - name: Run Setup
         env:
           TRAEFIK_PUBLIC_NETWORK_IS_EXTERNAL: false
         run: |
           docker-compose -f docker-compose.yml up -d --no-build
+
+      - name: Test
+        env:
+          TRAEFIK_PUBLIC_NETWORK_IS_EXTERNAL: false
+        run: |
           docker-compose -f docker-compose.yml exec -T backend bash /app/tests-start.sh "$@"
           docker-compose -f docker-compose.yml down -v
        
