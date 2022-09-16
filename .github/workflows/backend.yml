@@ -30,18 +30,35 @@ jobs:
           context: ./backend
           file: ./backend/backend.dockerfile
           push: false
+          load: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      #- name: Build Containers
-      #  run: |
-      #    INSTALL_DEV=true docker-compose -f docker-compose.yml build
-      #
-      #- name: Run and Test
-      #  env:
-      #    TRAEFIK_PUBLIC_NETWORK_IS_EXTERNAL: false
-      #  run: |
-      #    docker-compose -f docker-compose.yml up -d
-      #    docker-compose -f docker-compose.yml exec -T backend bash /app/tests-start.sh "$@"
-      #    docker-compose -f docker-compose.yml down -v
-      # 
+      - name: Build Celeryworker
+        uses: docker/build-push-action@v3
+        with:
+          context: ./backend
+          file: ./backend/celeryworker.dockerfile
+          push: false
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build Frontend
+        uses: docker/build-push-action@v3
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          push: false
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Run and Test
+        env:
+          TRAEFIK_PUBLIC_NETWORK_IS_EXTERNAL: false
+        run: |
+          docker-compose -f docker-compose.yml up -d
+          docker-compose -f docker-compose.yml exec -T backend bash /app/tests-start.sh "$@"
+          docker-compose -f docker-compose.yml down -v
+       
