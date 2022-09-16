@@ -84,9 +84,9 @@ def test_check_if_user_is_superuser_normal_user(db: Session) -> None:
 def test_get_user(db: Session) -> None:
     password = random_lower_string()
     nickname = random_lower_string()
-    username = random_email()
+    email = random_email()
     user_in = UserCreate(
-        email=username, nickname=nickname, password=password, is_superuser=True
+        email=email, nickname=nickname, password=password, is_superuser=True
     )
     user = crud.user.create(db, obj_in=user_in)
     user_2 = crud.user.get(db, id=user.id)

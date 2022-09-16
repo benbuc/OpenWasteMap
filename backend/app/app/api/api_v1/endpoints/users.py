@@ -47,7 +47,7 @@ def create_user(
     if user_with_email:
         raise HTTPException(
             status_code=400,
-            detail="The user with this username already exists in the system.",
+            detail="The user with this email already exists in the system.",
         )
     if user_with_nickname:
         raise HTTPException(
@@ -138,7 +138,7 @@ def update_user(
     if not user:
         raise HTTPException(
             status_code=404,
-            detail="The user with this username does not exist in the system",
+            detail="The user with this email does not exist in the system",
         )
     user = crud.user.update(db, db_obj=user, obj_in=user_in)
     return user

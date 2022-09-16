@@ -37,14 +37,14 @@ def test_get_users_normal_user_me(
 
 
 def test_create_user_new_email(client: TestClient, db: Session) -> None:
-    username = random_email()
+    email = random_email()
     nickname = random_lower_string()
     password = random_lower_string()
-    data = {"email": username, "nickname": nickname, "password": password}
+    data = {"email": email, "nickname": nickname, "password": password}
     r = client.post(f"{settings.API_V1_STR}/users/", json=data)
     assert 200 <= r.status_code < 300
     created_user = r.json()
-    user = crud.user.get_by_email(db, email=username)
+    user = crud.user.get_by_email(db, email=email)
     assert user
     assert user.email == created_user["email"]
     assert user.nickname == created_user["nickname"]
@@ -55,10 +55,10 @@ def test_create_user_new_email(client: TestClient, db: Session) -> None:
 def test_get_existing_user(
     client: TestClient, superuser_token_headers: dict, db: Session
 ) -> None:
-    username = random_email()
+    email = random_email()
     nickname = random_lower_string()
     password = random_lower_string()
-    user_in = UserCreate(email=username, nickname=nickname, password=password)
+    user_in = UserCreate(email=email, nickname=nickname, password=password)
     user = crud.user.create(db, obj_in=user_in)
     user_id = user.id
     r = client.get(
@@ -66,7 +66,7 @@ def test_get_existing_user(
     )
     assert 200 <= r.status_code < 300
     api_user = r.json()
-    existing_user = crud.user.get_by_email(db, email=username)
+    existing_user = crud.user.get_by_email(db, email=email)
     assert existing_user
     assert existing_user.email == api_user["email"]
     assert existing_user.nickname == api_user["nickname"]
@@ -77,10 +77,10 @@ def test_get_existing_user(
 def test_get_existing_user_nickname(
     client: TestClient, superuser_token_headers: dict, db: Session
 ) -> None:
-    username = random_email()
+    email = random_email()
     nickname = random_lower_string()
     password = random_lower_string()
-    user_in = UserCreate(email=username, nickname=nickname, password=password)
+    user_in = UserCreate(email=email, nickname=nickname, password=password)
     user = crud.user.create(db, obj_in=user_in)
     user_id = user.id
     r = client.get(
@@ -95,14 +95,14 @@ def test_get_existing_user_nickname(
     assert existing_user.date_joined.isoformat() == api_user["date_joined"]
 
 
-def test_create_user_existing_username(client: TestClient, db: Session) -> None:
-    username = random_email()
+def test_create_user_existing_email(client: TestClient, db: Session) -> None:
+    email = random_email()
     nickname1 = random_lower_string()
     nickname2 = random_lower_string()
     password = random_lower_string()
-    user_in = UserCreate(email=username, nickname=nickname1, password=password)
+    user_in = UserCreate(email=email, nickname=nickname1, password=password)
     crud.user.create(db, obj_in=user_in)
-    data = {"email": username, "nickname": nickname2, "password": password}
+    data = {"email": email, "nickname": nickname2, "password": password}
     r = client.post(f"{settings.API_V1_STR}/users/", json=data)
     created_user = r.json()
     assert r.status_code == 400
@@ -110,13 +110,13 @@ def test_create_user_existing_username(client: TestClient, db: Session) -> None:
 
 
 def test_create_user_existing_nickname(client: TestClient, db: Session) -> None:
-    username1 = random_email()
-    username2 = random_email()
+    email1 = random_email()
+    email2 = random_email()
     nickname = random_lower_string()
     password = random_lower_string()
-    user_in = UserCreate(email=username1, nickname=nickname, password=password)
+    user_in = UserCreate(email=email1, nickname=nickname, password=password)
     crud.user.create(db, obj_in=user_in)
-    data = {"email": username2, "nickname": nickname, "password": password}
+    data = {"email": email2, "nickname": nickname, "password": password}
     r = client.post(f"{settings.API_V1_STR}/users/", json=data)
     created_user = r.json()
     assert r.status_code == 400
@@ -126,16 +126,16 @@ def test_create_user_existing_nickname(client: TestClient, db: Session) -> None:
 def test_retrieve_users(
     client: TestClient, superuser_token_headers: dict, db: Session
 ) -> None:
-    username = random_email()
+    email = random_email()
     nickname = random_lower_string()
     password = random_lower_string()
-    user_in = UserCreate(email=username, nickname=nickname, password=password)
+    user_in = UserCreate(email=email, nickname=nickname, password=password)
     crud.user.create(db, obj_in=user_in)
 
-    username2 = random_email()
+    email2 = random_email()
     nickname2 = random_lower_string()
     password2 = random_lower_string()
-    user_in2 = UserCreate(email=username2, nickname=nickname2, password=password2)
+    user_in2 = UserCreate(email=email2, nickname=nickname2, password=password2)
     crud.user.create(db, obj_in=user_in2)
 
     r = client.get(f"{settings.API_V1_STR}/users/", headers=superuser_token_headers)
