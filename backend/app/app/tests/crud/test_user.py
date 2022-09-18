@@ -67,10 +67,9 @@ def test_check_if_user_is_superuser(db: Session) -> None:
     email = random_email()
     nickname = random_lower_string()
     password = random_lower_string()
-    user_in = UserCreate(
-        email=email, nickname=nickname, password=password, is_superuser=True
-    )
+    user_in = UserCreate(email=email, nickname=nickname, password=password)
     user = crud.user.create(db, obj_in=user_in)
+    user = crud.user.update_is_superuser(db, db_obj=user, new_is_superuser=True)
     is_superuser = crud.user.is_superuser(user)
     assert is_superuser is True
 
