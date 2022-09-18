@@ -21,7 +21,7 @@ def init_db(db: Session) -> None:
             email=settings.FIRST_SUPERUSER,
             nickname=settings.FIRST_SUPERUSER_NICKNAME,
             password=settings.FIRST_SUPERUSER_PASSWORD,
-            is_superuser=True,
         )
         user = crud.user.create(db, obj_in=user_in)  # noqa: F841
         crud.user.update_email_verified(db, db_obj=user, new_email_verified=True)
+        crud.user.update_is_superuser(db, db_obj=user, new_is_superuser=True)

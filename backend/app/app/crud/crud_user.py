@@ -22,7 +22,6 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
             nickname=obj_in.nickname,
             hashed_password=get_password_hash(obj_in.password),
             full_name=obj_in.full_name,
-            is_superuser=obj_in.is_superuser,
             date_joined=datetime.utcnow(),
         )
         db.add(db_obj)
@@ -47,6 +46,12 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         self, db: Session, *, db_obj: User, new_email_verified: bool
     ) -> User:
         update_data = {"email_verified": new_email_verified}
+        return super().update(db, db_obj=db_obj, obj_in=update_data)
+
+    def update_is_superuser(
+        self, db: Session, *, db_obj: User, new_is_superuser: bool
+    ) -> User:
+        update_data = {"is_superuser": new_is_superuser}
         return super().update(db, db_obj=db_obj, obj_in=update_data)
 
     def authenticate(self, db: Session, *, email: str, password: str) -> Optional[User]:
