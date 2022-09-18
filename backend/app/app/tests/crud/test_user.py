@@ -142,3 +142,13 @@ def test_update_user_email_verified(db: Session) -> None:
     crud.user.update_email_verified(db, db_obj=user, new_email_verified=True)
     stored_user_2 = crud.user.get(db, id=user.id)
     assert stored_user_2.email_verified is True
+
+
+def test_username_email_forced_lowercase(db: Session) -> None:
+    email = random_email().upper()
+    nickname = random_lower_string().upper()
+    password = random_lower_string()
+    user_in = UserCreate(email=email, nickname=nickname, password=password)
+    user = crud.user.create(db, obj_in=user_in)
+    assert user.email == email.lower()
+    assert user.nickname == nickname.lower()

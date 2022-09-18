@@ -10,7 +10,7 @@ from app.api import deps
 router = APIRouter()
 
 
-@router.get("/", response_model=List[schemas.WasteSample])
+@router.get("", response_model=List[schemas.WasteSample])
 def read_waste_samples(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
@@ -40,7 +40,7 @@ def read_all_waste_samples(
     return crud.waste_sample.get_all(db)
 
 
-@router.post("/", response_model=schemas.WasteSample)
+@router.post("", response_model=schemas.WasteSample)
 def create_waste_sample(
     *,
     db: Session = Depends(deps.get_db),

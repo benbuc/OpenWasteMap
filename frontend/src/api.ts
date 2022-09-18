@@ -40,12 +40,12 @@ export const api = {
   },
   async getUsers(token: string) {
     return axios.get<IUserProfile[]>(
-      `${apiUrl}/api/v1/users/`,
+      `${apiUrl}/api/v1/users`,
       authHeaders(token)
     );
   },
   async getAllUsers(token: string) {
-    return axios.get<IUserProfile[]>(`${apiUrl}/api/v1/users/`, {
+    return axios.get<IUserProfile[]>(`${apiUrl}/api/v1/users`, {
       headers: authHeaders(token).headers,
       params: {
         limit: 0,
@@ -60,7 +60,7 @@ export const api = {
     );
   },
   async createUser(token: string, data: IUserProfileCreate) {
-    return axios.post(`${apiUrl}/api/v1/users/`, data, authHeaders(token));
+    return axios.post(`${apiUrl}/api/v1/users`, data, authHeaders(token));
   },
   async passwordRecovery(email: string) {
     return axios.post(`${apiUrl}/api/v1/password-recovery/${email}`);
@@ -81,7 +81,7 @@ export const api = {
   },
   async getWasteSamples(token: string) {
     return axios.get<IWasteSample[]>(
-      `${apiUrl}/api/v1/waste-samples/`,
+      `${apiUrl}/api/v1/waste-samples`,
       authHeaders(token)
     );
   },
@@ -93,7 +93,7 @@ export const api = {
   },
   async createWasteSample(token: string, data: IWasteSampleCreate) {
     return axios.post(
-      `${apiUrl}/api/v1/waste-samples/`,
+      `${apiUrl}/api/v1/waste-samples`,
       data,
       authHeaders(token)
     );
