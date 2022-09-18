@@ -106,7 +106,7 @@ export default class FABCreateSample extends Vue {
     }
   }
   get gpsReady() {
-    return this.$store.state.geolocation.lat && this.coordinates.accuracy < 10;
+    return this.$store.state.geolocation.lat && this.coordinates.accuracy < 15;
   }
   get coordinates() {
     return {
