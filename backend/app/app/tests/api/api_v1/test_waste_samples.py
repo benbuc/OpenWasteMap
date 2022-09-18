@@ -15,7 +15,7 @@ def test_create_waste_sample(
 ) -> None:
     data = {"waste_level": 3, "latitude": 12.345, "longitude": 23.456}
     response = client.post(
-        f"{settings.API_V1_STR}/waste-samples/",
+        f"{settings.API_V1_STR}/waste-samples",
         headers=superuser_token_headers,
         json=data,
     )
@@ -41,7 +41,7 @@ def test_create_invalid_waste_sample(
     ]
     responses = [
         client.post(
-            f"{settings.API_V1_STR}/waste-samples/",
+            f"{settings.API_V1_STR}/waste-samples",
             headers=superuser_token_headers,
             json=d,
         )
