@@ -1,7 +1,7 @@
 from datetime import timedelta
 from typing import Any
 
-from fastapi import APIRouter, Body, Depends, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Body, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
@@ -10,7 +10,9 @@ from app.api import deps
 from app.core import security
 from app.core.config import settings
 from app.utils import (
+    generate_email_verification_token,
     generate_password_reset_token,
+    send_email_verification,
     send_reset_password_email,
     verify_email_verification_token,
     verify_password_reset_token,
@@ -113,3 +115,24 @@ def verify_email(
         raise HTTPException(status_code=400, detail="Inactive user")
     crud.user.update_email_verified(db, db_obj=user, new_email_verified=True)
     return {"msg": "E-mail verified"}
+
+
+@router.post("/resend-verification", response_model=schemas.Msg)
+def resend_email_verification(
+    background_tasks: BackgroundTasks,
+    current_user: models.User = Depends(deps.get_current_active_user),
+):
+    if current_user.email_verified:
+        raise HTTPException(status_code=400, detail="Email address already verified.")
+
+    email_verification_token = generate_email_verification_token(
+        email=current_user.email
+    )
+    send_email_verification(
+        background_tasks=background_tasks,
+        email_to=current_user.email,
+        nickname=current_user.nickname,
+        token=email_verification_token,
+    )
+
+    return {"msg": "Re-sent email verification"}
