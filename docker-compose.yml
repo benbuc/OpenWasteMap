@@ -153,6 +153,8 @@ services:
       dockerfile: backend.dockerfile
       args:
         INSTALL_DEV: ${INSTALL_DEV-false}
+    volumes:
+      - ${BACKUP_DIR?Variable not set}:/backups
     deploy:
       labels:
         - traefik.enable=true
@@ -174,6 +176,8 @@ services:
       dockerfile: celeryworker.dockerfile
       args:
         INSTALL_DEV: ${INSTALL_DEV-false}
+    volumes:
+      - ${BACKUP_DIR?Variable not set}:/backups
 
   frontend:
     image: '${DOCKER_IMAGE_FRONTEND?Variable not set}:${TAG-latest}'
