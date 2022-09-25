@@ -3,6 +3,7 @@ import json
 import zipfile
 from datetime import datetime
 
+from celery.schedules import crontab
 from fastapi.encoders import jsonable_encoder
 
 from app import crud
@@ -41,4 +42,6 @@ def full_backup():
 
 @celery_app.on_after_finalize.connect
 def setup_periodic_backup(sender, **kwargs):
-    sender.add_periodic_task(10.0, full_backup, name="Create Backup")
+    sender.add_periodic_task(
+        crontab(hour=5, minute=0), full_backup, name="Create Backup"
+    )
