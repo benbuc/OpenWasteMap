@@ -678,6 +678,15 @@ To update the data in the .env file to be used by CI, create a new file containi
 cat .ci.env | base64
 ```
 
+### Automatic Backups
+
+In the `.env` file a `BACKUP_DIR` variable has to be supplied.
+This directory is mounted into the container to generated backups.
+Backup are generated each day at a fixed time or can be triggered manually.
+To make the backups persistent against server failure, it is mandatory to set up an external routine which collects and safely stores these backups regularly.
+This could for example be another independent server with `scp` access to the `BACKUP_DIR`.
+This server would then copy the contents once a day using a cronjob and e.g. `rsync`.
+
 ## Docker Compose files and env vars
 
 There is a main `docker-compose.yml` file with all the configurations that apply to the whole stack, it is used automatically by `docker-compose`.
