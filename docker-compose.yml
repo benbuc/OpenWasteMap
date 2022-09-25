@@ -85,6 +85,8 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
+    volumes:
+      - app-pgadmin-config:/var/lib/pgadmin
     networks:
       - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
       - default
@@ -191,6 +193,7 @@ services:
 
 volumes:
   app-db-data:
+  app-pgadmin-config:
 
 
 networks:
