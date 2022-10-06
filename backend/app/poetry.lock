@@ -377,7 +377,7 @@ test = ["anyio[trio] (>=3.2.1,<4.0.0)", "black (==22.8.0)", "databases[sqlite] (
 
 [[package]]
 name = "fastapi-mail"
-version = "1.1.4"
+version = "1.1.5"
 description = "Simple lightweight mail library for FastApi"
 category = "main"
 optional = false
@@ -1075,7 +1075,7 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "dccc8041a01ad125a39b5379225cd0c9bbe7d1f19e60f8e55915945370d68bb9"
+content-hash = "bc4872f493b7652eccdd515c403b2675c61eaa72f00189aea834fb8dda46b5d4"
 
 [metadata.files]
 aiosmtplib = [
@@ -1348,8 +1348,8 @@ fastapi = [
     {file = "fastapi-0.85.0.tar.gz", hash = "sha256:bb219cfafd0d2ccf8f32310c9a257a06b0210bd8e2a03706a6f5a9f9f1416878"},
 ]
 fastapi-mail = [
-    {file = "fastapi-mail-1.1.4.tar.gz", hash = "sha256:6ff9a189f338c1a6b2236adbee1eb7930470e00bd0ae5cc382b878bca6b9d29c"},
-    {file = "fastapi_mail-1.1.4-py3-none-any.whl", hash = "sha256:bb381dd88588a2f90db7333878c66f458b470d762f3b724c3ecc92b0acbce67d"},
+    {file = "fastapi-mail-1.1.5.tar.gz", hash = "sha256:a97db07b70275bff29396f6bde40efd221986b2ee06465fee9a1bef6a918a6a8"},
+    {file = "fastapi_mail-1.1.5-py3-none-any.whl", hash = "sha256:96e9fd5c51cc7caef88895e8a0487e9362b59bc7b4532469f9bc27bcd033a138"},
 ]
 flake8 = [
     {file = "flake8-5.0.4-py2.py3-none-any.whl", hash = "sha256:7a1cf6b73744f5806ab95e526f6f0d8c01c66d7bbe349562d22dfca20610b248"},
