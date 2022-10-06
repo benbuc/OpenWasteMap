@@ -264,6 +264,34 @@ export const actions = {
       await dispatchCheckApiError(context, error as AxiosError);
     }
   },
+  async resendEmailVerification(context: MainContext) {
+    const loadingNotification = {
+      content: "Requesting new verification",
+      showProgress: true,
+    };
+    try {
+      commitAddNotification(context, loadingNotification);
+      const response = (
+        await Promise.all([
+          api.resendVerification(context.state.token),
+          await new Promise<void>((resolve, reject) =>
+            setTimeout(() => resolve(), 500)
+          ),
+        ])
+      )[0];
+      commitRemoveNotification(context, loadingNotification);
+      commitAddNotification(context, {
+        content: "Please check your mailbox",
+        color: "success",
+      });
+    } catch (error) {
+      commitRemoveNotification(context, loadingNotification);
+      commitAddNotification(context, {
+        content: "An error occured. Please try again",
+        color: "error",
+      });
+    }
+  },
 };
 
 const { dispatch } = getStoreAccessors<MainState | any, State>("");
@@ -280,10 +308,13 @@ export const dispatchRouteLogOut = dispatch(actions.actionRouteLogOut);
 export const dispatchUpdateUserProfile = dispatch(
   actions.actionUpdateUserProfile
 );
+export const dispatchCreateWasteSample = dispatch(
+  actions.actionCreateWasteSample
+);
 export const dispatchRemoveNotification = dispatch(actions.removeNotification);
 export const dispatchPasswordRecovery = dispatch(actions.passwordRecovery);
 export const dispatchResetPassword = dispatch(actions.resetPassword);
 export const dispatchVerifyEmail = dispatch(actions.verifyEmail);
-export const dispatchCreateWasteSample = dispatch(
-  actions.actionCreateWasteSample
+export const dispatchResendEmailVerification = dispatch(
+  actions.resendEmailVerification
 );

@@ -76,6 +76,13 @@ export const api = {
       token,
     });
   },
+  async resendVerification(token: string) {
+    return axios.post(
+      `${apiUrl}/api/v1/resend-verification`,
+      null,
+      authHeaders(token)
+    );
+  },
   getTilesEndpoint() {
     return `${apiUrl}/api/v1/tiles/{z}/{x}/{y}.png`;
   },
