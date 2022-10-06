@@ -7,6 +7,9 @@
           <v-card-text>
             <v-alert outlined type="warning" v-if="!userProfile.email_verified">
               E-mail not yet verified
+              <v-btn v-on:click="resendVerification"
+                >Re-send verification</v-btn
+              >
             </v-alert>
           </v-card-text>
         </v-card>
@@ -17,7 +20,10 @@
 
 <script lang="ts">
 import store from "@/store";
-import { dispatchCheckLoggedIn } from "@/store/main/actions";
+import {
+  dispatchCheckLoggedIn,
+  dispatchResendEmailVerification,
+} from "@/store/main/actions";
 import { readIsLoggedIn, readUserProfile } from "@/store/main/getters";
 import { Component, Vue } from "vue-property-decorator";
 
@@ -41,6 +47,10 @@ export default class ProfileIndex extends Vue {
   }
   public beforeRouteUpdate(to, from, next) {
     routeGuardMain(to, from, next);
+  }
+
+  public async resendVerification() {
+    await dispatchResendEmailVerification(this.$store);
   }
 }
 </script>
