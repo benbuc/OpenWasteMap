@@ -56,6 +56,7 @@ export default new Router({
     },
     {
       path: "/admin",
+      name: "admin",
       component: () =>
         import(/* webpackChunkName: "admin" */ "../views/main/admin/Admin.vue"),
       redirect: "/admin/dashboard",
