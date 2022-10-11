@@ -72,7 +72,7 @@ tests_no_zope = ["cloudpickle", "coverage[toml] (>=5.0.2)", "hypothesis", "mypy 
 
 [[package]]
 name = "autoflake"
-version = "1.7.1"
+version = "1.7.3"
 description = "Removes unused imports and unused variables"
 category = "dev"
 optional = false
@@ -1075,7 +1075,7 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "5b2a5264d5f3450689982d0591262ef590597b37224d6f35ebf77d6afad8b8f0"
+content-hash = "b8612ef4206aa0394f5a4bfbe4e23c0d3c337355c2a5dfd9c138c1a678463084"
 
 [metadata.files]
 aiosmtplib = [
@@ -1099,8 +1099,8 @@ attrs = [
     {file = "attrs-22.1.0.tar.gz", hash = "sha256:29adc2665447e5191d0e7c568fde78b21f9672d344281d0c6e1ab085429b22b6"},
 ]
 autoflake = [
-    {file = "autoflake-1.7.1-py2.py3-none-any.whl", hash = "sha256:b759b1aee50526cc169a812a9a0de49b808c3de6be7166690e93bb36a7f23c98"},
-    {file = "autoflake-1.7.1.tar.gz", hash = "sha256:e7eddc1a5759d8f2cab5880f5777bf8a342db16d82a2ebbed2969a6bd74da0a2"},
+    {file = "autoflake-1.7.3-py2.py3-none-any.whl", hash = "sha256:f465256141901a364fa60578d6c6d87414316ea9a79f0994792f32cdb044ca9e"},
+    {file = "autoflake-1.7.3.tar.gz", hash = "sha256:cf251adb62f4f0ac7c945a7bd8005358523cf1d295844c2dea3d29b26259a27e"},
 ]
 bcrypt = [
     {file = "bcrypt-4.0.0-cp36-abi3-macosx_10_10_universal2.whl", hash = "sha256:845b1daf4df2dd94d2fdbc9454953ca9dd0e12970a0bfc9f3dcc6faea3fa96e4"},
