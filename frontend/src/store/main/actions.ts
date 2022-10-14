@@ -77,7 +77,7 @@ export const actions = {
         color: "success",
       });
     } catch (error) {
-      let e = error as AxiosError;
+      const e = error as AxiosError;
       if (e.response && e.response.data.detail) {
         commitRemoveNotification(context, loadingNotification);
         commitAddNotification(context, {
