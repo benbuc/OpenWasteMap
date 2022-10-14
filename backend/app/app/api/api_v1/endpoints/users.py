@@ -74,9 +74,11 @@ def update_user_me(
     *,
     db: Session = Depends(deps.get_db),
     password: str = Body(None),
+    nickname: str = Body(None),
     full_name: str = Body(None),
     email: EmailStr = Body(None),
     current_user: models.User = Depends(deps.get_current_active_user),
+    background_tasks: BackgroundTasks,
 ) -> Any:
     """
     Update own user.
@@ -85,10 +87,32 @@ def update_user_me(
     user_in = schemas.UserUpdate(**current_user_data)
     if password is not None:
         user_in.password = password
+    if nickname is not None and nickname != current_user.nickname:
+        if crud.user.get_by_nickname(db, nickname=nickname):
+            raise HTTPException(
+                status_code=400,
+                detail="The user with this nickname already exists in the system.",
+            )
+        user_in.nickname = nickname
     if full_name is not None:
         user_in.full_name = full_name
-    if email is not None:
+    if email is not None and email != current_user.email:
+        if crud.user.get_by_email(db, email=email):
+            raise HTTPException(
+                status_code=400,
+                detail="The user with this email already exists in the system.",
+            )
         user_in.email = email
+        if settings.EMAILS_ENABLED:
+            email_verification_token = generate_email_verification_token(
+                email=user_in.email
+            )
+            send_email_verification(
+                background_tasks=background_tasks,
+                email_to=user_in.email,
+                nickname=current_user.nickname,
+                token=email_verification_token,
+            )
     user = crud.user.update(db, db_obj=current_user, obj_in=user_in)
     return user
 

@@ -12,14 +12,7 @@
     >
       <v-icon>admin_panel_settings</v-icon>
     </v-btn>
-    <v-btn
-      fab
-      dark
-      top
-      right
-      class="v-btn--to-map"
-      :to="{ name: 'home' }"
-    >
+    <v-btn fab dark top right class="v-btn--to-map" :to="{ name: 'home' }">
       <v-icon>map</v-icon>
     </v-btn>
     <UserProfile></UserProfile>
