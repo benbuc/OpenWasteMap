@@ -1,43 +1,45 @@
 <template>
   <v-container fluid>
-    <v-card class="ma-3 pa-3">
-      <v-card-title primary-title>
-        <div class="headline primary--text">Edit User Profile</div>
-      </v-card-title>
-      <v-card-text>
-        <template>
-          <v-form v-model="valid" ref="form" lazy-validation>
-            <v-text-field
-              label="Nickname"
-              v-model="nickname"
-              v-validate="'required'"
-              :error-messages="errors.collect('nickname')"
-              required
-            ></v-text-field>
-            <v-text-field
-              label="Full Name"
-              v-model="fullName"
-              required
-            ></v-text-field>
-            <v-text-field
-              label="E-mail"
-              type="email"
-              v-model="email"
-              v-validate="'required|email'"
-              data-vv-name="email"
-              :error-messages="errors.collect('email')"
-              required
-            ></v-text-field>
-          </v-form>
-        </template>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn @click="cancel">Cancel</v-btn>
-        <v-btn @click="reset">Reset</v-btn>
-        <v-btn @click="submit" :disabled="!valid"> Save </v-btn>
-      </v-card-actions>
-    </v-card>
+    <v-layout align-center justify-center>
+      <v-card class="ma-3 pa-3">
+        <v-card-title primary-title>
+          <div class="headline primary--text">Edit User Profile</div>
+        </v-card-title>
+        <v-card-text>
+          <template>
+            <v-form v-model="valid" ref="form" lazy-validation>
+              <v-text-field
+                label="Nickname"
+                v-model="nickname"
+                v-validate="'required'"
+                :error-messages="errors.collect('nickname')"
+                required
+              ></v-text-field>
+              <v-text-field
+                label="Full Name"
+                v-model="fullName"
+                required
+              ></v-text-field>
+              <v-text-field
+                label="E-mail"
+                type="email"
+                v-model="email"
+                v-validate="'required|email'"
+                data-vv-name="email"
+                :error-messages="errors.collect('email')"
+                required
+              ></v-text-field>
+            </v-form>
+          </template>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn @click="cancel">Cancel</v-btn>
+          <v-btn @click="reset">Reset</v-btn>
+          <v-btn @click="submit" :disabled="!valid"> Save </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-layout>
   </v-container>
 </template>
 

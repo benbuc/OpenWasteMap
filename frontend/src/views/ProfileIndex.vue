@@ -12,37 +12,7 @@
     >
       <v-icon>admin_panel_settings</v-icon>
     </v-btn>
-    <v-container fluid fill-height>
-      <v-layout align-center justify-center>
-        <v-card class="ma-3 pa-3 elevation-12">
-          <v-card-title primary-title>
-            <div class="headline primary--text">{{ userProfile.nickname }}</div>
-          </v-card-title>
-          <v-card-text>
-            <v-alert icon="info" outlined type="warning" v-if="!userProfile.email_verified">
-              E-mail not yet verified
-              <v-btn v-on:click="resendVerification" small
-                >Re-send</v-btn
-              >
-            </v-alert>
-            <div class="subheading secondary--text text--lighten-2">Email</div>
-            <div class="title primary--text text--darken-2">
-              {{ userProfile.email }}
-              <v-tooltip
-                bottom
-                color="success"
-                v-if="userProfile.email_verified"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-icon color="success" v-bind="attrs" v-on="on">verified</v-icon>
-                </template>
-                <span>Email is verified</span>
-              </v-tooltip>
-            </div>
-          </v-card-text>
-        </v-card>
-      </v-layout>
-    </v-container>
+    <UserProfile></UserProfile>
   </v-main>
 </template>
 
@@ -54,6 +24,7 @@ import {
 } from "@/store/main/actions";
 import { readIsLoggedIn, readUserProfile } from "@/store/main/getters";
 import { Component, Vue } from "vue-property-decorator";
+import UserProfile from "./main/profile/UserProfile.vue";
 
 const routeGuardMain = async (to, from, next) => {
   await dispatchCheckLoggedIn(store);
@@ -64,7 +35,11 @@ const routeGuardMain = async (to, from, next) => {
   }
 };
 
-@Component
+@Component({
+  components: {
+    UserProfile,
+  },
+})
 export default class ProfileIndex extends Vue {
   get userProfile() {
     return readUserProfile(this.$store)!;
@@ -75,10 +50,6 @@ export default class ProfileIndex extends Vue {
   }
   public beforeRouteUpdate(to, from, next) {
     routeGuardMain(to, from, next);
-  }
-
-  public async resendVerification() {
-    await dispatchResendEmailVerification(this.$store);
   }
 }
 </script>
