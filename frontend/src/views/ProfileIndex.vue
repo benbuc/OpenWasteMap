@@ -1,20 +1,21 @@
 <template>
   <v-main>
-    <v-container fluid fill-height>
-      <v-layout align-center justify-center>
-        <v-card class="ma-3 pa-3 elevation-12">
-          <v-card-title primary-title>{{ userProfile.nickname }}</v-card-title>
-          <v-card-text>
-            <v-alert outlined type="warning" v-if="!userProfile.email_verified">
-              E-mail not yet verified
-              <v-btn v-on:click="resendVerification"
-                >Re-send verification</v-btn
-              >
-            </v-alert>
-          </v-card-text>
-        </v-card>
-      </v-layout>
-    </v-container>
+    <v-btn
+      fab
+      large
+      dark
+      bottom
+      left
+      class="v-btn--admin"
+      :to="{ name: 'admin' }"
+      v-if="userProfile.is_superuser"
+    >
+      <v-icon>admin_panel_settings</v-icon>
+    </v-btn>
+    <v-btn fab dark top right class="v-btn--to-map" :to="{ name: 'home' }">
+      <v-icon>map</v-icon>
+    </v-btn>
+    <UserProfile></UserProfile>
   </v-main>
 </template>
 
@@ -26,6 +27,7 @@ import {
 } from "@/store/main/actions";
 import { readIsLoggedIn, readUserProfile } from "@/store/main/getters";
 import { Component, Vue } from "vue-property-decorator";
+import UserProfile from "./main/profile/UserProfile.vue";
 
 const routeGuardMain = async (to, from, next) => {
   await dispatchCheckLoggedIn(store);
@@ -36,7 +38,11 @@ const routeGuardMain = async (to, from, next) => {
   }
 };
 
-@Component
+@Component({
+  components: {
+    UserProfile,
+  },
+})
 export default class ProfileIndex extends Vue {
   get userProfile() {
     return readUserProfile(this.$store)!;
@@ -48,9 +54,19 @@ export default class ProfileIndex extends Vue {
   public beforeRouteUpdate(to, from, next) {
     routeGuardMain(to, from, next);
   }
-
-  public async resendVerification() {
-    await dispatchResendEmailVerification(this.$store);
-  }
 }
 </script>
+
+<style scoped>
+.v-btn--admin {
+  bottom: 0;
+  position: absolute;
+  margin: 0 0 16px 16px;
+}
+.v-btn--to-map {
+  top: 0;
+  right: 0;
+  position: absolute;
+  margin: 16px 16px 0 0;
+}
+</style>

@@ -24,9 +24,31 @@ export default new Router({
     },
     {
       path: "/profile",
-      component: () =>
-        import(/* webpackChunkName: "profile" */ "../views/ProfileIndex.vue"),
-      children: [],
+      component: RouterComponent,
+      redirect: "profile/view",
+      children: [
+        {
+          path: "view",
+          component: () =>
+            import(
+              /* webpackChunkName: "profile" */ "../views/ProfileIndex.vue"
+            ),
+        },
+        {
+          path: "edit",
+          component: () =>
+            import(
+              /* webpackChunkName: "profile-edit" */ "../views/main/profile/UserProfileEdit.vue"
+            ),
+        },
+        {
+          path: "password",
+          component: () =>
+            import(
+              /* webpackChunkName: "profile-password" */ "../views/main/profile/UserProfileEditPassword.vue"
+            ),
+        },
+      ],
     },
     {
       path: "/signup",
@@ -56,6 +78,7 @@ export default new Router({
     },
     {
       path: "/admin",
+      name: "admin",
       component: () =>
         import(/* webpackChunkName: "admin" */ "../views/main/admin/Admin.vue"),
       redirect: "/admin/dashboard",

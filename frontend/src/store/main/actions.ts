@@ -59,8 +59,8 @@ export const actions = {
     }
   },
   async actionUpdateUserProfile(context: MainContext, payload) {
+    const loadingNotification = { content: "saving", showProgress: true };
     try {
-      const loadingNotification = { content: "saving", showProgress: true };
       commitAddNotification(context, loadingNotification);
       const response = (
         await Promise.all([
@@ -77,7 +77,16 @@ export const actions = {
         color: "success",
       });
     } catch (error) {
-      await dispatchCheckApiError(context, error as AxiosError);
+      const e = error as AxiosError;
+      if (e.response && e.response.data.detail) {
+        commitRemoveNotification(context, loadingNotification);
+        commitAddNotification(context, {
+          content: e.response.data.detail,
+          color: "error",
+        });
+      } else {
+        await dispatchCheckApiError(context, error as AxiosError);
+      }
     }
   },
   async actionCheckLoggedIn(context: MainContext) {

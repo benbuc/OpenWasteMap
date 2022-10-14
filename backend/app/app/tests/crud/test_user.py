@@ -116,6 +116,27 @@ def test_update_user(db: Session) -> None:
     assert verify_password(new_password, user_2.hashed_password)
 
 
+def test_update_user_without_password(db: Session) -> None:
+    password = random_lower_string()
+    nickname = random_lower_string()
+    full_name = random_lower_string()
+    email = random_email()
+    user_in = UserCreate(
+        email=email,
+        nickname=nickname,
+        full_name=full_name,
+        password=password,
+        is_superuser=True,
+    )
+    user = crud.user.create(db, obj_in=user_in)
+    new_full_name = random_lower_string()
+    user_in_update = UserUpdate(full_name=new_full_name)
+    crud.user.update(db, db_obj=user, obj_in=user_in_update)
+    user_2 = crud.user.get(db, id=user.id)
+    assert user_2
+    assert user_2.full_name == new_full_name
+
+
 def test_get_all_users(db: Session) -> None:
     users = [create_random_user(db) for _ in range(3)]
     all_users = crud.user.get_all(db)
