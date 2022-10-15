@@ -19,6 +19,7 @@
     "vee-validate": "^2.1.7",
     "vue": "^2.5.22",
     "vue-class-component": "^6.0.0",
+    "vue-loader": "^15.10.0",
     "vue-moment": "^4.1.0",
     "vue-property-decorator": "^7.3.0",
     "vue-router": "^3.0.2",
@@ -40,8 +41,7 @@
     "sass": "^1.54.8",
     "ts-jest": "^23.10.5",
     "typescript": "^3.2.4",
-    "vue-cli-plugin-vuetify": "^2.0.2",
-    "vue-template-compiler": "^2.5.22"
+    "vue-cli-plugin-vuetify": "^2.0.2"
   },
   "postcss": {
     "plugins": {
