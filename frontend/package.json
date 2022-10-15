@@ -10,7 +10,6 @@
     "pretty": "prettier --write \"./**/*.{js,jsx,vue,ts,tsx}\""
   },
   "dependencies": {
-    "@babel/polyfill": "^7.2.5",
     "@types/leaflet": "^1.7.9",
     "axios": "^0.18.0",
     "core-js": "^3.4.3",

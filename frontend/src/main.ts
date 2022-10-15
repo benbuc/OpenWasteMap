@@ -1,4 +1,3 @@
-import "@babel/polyfill";
 // Import Component hooks before component definitions
 import "./component-hooks";
 import Vue from "vue";
