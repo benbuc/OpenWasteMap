@@ -604,6 +604,8 @@ TAG=prod FRONTEND_ENV=production bash ./scripts/build-push.sh
 
 3. **Deploy your stack**
 
+Initially make sure to create the `BACKUP_DIR` which is going to be mounted into the container.
+
 * Set these environment variables:
   * `DOMAIN=openwastemap.org`
   * `TRAEFIK_TAG=openwastemap.org`
