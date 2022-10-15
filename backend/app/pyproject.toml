@@ -29,7 +29,7 @@ fastapi-mail = "^1.1.5"
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.982"
-black = "^22.8"
+black = "^22.10"
 isort = "^5.10.1"
 autoflake = "^1.7.1"
 flake8 = "^5.0.4"
