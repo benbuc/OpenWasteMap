@@ -18,7 +18,7 @@ ENV VUE_APP_VERSION=${VERSION}
 # Comment out the next line to disable tests
 RUN npm run test:unit
 
-RUN npm run build
+RUN export NODE_OPTIONS=--openssl-legacy-provider && npm run build
 
 
 # Stage 1, based on Nginx, to have only the compiled app, ready for production with Nginx
