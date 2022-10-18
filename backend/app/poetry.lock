@@ -359,7 +359,7 @@ idna = ">=2.0.0"
 
 [[package]]
 name = "fastapi"
-version = "0.85.0"
+version = "0.85.1"
 description = "FastAPI framework, high performance, easy to learn, fast to code, ready for production"
 category = "main"
 optional = false
@@ -1075,7 +1075,7 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "3eb71e711791ee5405659fa28eb73726e9f23dfa1f7630ae600ce4c2e7679317"
+content-hash = "53576b650aa2b1a105702fcb084ed120edb1b942534247bdda1c164f9f2501fb"
 
 [metadata.files]
 aiosmtplib = [
@@ -1342,8 +1342,8 @@ email-validator = [
     {file = "email_validator-1.3.0.tar.gz", hash = "sha256:553a66f8be2ec2dea641ae1d3f29017ab89e9d603d4a25cdaac39eefa283d769"},
 ]
 fastapi = [
-    {file = "fastapi-0.85.0-py3-none-any.whl", hash = "sha256:1803d962f169dc9f8dde54a64b22eb16f6d81573f54401971f90f0a67234a8b4"},
-    {file = "fastapi-0.85.0.tar.gz", hash = "sha256:bb219cfafd0d2ccf8f32310c9a257a06b0210bd8e2a03706a6f5a9f9f1416878"},
+    {file = "fastapi-0.85.1-py3-none-any.whl", hash = "sha256:de3166b6b1163dc22da4dc4ebdc3192fcbac7700dd1870a1afa44de636a636b5"},
+    {file = "fastapi-0.85.1.tar.gz", hash = "sha256:1facd097189682a4ff11cbd01334a992e51b56be663b2bd50c2c09523624f144"},
 ]
 fastapi-mail = [
     {file = "fastapi-mail-1.1.5.tar.gz", hash = "sha256:a97db07b70275bff29396f6bde40efd221986b2ee06465fee9a1bef6a918a6a8"},
