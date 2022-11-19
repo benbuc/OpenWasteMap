@@ -11,6 +11,7 @@ import router from "./router/routes";
 import store from "@/store";
 import "./registerServiceWorker";
 import "vuetify/dist/vuetify.min.css";
+import "material-design-icons-iconfont/dist/material-design-icons.css";
 
 Vue.config.productionTip = false;
 
