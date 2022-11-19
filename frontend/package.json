@@ -36,6 +36,7 @@
     "@vue/cli-service": "^4.1.1",
     "@vue/test-utils": "^1.0.0-beta.28",
     "babel-core": "7.0.0-bridge.0",
+    "material-design-icons-iconfont": "^6.7.0",
     "prettier": "^2.7.1",
     "sass": "^1.54.8",
     "ts-jest": "^23.10.5",

@@ -3,3 +3,4 @@
 docker-stack.yml
 .env
 .DS_Store
+backups/
