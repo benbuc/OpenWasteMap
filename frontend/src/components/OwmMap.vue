@@ -29,7 +29,10 @@ export default class OwmMap extends Vue {
   public urlOSM = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
   public attributionOSM =
     '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
-  public attributionOWM = "TODO " + appVersion;
+  public attributionOWM =
+    "<a href='/privacy'>Privacy</a> | <a href='/imprint'>Imprint</a> (" +
+    appVersion +
+    ")";
   public urlOWM() {
     // adding random characters to the end
     // will prevent browser from caching tiles

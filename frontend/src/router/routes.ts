@@ -77,6 +77,16 @@ export default new Router({
         ),
     },
     {
+      path: "/privacy",
+      component: () =>
+        import(/* webpackChunkName: "privacy" */ "../views/Privacy.vue"),
+    },
+    {
+      path: "/imprint",
+      component: () =>
+        import(/* webpackChunkName: "imprint" */ "../views/Imprint.vue"),
+    },
+    {
       path: "/admin",
       name: "admin",
       component: () =>
