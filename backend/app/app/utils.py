@@ -17,10 +17,10 @@ if settings.EMAILS_ENABLED:
         MAIL_FROM=settings.SMTP_USER,
         MAIL_PORT=settings.SMTP_PORT,
         MAIL_SERVER=settings.SMTP_HOST,
-        MAIL_TLS=settings.SMTP_TLS,
-        MAIL_SSL=False,
         VALIDATE_CERTS=False,
         TEMPLATE_FOLDER=Path(settings.EMAIL_TEMPLATES_DIR),
+        MAIL_SSL_TLS=settings.SMTP_TLS,
+        MAIL_STARTTLS=False,
     )
 
 logging.basicConfig(level=logging.INFO)

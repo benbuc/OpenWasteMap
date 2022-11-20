@@ -51,6 +51,14 @@
                     </v-text-field>
                   </v-flex>
                 </v-layout>
+                <v-checkbox
+                  v-model="termsAccepted"
+                  required>
+                  <template slot="label">
+                    I agree to the&nbsp;<a @click.stop target="_blank" href="/privacy">Privacy Policy</a>.
+
+                  </template>
+                </v-checkbox>
               </v-form>
             </v-card-text>
             <v-card-actions class="justify-center">
@@ -86,6 +94,7 @@ export default class Signup extends Vue {
   public setPassword = false;
   public password1: string = "";
   public password2: string = "";
+  public termsAccepted = false;
 
   public async submit() {
     if (await this.$validator.validateAll()) {

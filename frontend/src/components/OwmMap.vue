@@ -1,16 +1,21 @@
 <template>
-  <l-map
-    ref="owmMap"
-    style="z-index: 0"
-    :zoom="zoom"
-    :center="center"
-    @ready="mapReady"
-    @update:center="centerUpdate"
-    @update:zoom="zoomUpdate"
-  >
-    <l-tile-layer :url="urlOSM" :attribution="attributionOSM"></l-tile-layer>
-    <l-marker v-if="currentPosition" :lat-lng="currentPosition"></l-marker>
-  </l-map>
+  <v-main class="map-container">
+    <l-map
+      ref="owmMap"
+      style="z-index: 0"
+      :zoom="zoom"
+      :center="center"
+      @ready="mapReady"
+      @update:center="centerUpdate"
+      @update:zoom="zoomUpdate"
+    >
+      <l-marker v-if="currentPosition" :lat-lng="currentPosition"></l-marker>
+    </l-map>
+    <v-overlay v-if="showOsmConsent">
+      <OsmConsent></OsmConsent>
+    </v-overlay>
+    <OsmConsentNotice v-if="showOsmConsentNotice"></OsmConsentNotice>
+  </v-main>
 </template>
 
 <script lang="ts">
@@ -19,17 +24,30 @@ import { api } from "@/api";
 import L, { latLng } from "leaflet";
 import { LMap } from "vue2-leaflet";
 import { appVersion } from "@/env";
+import OsmConsent from "./OsmConsent.vue";
+import OsmConsentNotice from "./OsmConsentNotice.vue";
 
-@Component
+@Component({
+  components: {
+    OsmConsent,
+    OsmConsentNotice,
+  },
+})
 export default class OwmMap extends Vue {
   public owmMap?: L.Map;
   public owmTileLayer?: L.TileLayer;
+  public osmTileLayer?: L.TileLayer;
   public zoom = 11;
   public center = latLng(52.5183, 13.4006);
   public urlOSM = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
   public attributionOSM =
     '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
-  public attributionOWM = "TODO " + appVersion;
+  public attributionOWM =
+    "<a href='/privacy'>Privacy</a> | <a href='/imprint'>Imprint</a> (" +
+    appVersion +
+    ")";
+  public showOsmConsent = false;
+  public showOsmConsentNotice = false;
   public urlOWM() {
     // adding random characters to the end
     // will prevent browser from caching tiles
@@ -39,6 +57,22 @@ export default class OwmMap extends Vue {
   }
   public refreshOwmMap() {
     this.owmTileLayer?.setUrl(this.urlOWM());
+  }
+  public updateOsmConsent() {
+    let osmConsent = localStorage.getItem("osmConsent");
+    if (osmConsent === null) {
+      this.showOsmConsent = true;
+      this.showOsmConsentNotice = false;
+    } else {
+      this.showOsmConsent = false;
+      if (osmConsent === "false") {
+        this.showOsmConsentNotice = true;
+      }
+      if (osmConsent === "true") {
+        this.activateOsmTileLayer();
+        this.showOsmConsentNotice = false;
+      }
+    }
   }
   public centerUpdate(center) {
     this.center = center;
@@ -83,13 +117,36 @@ export default class OwmMap extends Vue {
     this.$root.$on("refresh_owm_map", () => {
       this.refreshOwmMap();
     });
+    this.$root.$on("update_osm_consent", () => {
+      this.updateOsmConsent();
+    });
   }
   public mapReady() {
     this.owmMap = (this.$refs.owmMap as LMap).mapObject;
+    this.osmTileLayer = L.tileLayer("", {
+      attribution: this.attributionOSM,
+    });
+    this.osmTileLayer.addTo(this.owmMap);
     this.owmTileLayer = L.tileLayer(this.urlOWM(), {
       attribution: this.attributionOWM,
     });
     this.owmTileLayer.addTo(this.owmMap);
+    this.updateOsmConsent();
+  }
+  public activateOsmTileLayer() {
+    if (this.osmTileLayer === undefined) {
+      return;
+    }
+    this.osmTileLayer.setUrl(this.urlOSM);
   }
 }
 </script>
+
+<style scoped>
+.map-container {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+</style>
