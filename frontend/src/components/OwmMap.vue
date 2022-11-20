@@ -1,20 +1,21 @@
 <template>
   <v-main class="map-container">
-  <l-map
-    ref="owmMap"
-    style="z-index: 0"
-    :zoom="zoom"
-    :center="center"
-    @ready="mapReady"
-    @update:center="centerUpdate"
-    @update:zoom="zoomUpdate"
-  >
-    <l-marker v-if="currentPosition" :lat-lng="currentPosition"></l-marker>
-  </l-map>
-  <v-overlay v-if="showOsmConsent">
-    <OsmConsent></OsmConsent>
-  </v-overlay>
-</v-main>
+    <l-map
+      ref="owmMap"
+      style="z-index: 0"
+      :zoom="zoom"
+      :center="center"
+      @ready="mapReady"
+      @update:center="centerUpdate"
+      @update:zoom="zoomUpdate"
+    >
+      <l-marker v-if="currentPosition" :lat-lng="currentPosition"></l-marker>
+    </l-map>
+    <v-overlay v-if="showOsmConsent">
+      <OsmConsent></OsmConsent>
+    </v-overlay>
+    <OsmConsentNotice v-if="showOsmConsentNotice"></OsmConsentNotice>
+  </v-main>
 </template>
 
 <script lang="ts">
@@ -24,10 +25,12 @@ import L, { latLng } from "leaflet";
 import { LMap } from "vue2-leaflet";
 import { appVersion } from "@/env";
 import OsmConsent from "./OsmConsent.vue";
+import OsmConsentNotice from "./OsmConsentNotice.vue";
 
 @Component({
   components: {
     OsmConsent,
+    OsmConsentNotice,
   },
 })
 export default class OwmMap extends Vue {
@@ -44,6 +47,7 @@ export default class OwmMap extends Vue {
     appVersion +
     ")";
   public showOsmConsent = false;
+  public showOsmConsentNotice = false;
   public urlOWM() {
     // adding random characters to the end
     // will prevent browser from caching tiles
@@ -56,13 +60,18 @@ export default class OwmMap extends Vue {
   }
   public updateOsmConsent() {
     let osmConsent = localStorage.getItem("osmConsent");
-    if (osmConsent === "true") {
-      this.activateOsmTileLayer();
-    }
     if (osmConsent === null) {
       this.showOsmConsent = true;
+      this.showOsmConsentNotice = false;
     } else {
       this.showOsmConsent = false;
+      if (osmConsent === "false") {
+        this.showOsmConsentNotice = true;
+      }
+      if (osmConsent === "true") {
+        this.activateOsmTileLayer();
+        this.showOsmConsentNotice = false;
+      }
     }
   }
   public centerUpdate(center) {

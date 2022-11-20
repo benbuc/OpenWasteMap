@@ -1,32 +1,33 @@
 <template>
-    <div class="osm-consent">
-        <div class="osm-consent__content">
-        <h2 class="osm-consent__title">OpenStreetMap</h2>
-        <p class="osm-consent__text">
-            We use OpenStreetMap as the background map. By using this map you agree to the
-            <a
-            href="https://wiki.osmfoundation.org/wiki/Privacy_Policy"
-            target="_blank"
-            rel="noopener noreferrer"
-            >OpenStreetMap privacy policy</a
-            >.
-        </p>
-        <div class="osm-consent__buttons">
-            <button
-            class="osm-consent__button osm-consent__button--accept"
-            @click="accept"
-            >
-            Accept
-            </button>
-            <button
-            class="osm-consent__button osm-consent__button--decline"
-            @click="decline"
-            >
-            Decline
-            </button>
-        </div>
-        </div>
+  <div class="osm-consent">
+    <div class="osm-consent__content">
+      <h2 class="osm-consent__title">OpenStreetMap</h2>
+      <p class="osm-consent__text">
+        We use OpenStreetMap as the background map. By using this map you agree
+        to the
+        <a
+          href="https://wiki.osmfoundation.org/wiki/Privacy_Policy"
+          target="_blank"
+          rel="noopener noreferrer"
+          >OpenStreetMap privacy policy</a
+        >.
+      </p>
+      <div class="osm-consent__buttons">
+        <button
+          class="osm-consent__button osm-consent__button--accept"
+          @click="accept"
+        >
+          Accept
+        </button>
+        <button
+          class="osm-consent__button osm-consent__button--decline"
+          @click="decline"
+        >
+          Decline
+        </button>
+      </div>
     </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -57,9 +58,9 @@ export default class OsmConsent extends Vue {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: black;    
+  color: black;
 }
-.osm-consent_buttons {
+.osm-consent__buttons {
   display: flex;
   justify-content: space-between;
   margin-top: 1rem;
