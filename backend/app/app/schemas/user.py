@@ -16,7 +16,7 @@ class UserBase(BaseModel):
 
     @validator("nickname")
     def nickname_length(cls, v):
-        assert len(v) >= 3, "must be at least 3 characters"
+        assert 3 <= len(v) <= 20, "must be between 3 and 20 characters"
         return v
 
 

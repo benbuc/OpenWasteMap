@@ -185,3 +185,11 @@ def test_short_nickname_fails(db: Session) -> None:
     password = random_lower_string()
     with pytest.raises(ValueError):
         UserCreate(email=email, nickname=nickname, password=password)
+
+
+def test_long_nickname_fails(db: Session) -> None:
+    email = random_email()
+    nickname = "a" * 21
+    password = random_lower_string()
+    with pytest.raises(ValueError):
+        UserCreate(email=email, nickname=nickname, password=password)
