@@ -15,6 +15,11 @@ class UserBase(BaseModel):
         assert v.isalnum(), "must be alphanumeric"
         return v
 
+    @validator("nickname")
+    def nickname_length(cls, v):
+        assert len(v) >= 3, "must be at least 3 characters"
+        return v
+
 
 # Properties to receive via API on creation
 class UserCreate(UserBase):
