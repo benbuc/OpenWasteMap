@@ -62,8 +62,7 @@ def test_get_existing_user(
     user = crud.user.create(db, obj_in=user_in)
     user_id = user.id
     r = client.get(
-        f"{settings.API_V1_STR}/users/{user_id}",
-        headers=superuser_token_headers,
+        f"{settings.API_V1_STR}/users/{user_id}", headers=superuser_token_headers,
     )
     assert 200 <= r.status_code < 300
     api_user = r.json()
@@ -85,8 +84,7 @@ def test_get_existing_user_nickname(
     user = crud.user.create(db, obj_in=user_in)
     user_id = user.id
     r = client.get(
-        f"{settings.API_V1_STR}/users/{user_id}",
-        headers=superuser_token_headers,
+        f"{settings.API_V1_STR}/users/{user_id}", headers=superuser_token_headers,
     )
     assert 200 <= r.status_code < 300
     api_user = r.json()
@@ -122,6 +120,17 @@ def test_create_user_existing_nickname(client: TestClient, db: Session) -> None:
     r = client.post(f"{settings.API_V1_STR}/users", json=data)
     created_user = r.json()
     assert r.status_code == 400
+    assert "_id" not in created_user
+
+
+def test_create_user_not_alphanumeric(client: TestClient, db: Session) -> None:
+    email = random_email()
+    nickname = random_lower_string() + " " + random_lower_string()
+    password = random_lower_string()
+    data = {"email": email, "nickname": nickname, "password": password}
+    r = client.post(f"{settings.API_V1_STR}/users", json=data)
+    created_user = r.json()
+    assert r.status_code == 422
     assert "_id" not in created_user
 
 
