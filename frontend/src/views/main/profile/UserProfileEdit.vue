@@ -11,23 +11,20 @@
               <v-text-field
                 label="Nickname"
                 v-model="nickname"
-                v-validate="'required'"
-                :error-messages="errors.collect('nickname')"
+                v-validate="'required|min:3|max:20|alpha_num'"
+                data-vv-name="nickname"
+                data-vv-delay="100"
                 required
-              ></v-text-field>
-              <v-text-field
-                label="Full Name"
-                v-model="fullName"
-                required
+                :error-messages="errors.first('nickname')"
               ></v-text-field>
               <v-text-field
                 label="E-mail"
-                type="email"
                 v-model="email"
                 v-validate="'required|email'"
                 data-vv-name="email"
-                :error-messages="errors.collect('email')"
+                data-vv-delay="100"
                 required
+                :error-messages="errors.first('email')"
               ></v-text-field>
             </v-form>
           </template>
@@ -54,14 +51,12 @@ import { dispatchUpdateUserProfile } from "@/store/main/actions";
 export default class UserProfileEdit extends Vue {
   public valid = true;
   public nickname: string = "";
-  public fullName: string = "";
   public email: string = "";
 
   public created() {
     const userProfile = readUserProfile(this.$store);
     if (userProfile) {
       this.nickname = userProfile.nickname;
-      this.fullName = userProfile.full_name;
       this.email = userProfile.email;
     }
   }
@@ -74,7 +69,6 @@ export default class UserProfileEdit extends Vue {
     const userProfile = readUserProfile(this.$store);
     if (userProfile) {
       this.nickname = userProfile.nickname;
-      this.fullName = userProfile.full_name;
       this.email = userProfile.email;
     }
   }
@@ -88,9 +82,6 @@ export default class UserProfileEdit extends Vue {
       const updatedProfile: IUserProfileUpdate = {};
       if (this.nickname) {
         updatedProfile.nickname = this.nickname;
-      }
-      if (this.fullName) {
-        updatedProfile.full_name = this.fullName;
       }
       if (this.email) {
         updatedProfile.email = this.email;

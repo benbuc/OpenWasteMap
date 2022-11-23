@@ -123,6 +123,17 @@ def test_create_user_existing_nickname(client: TestClient, db: Session) -> None:
     assert "_id" not in created_user
 
 
+def test_create_user_not_alphanumeric(client: TestClient, db: Session) -> None:
+    email = random_email()
+    nickname = random_lower_string() + " " + random_lower_string()
+    password = random_lower_string()
+    data = {"email": email, "nickname": nickname, "password": password}
+    r = client.post(f"{settings.API_V1_STR}/users", json=data)
+    created_user = r.json()
+    assert r.status_code == 422
+    assert "_id" not in created_user
+
+
 def test_retrieve_users(
     client: TestClient, superuser_token_headers: dict, db: Session
 ) -> None:

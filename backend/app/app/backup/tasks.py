@@ -26,10 +26,12 @@ def full_backup():
     zip_buffer = io.BytesIO()
     with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED, False) as zip_file:
         zip_file.writestr(
-            "waste_samples.json", json.dumps(jsonable_encoder(all_waste_samples)),
+            "waste_samples.json",
+            json.dumps(jsonable_encoder(all_waste_samples)),
         )
         zip_file.writestr(
-            "users.json", json.dumps(jsonable_encoder(all_users)),
+            "users.json",
+            json.dumps(jsonable_encoder(all_users)),
         )
 
     backup_filename = (

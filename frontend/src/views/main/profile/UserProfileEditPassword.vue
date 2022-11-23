@@ -11,9 +11,9 @@
               <div class="subheading secondary--text text--lighten-2">User</div>
               <div
                 class="title primary--text text--darken-2"
-                v-if="userProfile.full_name"
+                v-if="userProfile.nickname"
               >
-                {{ userProfile.full_name }}
+                {{ userProfile.nickname }}
               </div>
               <div class="title primary--text text--darken-2" v-else>
                 {{ userProfile.email }}
@@ -21,26 +21,24 @@
             </div>
             <v-form ref="form">
               <v-text-field
+                label="Password"
                 type="password"
                 ref="password"
-                label="Password"
+                v-model="password1"
+                v-validate="'required|min:8'"
                 data-vv-name="password"
                 data-vv-delay="100"
-                data-vv-rules="required"
-                v-validate="'required'"
-                v-model="password1"
                 :error-messages="errors.first('password')"
               >
               </v-text-field>
               <v-text-field
-                type="password"
                 label="Confirm Password"
+                type="password"
+                v-model="password2"
+                v-validate="'required|confirmed:password'"
                 data-vv-name="password_confirmation"
                 data-vv-delay="100"
-                data-vv-rules="required|confirmed:$password"
                 data-vv-as="password"
-                v-validate="'required|confirmed:password'"
-                v-model="password2"
                 :error-messages="errors.first('password_confirmation')"
               >
               </v-text-field>

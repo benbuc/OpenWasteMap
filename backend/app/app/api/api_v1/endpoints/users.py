@@ -75,7 +75,6 @@ def update_user_me(
     db: Session = Depends(deps.get_db),
     password: str = Body(None),
     nickname: str = Body(None),
-    full_name: str = Body(None),
     email: EmailStr = Body(None),
     current_user: models.User = Depends(deps.get_current_active_user),
     background_tasks: BackgroundTasks,
@@ -94,8 +93,6 @@ def update_user_me(
                 detail="The user with this nickname already exists in the system.",
             )
         user_in.nickname = nickname
-    if full_name is not None:
-        user_in.full_name = full_name
     if email is not None and email != current_user.email:
         if crud.user.get_by_email(db, email=email):
             raise HTTPException(

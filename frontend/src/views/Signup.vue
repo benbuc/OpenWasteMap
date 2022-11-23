@@ -12,40 +12,42 @@
                 <v-text-field
                   label="Nickname"
                   v-model="nickname"
+                  v-validate="'required|min:3|max:20|alpha_num'"
+                  data-vv-name="nickname"
+                  data-vv-delay="100"
                   required
-                ></v-text-field>
-                <v-text-field
-                  label="Full Name"
-                  v-model="fullName"
+                  :error-messages="errors.first('nickname')"
                 ></v-text-field>
                 <v-text-field
                   label="E-Mail"
                   v-model="email"
                   v-validate="'required|email'"
                   data-vv-name="email"
+                  data-vv-delay="100"
                   required
+                  :error-messages="errors.first('email')"
                 ></v-text-field>
                 <v-layout align-center>
                   <v-flex>
                     <v-text-field
+                      label="Set Password"
                       type="password"
                       ref="password"
-                      label="Set Password"
+                      v-model="password1"
+                      v-validate="'required|min:8'"
                       data-vv-name="password"
                       data-vv-delay="100"
-                      v-validate="{ required: true }"
-                      v-model="password1"
                       :error-messages="errors.first('password')"
                     >
                     </v-text-field>
                     <v-text-field
-                      type="password"
                       label="Confirm Password"
+                      type="password"
+                      v-model="password2"
+                      v-validate="{ required: true, confirmed: 'password' }"
                       data-vv-name="password_confirmation"
                       data-vv-delay="100"
                       data-vv-as="password"
-                      v-validate="{ required: true, confirmed: 'password' }"
-                      v-model="password2"
                       :error-messages="errors.first('password_confirmation')"
                     >
                     </v-text-field>
@@ -53,12 +55,20 @@
                 </v-layout>
                 <v-checkbox
                   v-model="termsAccepted"
-                  required>
+                  required
+                  :error-messages="errors.has('privacy_policy') ? 'You have to accept the privacy policy to create an account' : ''">
                   <template slot="label">
                     I agree to the&nbsp;<a @click.stop target="_blank" href="/privacy">Privacy Policy</a>.
-
                   </template>
                 </v-checkbox>
+                <input
+                  type="checkbox"
+                  name="privacy_policy"
+                  v-model="termsAccepted"
+                  v-validate="'required'"
+                  style="display: none;"
+                  required>
+                </input>
               </v-form>
             </v-card-text>
             <v-card-actions class="justify-center">
@@ -89,7 +99,6 @@ export default class Signup extends Vue {
   public valid = false;
   public appName = appName;
   public nickname: string = "";
-  public fullName: string = "";
   public email: string = "";
   public setPassword = false;
   public password1: string = "";
@@ -102,9 +111,6 @@ export default class Signup extends Vue {
         email: this.email,
         nickname: this.nickname,
       };
-      if (this.fullName) {
-        userProfile.full_name = this.fullName;
-      }
       userProfile.password = this.password1;
       const error = await dispatchCreateUser(this.$store, userProfile);
       if (!error) {

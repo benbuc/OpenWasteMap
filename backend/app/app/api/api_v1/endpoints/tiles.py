@@ -14,7 +14,9 @@ router = APIRouter()
     responses={200: {"content": {"image/png": {}}}},
 )
 def get_tile(
-    zoom: int, xcoord: int, ycoord: int,
+    zoom: int,
+    xcoord: int,
+    ycoord: int,
 ):
     image_out = io.BytesIO()
     rendered_tile = TileRenderer(zoom, xcoord, ycoord).render()

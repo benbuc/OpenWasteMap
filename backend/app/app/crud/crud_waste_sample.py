@@ -35,7 +35,10 @@ class CRUDWasteSample(CRUDBase[WasteSample, WasteSampleCreate, WasteSampleUpdate
         return db_obj
 
     def create_multi(
-        self, db: Session, *, obj_in: List[WasteSampleImportExport],
+        self,
+        db: Session,
+        *,
+        obj_in: List[WasteSampleImportExport],
     ) -> List[int]:
         db_objs = []
         for sample_obj in obj_in:

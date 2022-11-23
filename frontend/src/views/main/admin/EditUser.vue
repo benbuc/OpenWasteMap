@@ -17,11 +17,6 @@
           </div>
           <v-form v-model="valid" ref="form" lazy-validation>
             <v-text-field
-              label="Full Name"
-              v-model="fullName"
-              required
-            ></v-text-field>
-            <v-text-field
               label="E-mail"
               type="email"
               v-model="email"
@@ -94,7 +89,6 @@ import { readAdminOneUser } from "@/store/admin/getters";
 @Component
 export default class EditUser extends Vue {
   public valid = true;
-  public fullName: string = "";
   public email: string = "";
   public isActive: boolean = true;
   public isSuperuser: boolean = false;
@@ -113,7 +107,6 @@ export default class EditUser extends Vue {
     this.password2 = "";
     this.$validator.reset();
     if (this.user) {
-      this.fullName = this.user.full_name;
       this.email = this.user.email;
       this.isActive = this.user.is_active;
       this.isSuperuser = this.user.is_superuser;
@@ -127,9 +120,6 @@ export default class EditUser extends Vue {
   public async submit() {
     if (await this.$validator.validateAll()) {
       const updatedProfile: IUserProfileUpdate = {};
-      if (this.fullName) {
-        updatedProfile.full_name = this.fullName;
-      }
       if (this.email) {
         updatedProfile.email = this.email;
       }

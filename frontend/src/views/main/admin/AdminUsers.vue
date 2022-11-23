@@ -12,7 +12,6 @@
           <tr v-for="item in items" :key="item.name">
             <td>{{ item.nickname }}</td>
             <td>{{ item.email }}</td>
-            <td>{{ item.full_name }}</td>
             <td><v-icon v-if="item.is_active">checkmark</v-icon></td>
             <td><v-icon v-if="item.is_superuser">checkmark</v-icon></td>
             <td>
@@ -53,12 +52,6 @@ export default class AdminUsers extends Vue {
       text: "Email",
       sortable: true,
       value: "email",
-      align: "left",
-    },
-    {
-      text: "Full Name",
-      sortable: true,
-      value: "full_name",
       align: "left",
     },
     {
