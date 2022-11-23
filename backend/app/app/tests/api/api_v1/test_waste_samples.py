@@ -121,7 +121,8 @@ def test_get_all_waste_samples(
         create_random_waste_sample(db, create_owner=False) for _ in range(5)
     ]
     response = client.get(
-        f"{settings.API_V1_STR}/waste-samples/all", headers=superuser_token_headers,
+        f"{settings.API_V1_STR}/waste-samples/all",
+        headers=superuser_token_headers,
     )
     assert response.status_code == 200
     content = response.json()

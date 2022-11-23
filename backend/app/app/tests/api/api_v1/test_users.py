@@ -62,7 +62,8 @@ def test_get_existing_user(
     user = crud.user.create(db, obj_in=user_in)
     user_id = user.id
     r = client.get(
-        f"{settings.API_V1_STR}/users/{user_id}", headers=superuser_token_headers,
+        f"{settings.API_V1_STR}/users/{user_id}",
+        headers=superuser_token_headers,
     )
     assert 200 <= r.status_code < 300
     api_user = r.json()
@@ -84,7 +85,8 @@ def test_get_existing_user_nickname(
     user = crud.user.create(db, obj_in=user_in)
     user_id = user.id
     r = client.get(
-        f"{settings.API_V1_STR}/users/{user_id}", headers=superuser_token_headers,
+        f"{settings.API_V1_STR}/users/{user_id}",
+        headers=superuser_token_headers,
     )
     assert 200 <= r.status_code < 300
     api_user = r.json()

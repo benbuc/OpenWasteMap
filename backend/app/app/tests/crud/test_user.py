@@ -1,5 +1,6 @@
 from datetime import datetime
 
+import pytest
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
@@ -173,3 +174,11 @@ def test_username_email_forced_lowercase(db: Session) -> None:
     user = crud.user.create(db, obj_in=user_in)
     assert user.email == email.lower()
     assert user.nickname == nickname.lower()
+
+
+def test_nickname_only_alphanumeric(db: Session) -> None:
+    email = random_email()
+    nickname = random_lower_string() + " " + random_lower_string()
+    password = random_lower_string()
+    with pytest.raises(ValueError):
+        UserCreate(email=email, nickname=nickname, password=password)

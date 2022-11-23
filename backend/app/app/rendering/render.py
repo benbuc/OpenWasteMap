@@ -186,7 +186,7 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
 
         # This is a highly optimized version of the Haversine formula
         return EARTH_RADIUS * np.sqrt(
-            (dlat ** 2) + (np.cos(sample_lat) ** 2) * (dlon ** 2)
+            (dlat**2) + (np.cos(sample_lat) ** 2) * (dlon**2)
         )
 
     def get_confidence_levels(self, distances):

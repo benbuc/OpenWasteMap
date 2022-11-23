@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, validator
 
 
 # Shared properties
@@ -9,6 +9,11 @@ class UserBase(BaseModel):
     email: Optional[EmailStr] = None
     nickname: Optional[str] = None
     full_name: Optional[str] = None
+
+    @validator("nickname")
+    def nickname_alphanumeric(cls, v):
+        assert v.isalnum(), "must be alphanumeric"
+        return v
 
 
 # Properties to receive via API on creation

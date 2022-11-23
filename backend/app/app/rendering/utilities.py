@@ -7,7 +7,7 @@ from .parameters import EARTH_RADIUS, SAMPLE_MAX_INFLUENCE
 
 def num_tiles(zoom):
     "Number of tiles in an axis for a zoom level"
-    return 2.0 ** zoom
+    return 2.0**zoom
 
 
 # Calculate coordinates from tilename
