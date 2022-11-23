@@ -10,21 +10,20 @@
             <v-text-field
               label="Nickname"
               v-model="nickname"
+              v-validate="'required|min:3|max:20|alpha_num'"
+              data-vv-name="nickname"
+              data-vv-delay="100"
               required
-            ></v-text-field>
-            <v-text-field
-              label="Full Name"
-              v-model="fullName"
-              required
+              :error-messages="errors.first('nickname')"
             ></v-text-field>
             <v-text-field
               label="E-mail"
-              type="email"
               v-model="email"
               v-validate="'required|email'"
               data-vv-name="email"
-              :error-messages="errors.collect('email')"
+              data-vv-delay="100"
               required
+              :error-messages="errors.collect('email')"
             ></v-text-field>
             <div class="subheading secondary--text text--lighten-2">
               User is superuser
@@ -40,24 +39,24 @@
             <v-layout align-center>
               <v-flex>
                 <v-text-field
+                  label="Set Password"
                   type="password"
                   ref="password"
-                  label="Set Password"
+                  v-model="password1"
+                  v-validate="'required|min:8'"
                   data-vv-name="password"
                   data-vv-delay="100"
-                  v-validate="{ required: true }"
-                  v-model="password1"
                   :error-messages="errors.first('password')"
                 >
                 </v-text-field>
                 <v-text-field
-                  type="password"
                   label="Confirm Password"
+                  type="password"
+                  v-model="password2"
+                  v-validate="{ required: true, confirmed: 'password' }"
                   data-vv-name="password_confirmation"
                   data-vv-delay="100"
                   data-vv-as="password"
-                  v-validate="{ required: true, confirmed: 'password' }"
-                  v-model="password2"
                   :error-messages="errors.first('password_confirmation')"
                 >
                 </v-text-field>
@@ -89,7 +88,6 @@ import { dispatchGetUsers, dispatchCreateUser } from "@/store/admin/actions";
 export default class CreateUser extends Vue {
   public valid = false;
   public nickname: string = "";
-  public fullName: string = "";
   public email: string = "";
   public isActive: boolean = true;
   public isSuperuser: boolean = false;
@@ -106,7 +104,6 @@ export default class CreateUser extends Vue {
     this.password1 = "";
     this.password2 = "";
     this.nickname = "";
-    this.fullName = "";
     this.email = "";
     this.isActive = true;
     this.isSuperuser = false;
@@ -123,9 +120,6 @@ export default class CreateUser extends Vue {
         email: this.email,
         nickname: this.nickname,
       };
-      if (this.fullName) {
-        updatedProfile.full_name = this.fullName;
-      }
       if (this.email) {
         updatedProfile.email = this.email;
       }

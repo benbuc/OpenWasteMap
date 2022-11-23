@@ -12,7 +12,7 @@
                 <v-text-field
                   label="Nickname"
                   v-model="nickname"
-                  v-validate="'required|min:3|max:20'"
+                  v-validate="'required|min:3|max:20|alpha_num'"
                   data-vv-name="nickname"
                   data-vv-delay="100"
                   required
@@ -99,7 +99,6 @@ export default class Signup extends Vue {
   public valid = false;
   public appName = appName;
   public nickname: string = "";
-  public fullName: string = "";
   public email: string = "";
   public setPassword = false;
   public password1: string = "";
@@ -112,9 +111,6 @@ export default class Signup extends Vue {
         email: this.email,
         nickname: this.nickname,
       };
-      if (this.fullName) {
-        userProfile.full_name = this.fullName;
-      }
       userProfile.password = this.password1;
       const error = await dispatchCreateUser(this.$store, userProfile);
       if (!error) {
