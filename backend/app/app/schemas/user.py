@@ -8,7 +8,6 @@ from pydantic import BaseModel, EmailStr, validator
 class UserBase(BaseModel):
     email: Optional[EmailStr] = None
     nickname: Optional[str] = None
-    full_name: Optional[str] = None
 
     @validator("nickname")
     def nickname_alphanumeric(cls, v):
