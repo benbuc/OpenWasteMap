@@ -5,6 +5,7 @@
       style="z-index: 0"
       :zoom="zoom"
       :center="center"
+      :options="{ zoomControl: false }"
       @ready="mapReady"
       @update:center="centerUpdate"
       @update:zoom="zoomUpdate"
@@ -131,6 +132,7 @@ export default class OwmMap extends Vue {
       attribution: this.attributionOWM,
     });
     this.owmTileLayer.addTo(this.owmMap);
+    L.control.zoom({ position: "bottomright" }).addTo(this.owmMap);
     this.updateOsmConsent();
   }
   public activateOsmTileLayer() {
