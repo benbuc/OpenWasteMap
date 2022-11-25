@@ -28,7 +28,8 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: ./backend
-          file: ./backend/backend.dockerfile
+          file: ./backend/Dockerfile
+          target: backend
           push: false
           load: true
           tags: owm_backend
@@ -41,7 +42,8 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: ./backend
-          file: ./backend/celeryworker.dockerfile
+          file: ./backend/Dockerfile
+          target: celeryworker
           push: false
           load: true
           tags: owm_celeryworker
