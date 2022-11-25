@@ -95,6 +95,7 @@ export default class MainMenuDrawer extends Vue {
   }
   async logout() {
     await dispatchUserLogOut(this.$store);
+    this.showDrawer = false;
   }
 }
 </script>
