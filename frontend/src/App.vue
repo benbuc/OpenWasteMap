@@ -35,5 +35,16 @@ import MainMenuDrawer from "@/components/MainMenuDrawer.vue";
 })
 export default class App extends Vue {
   showDrawer = false;
+
+  public mounted() {
+    document.body.style.overflow = "hidden";
+    window.addEventListener("resize", this.onResize);
+  }
+  public onUnmounted() {
+    window.removeEventListener("resize", this.onResize);
+  }
+  onResize() {
+    document.body.style.height = window.innerHeight + "px";
+  }
 }
 </script>
