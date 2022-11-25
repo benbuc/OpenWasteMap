@@ -1,4 +1,4 @@
-FROM python:3.10
+FROM python:3.10 as base
 
 WORKDIR /app/
 
@@ -21,6 +21,8 @@ RUN bash -c "if [ $INSTALL_DEV == 'true' ] ; then poetry install --no-root ; els
 ARG INSTALL_JUPYTER=false
 RUN bash -c "if [ $INSTALL_JUPYTER == 'true' ] ; then pip install jupyterlab ; fi"
 
+FROM base as celeryworker
+
 ENV C_FORCE_ROOT=1
 
 COPY ./app /app
@@ -33,3 +35,13 @@ COPY ./app/worker-start.sh /worker-start.sh
 RUN chmod +x /worker-start.sh
 
 CMD ["bash", "/worker-start.sh"]
+
+FROM base as backend
+
+
+COPY ./start-reload.sh /
+RUN chmod +x /start-reload.sh
+COPY ./app /app
+ENV PYTHONPATH=/app
+
+CMD ["uvicorn", "app.main:app", "--proxy-headers", "--host", "0.0.0.0", "--port", "80"]

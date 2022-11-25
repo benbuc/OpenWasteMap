@@ -152,7 +152,7 @@ services:
       - SMTP_HOST=${SMTP_HOST}
     build:
       context: ./backend
-      dockerfile: backend.dockerfile
+      target: backend
       args:
         INSTALL_DEV: ${INSTALL_DEV-false}
     volumes:
@@ -175,7 +175,7 @@ services:
       - SMTP_HOST=${SMTP_HOST?Variable not set}
     build:
       context: ./backend
-      dockerfile: celeryworker.dockerfile
+      target: celeryworker
       args:
         INSTALL_DEV: ${INSTALL_DEV-false}
     volumes:
