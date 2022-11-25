@@ -10,7 +10,7 @@
       <router-view class="router-view" v-if="showDialog"></router-view>
     </v-scale-transition>
 
-    <FABCreateSample v-if="loggedIn"></FABCreateSample>
+    <FABCreateSample></FABCreateSample>
   </v-main>
 </template>
 
@@ -37,9 +37,6 @@ export default class Home extends Vue {
     } else {
       this.$router.push({ name: "home" });
     }
-  }
-  get loggedIn() {
-    return readIsLoggedIn(this.$store);
   }
   public async mounted() {
     dispatchCheckLoggedIn(this.$store);
