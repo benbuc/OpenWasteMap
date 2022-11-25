@@ -120,16 +120,10 @@ export const actions = {
   },
   async actionLogOut(context: MainContext) {
     await dispatchRemoveLogIn(context);
-    await dispatchRouteLogOut(context);
   },
   async actionUserLogOut(context: MainContext) {
     await dispatchLogOut(context);
     commitAddNotification(context, { content: "Logged out", color: "success" });
-  },
-  actionRouteLogOut(context: MainContext) {
-    if (router.currentRoute.path !== "/") {
-      router.push("/");
-    }
   },
   async actionCheckApiError(context: MainContext, payload: AxiosError) {
     if (payload.response && payload.response!.status === 401) {
@@ -314,7 +308,6 @@ export const dispatchLogOut = dispatch(actions.actionLogOut);
 export const dispatchUserLogOut = dispatch(actions.actionUserLogOut);
 export const dispatchRemoveLogIn = dispatch(actions.actionRemoveLogIn);
 export const dispatchRouteLoggedIn = dispatch(actions.actionRouteLoggedIn);
-export const dispatchRouteLogOut = dispatch(actions.actionRouteLogOut);
 export const dispatchUpdateUserProfile = dispatch(
   actions.actionUpdateUserProfile
 );

@@ -1,6 +1,6 @@
 <template>
   <v-card class="elevation-12">
-    <v-card-text>
+    <v-card-text class="pt-4">
       <v-form @keyup.enter="submit">
         <v-text-field
           @keyup.enter="submit"

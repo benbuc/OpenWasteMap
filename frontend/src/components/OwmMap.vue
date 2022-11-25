@@ -1,5 +1,9 @@
 <template>
-  <v-container class="map-container" fluid :style="{height: `${mapHeight}px !important`}">
+  <v-container
+    class="map-container"
+    fluid
+    :style="{ height: `${mapHeight}px !important` }"
+  >
     <l-map
       ref="owmMap"
       style="z-index: 0"
