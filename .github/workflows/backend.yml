@@ -69,7 +69,7 @@ jobs:
         env:
           TRAEFIK_PUBLIC_NETWORK_IS_EXTERNAL: false
         run: |
-          docker-compose -f docker-compose.yml up -d --no-build
+          docker-compose -f docker-compose.yml up -d --no-build db backend frontend celeryworker queue
 
       - name: Test
         env:
