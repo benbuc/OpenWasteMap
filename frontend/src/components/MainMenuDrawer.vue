@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer v-model="showDrawer" app>
+  <v-navigation-drawer v-model="showDrawer" app temporary>
     <v-list-item class="px-2">
       <v-list-item-content v-if="userProfile">
         <v-list-item-title class="text-h6">
