@@ -48,7 +48,7 @@ services:
       - SERVER_HOST=http://${DOMAIN?Variable not set}
     build:
       context: ./backend
-      target: celeryworker
+      target: backend
       args:
         INSTALL_DEV: ${INSTALL_DEV-true}
         INSTALL_JUPYTER: ${INSTALL_JUPYTER-true}

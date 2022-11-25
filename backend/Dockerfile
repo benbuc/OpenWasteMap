@@ -38,7 +38,6 @@ CMD ["bash", "/worker-start.sh"]
 
 FROM base as backend
 
-
 COPY ./start-reload.sh /
 RUN chmod +x /start-reload.sh
 COPY ./app /app
