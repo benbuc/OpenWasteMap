@@ -8,7 +8,7 @@
       left
       class="v-btn--admin"
       :to="{ name: 'admin' }"
-      v-if="userProfile.is_superuser"
+      v-if="userProfile && userProfile.is_superuser"
     >
       <v-icon>admin_panel_settings</v-icon>
     </v-btn>

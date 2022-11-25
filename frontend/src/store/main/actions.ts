@@ -116,6 +116,7 @@ export const actions = {
     removeLocalToken();
     commitSetToken(context, "");
     commitSetLoggedIn(context, false);
+    commitSetUserProfile(context, null);
   },
   async actionLogOut(context: MainContext) {
     await dispatchRemoveLogIn(context);
@@ -126,8 +127,8 @@ export const actions = {
     commitAddNotification(context, { content: "Logged out", color: "success" });
   },
   actionRouteLogOut(context: MainContext) {
-    if (router.currentRoute.path !== "/login") {
-      router.push("/login");
+    if (router.currentRoute.path !== "/") {
+      router.push("/");
     }
   },
   async actionCheckApiError(context: MainContext, payload: AxiosError) {

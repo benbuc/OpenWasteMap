@@ -11,7 +11,6 @@
         left
         fab
         dark
-        color="primary"
         @click="showDrawer = !showDrawer"
       >
         <v-icon>menu</v-icon>

@@ -13,7 +13,7 @@ export const mutations = {
   setLogInError(state: MainState, payload: boolean) {
     state.logInError = payload;
   },
-  setUserProfile(state: MainState, payload: IUserProfile) {
+  setUserProfile(state: MainState, payload: IUserProfile | null) {
     state.userProfile = payload;
   },
   setDashboardMiniDrawer(state: MainState, payload: boolean) {
