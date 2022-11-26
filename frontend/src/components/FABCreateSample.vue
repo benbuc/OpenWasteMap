@@ -39,6 +39,7 @@
 import { IWasteSampleCreate } from "@/interfaces";
 import { dispatchCreateWasteSample } from "@/store/main/actions";
 import { readIsLoggedIn } from "@/store/main/getters";
+import { commitAddNotification } from "@/store/main/mutations";
 import { Vue, Component, Watch } from "vue-property-decorator";
 
 @Component
@@ -118,6 +119,10 @@ export default class FABCreateSample extends Vue {
   }
   checkLoggedIn(e: Event) {
     if (!this.loggedIn) {
+      commitAddNotification(this.$store, {
+        content: "Please log in to create samples",
+        color: "warning",
+      });
       this.$router.push("/login");
       e.stopPropagation();
     }
