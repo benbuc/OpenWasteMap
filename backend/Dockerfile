@@ -39,8 +39,10 @@ CMD ["bash", "/worker-start.sh"]
 FROM base as backend
 
 COPY ./start-reload.sh /
+COPY ./start.sh /
 RUN chmod +x /start-reload.sh
+RUN chmod +x /start.sh
 COPY ./app /app
 ENV PYTHONPATH=/app
 
-CMD ["uvicorn", "app.main:app", "--proxy-headers", "--host", "0.0.0.0", "--port", "80"]
+CMD ["bash", "/start.sh"]
