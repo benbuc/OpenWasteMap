@@ -2,20 +2,7 @@
   <div id="app">
     <v-app>
       <MainMenuDrawer v-model="showDrawer"></MainMenuDrawer>
-
-      <v-btn
-        v-model="showDrawer"
-        app
-        fixed
-        top
-        left
-        fab
-        dark
-        @click="showDrawer = !showDrawer"
-      >
-        <v-icon>menu</v-icon>
-      </v-btn>
-
+      <MainMenuButton v-model="showDrawer"></MainMenuButton>
       <NotificationsManager></NotificationsManager>
       <router-view></router-view>
     </v-app>
@@ -26,11 +13,13 @@
 import { Component, Vue } from "vue-property-decorator";
 import NotificationsManager from "@/components/NotificationsManager.vue";
 import MainMenuDrawer from "@/components/MainMenuDrawer.vue";
+import MainMenuButton from "./components/MainMenuButton.vue";
 
 @Component({
   components: {
     NotificationsManager,
     MainMenuDrawer,
+    MainMenuButton,
   },
 })
 export default class App extends Vue {

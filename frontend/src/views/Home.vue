@@ -6,10 +6,6 @@
       <router-view></router-view>
     </v-dialog>
 
-    <v-scale-transition>
-      <router-view class="router-view" v-if="showDialog"></router-view>
-    </v-scale-transition>
-
     <FABCreateSample></FABCreateSample>
   </v-main>
 </template>
@@ -18,7 +14,6 @@
 import { Component, Vue } from "vue-property-decorator";
 import OwmMap from "../components/OwmMap.vue";
 import FABCreateSample from "../components/FABCreateSample.vue";
-import { readIsLoggedIn } from "@/store/main/getters";
 import { dispatchCheckLoggedIn } from "@/store/main/actions";
 
 @Component({
@@ -32,9 +27,7 @@ export default class Home extends Vue {
     return this.$route.name !== "home";
   }
   public set showDialog(value: boolean) {
-    if (value) {
-      this.$router.push({ name: "login" });
-    } else {
+    if (!value) {
       this.$router.push({ name: "home" });
     }
   }
