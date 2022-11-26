@@ -5,7 +5,7 @@
         <v-flex xs12 sm8 md4>
           <v-card class="elevation-12">
             <v-toolbar dark color="primary">
-              <v-toolbar-title>Create Account - {{ appName }}</v-toolbar-title>
+              <v-toolbar-title>Create Account</v-toolbar-title>
             </v-toolbar>
             <v-card-text>
               <v-form v-model="valid" ref="form" lazy-validation>

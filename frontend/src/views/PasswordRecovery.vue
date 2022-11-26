@@ -5,9 +5,7 @@
         <v-flex xs12 sm8 md4>
           <v-card class="elevation-12">
             <v-toolbar dark color="primary">
-              <v-toolbar-title
-                >Password Recovery</v-toolbar-title
-              >
+              <v-toolbar-title>Password Recovery</v-toolbar-title>
             </v-toolbar>
             <v-card-text>
               <p class="subheading">
@@ -65,7 +63,7 @@ export default class Login extends Vue {
 
   public async submit() {
     if (await this.$validator.validateAll()) {
-    dispatchPasswordRecovery(this.$store, { email: this.email });
+      dispatchPasswordRecovery(this.$store, { email: this.email });
     }
   }
 }

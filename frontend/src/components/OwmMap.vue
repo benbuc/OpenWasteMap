@@ -2,7 +2,7 @@
   <v-container
     class="map-container"
     fluid
-    :style="{ height: `${mapHeight}px !important` }"
+    :style="{ height: `${mapHeight - 56}px !important` }"
   >
     <l-map
       ref="owmMap"

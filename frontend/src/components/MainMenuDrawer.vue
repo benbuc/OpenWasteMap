@@ -62,12 +62,13 @@
 
 <script lang="ts">
 import { dispatchUserLogOut } from "@/store/main/actions";
-import { readUserProfile } from "@/store/main/getters";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
 export default class MainMenuDrawer extends Vue {
   @Prop({ default: false }) value!: boolean;
+  @Prop({ default: [] }) items!: any[];
+  @Prop({ default: null }) userProfile!: any;
   drawerHeight = "100%";
   get showDrawer() {
     return this.value;
@@ -85,33 +86,10 @@ export default class MainMenuDrawer extends Vue {
   onResize() {
     this.drawerHeight = window.innerHeight + "px";
   }
-  get items() {
-    return [
-      {
-        title: "Home",
-        icon: "mdi-map",
-        link: "/",
-      },
-      this.userProfile
-        ? {
-            title: "Profile",
-            icon: "mdi-account",
-            link: "/profile",
-          }
-        : {
-            title: "Create Account",
-            icon: "mdi-account-plus",
-            link: "/signup",
-          },
-    ];
-  }
-
-  get userProfile() {
-    return readUserProfile(this.$store);
-  }
   async logout() {
     await dispatchUserLogOut(this.$store);
     this.showDrawer = false;
+    this.$router.push("/");
   }
 }
 </script>
