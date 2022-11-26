@@ -40,7 +40,7 @@ export default class App extends Vue {
     document.body.style.overflow = "hidden";
     window.addEventListener("resize", this.onResize);
   }
-  public onUnmounted() {
+  public unmounted() {
     window.removeEventListener("resize", this.onResize);
   }
   onResize() {

@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer v-model="showDrawer" app temporary>
+  <v-navigation-drawer v-model="showDrawer" app temporary :height="drawerHeight">
     <v-list-item class="px-2">
       <v-list-item-content v-if="userProfile">
         <v-list-item-title class="text-h6">
@@ -63,11 +63,22 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component
 export default class MainMenuDrawer extends Vue {
   @Prop({ default: false }) value!: boolean;
+  drawerHeight = "100%";
   get showDrawer() {
     return this.value;
   }
   set showDrawer(value: boolean) {
     this.$emit("input", value);
+  }
+  public mounted() {
+    this.drawerHeight = window.innerHeight + "px";
+    window.addEventListener("resize", this.onResize);
+  }
+  public unmounted() {
+    window.removeEventListener("resize", this.onResize);
+  }
+  onResize() {
+    this.drawerHeight = window.innerHeight + "px";
   }
   get items() {
     return [
