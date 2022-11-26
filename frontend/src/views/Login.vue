@@ -6,8 +6,8 @@
           @keyup.enter="submit"
           v-model="email"
           prepend-icon="person"
-          name="login"
-          label="Login"
+          name="email"
+          label="Email"
           type="text"
         ></v-text-field>
         <v-text-field
@@ -43,7 +43,6 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { api } from "@/api";
 import { appName } from "@/env";
 import { readIsLoggedIn, readLoginError } from "@/store/main/getters";
 import { dispatchCheckLoggedIn, dispatchLogIn } from "@/store/main/actions";
