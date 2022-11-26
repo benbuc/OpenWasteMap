@@ -1,10 +1,15 @@
 <template>
-  <v-main class="map-container">
+  <v-container
+    class="map-container"
+    fluid
+    :style="{ height: `${mapHeight - 56}px !important` }"
+  >
     <l-map
       ref="owmMap"
       style="z-index: 0"
       :zoom="zoom"
       :center="center"
+      :options="{ zoomControl: false }"
       @ready="mapReady"
       @update:center="centerUpdate"
       @update:zoom="zoomUpdate"
@@ -15,7 +20,7 @@
       <OsmConsent></OsmConsent>
     </v-overlay>
     <OsmConsentNotice v-if="showOsmConsentNotice"></OsmConsentNotice>
-  </v-main>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -46,6 +51,7 @@ export default class OwmMap extends Vue {
     "<a href='/privacy'>Privacy</a> | <a href='/imprint'>Imprint</a> (" +
     appVersion +
     ")";
+  public mapHeight = 0;
   public showOsmConsent = false;
   public showOsmConsentNotice = false;
   public urlOWM() {
@@ -120,6 +126,11 @@ export default class OwmMap extends Vue {
     this.$root.$on("update_osm_consent", () => {
       this.updateOsmConsent();
     });
+    this.mapHeight = window.innerHeight;
+    window.addEventListener("resize", this.onResize);
+  }
+  public unmounted() {
+    window.removeEventListener("resize", this.onResize);
   }
   public mapReady() {
     this.owmMap = (this.$refs.owmMap as LMap).mapObject;
@@ -131,6 +142,7 @@ export default class OwmMap extends Vue {
       attribution: this.attributionOWM,
     });
     this.owmTileLayer.addTo(this.owmMap);
+    L.control.zoom({ position: "bottomright" }).addTo(this.owmMap);
     this.updateOsmConsent();
   }
   public activateOsmTileLayer() {
@@ -139,12 +151,14 @@ export default class OwmMap extends Vue {
     }
     this.osmTileLayer.setUrl(this.urlOSM);
   }
+  onResize() {
+    this.mapHeight = window.innerHeight;
+  }
 }
 </script>
 
 <style scoped>
 .map-container {
-  height: 100%;
   width: 100%;
   padding: 0;
   margin: 0;

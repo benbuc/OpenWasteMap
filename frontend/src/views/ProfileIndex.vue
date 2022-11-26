@@ -8,12 +8,9 @@
       left
       class="v-btn--admin"
       :to="{ name: 'admin' }"
-      v-if="userProfile.is_superuser"
+      v-if="userProfile && userProfile.is_superuser"
     >
       <v-icon>admin_panel_settings</v-icon>
-    </v-btn>
-    <v-btn fab dark top right class="v-btn--to-map" :to="{ name: 'home' }">
-      <v-icon>map</v-icon>
     </v-btn>
     <UserProfile></UserProfile>
   </v-main>

@@ -5,9 +5,7 @@
         <v-flex xs12 sm8 md4>
           <v-card class="elevation-12">
             <v-toolbar dark color="primary">
-              <v-toolbar-title
-                >{{ appName }} - Password Recovery</v-toolbar-title
-              >
+              <v-toolbar-title>Password Recovery</v-toolbar-title>
             </v-toolbar>
             <v-card-text>
               <p class="subheading">
@@ -22,13 +20,14 @@
               >
                 <v-text-field
                   @keyup.enter="submit"
-                  label="Username"
-                  type="text"
+                  label="Email"
+                  type="email"
                   prepend-icon="person"
-                  v-model="username"
-                  v-validate="'required'"
-                  data-vv-name="username"
-                  :error-messages="errors.collect('username')"
+                  v-model="email"
+                  v-validate="'required|email'"
+                  data-vv-delay="100"
+                  data-vv-name="email"
+                  :error-messages="errors.collect('email')"
                   required
                 ></v-text-field>
               </v-form>
@@ -54,16 +53,18 @@ import { dispatchPasswordRecovery } from "@/store/main/actions";
 
 @Component
 export default class Login extends Vue {
-  public valid = true;
-  public username: string = "";
+  public valid = false;
+  public email: string = "";
   public appName = appName;
 
   public cancel() {
     this.$router.back();
   }
 
-  public submit() {
-    dispatchPasswordRecovery(this.$store, { username: this.username });
+  public async submit() {
+    if (await this.$validator.validateAll()) {
+      dispatchPasswordRecovery(this.$store, { email: this.email });
+    }
   }
 }
 </script>

@@ -116,19 +116,14 @@ export const actions = {
     removeLocalToken();
     commitSetToken(context, "");
     commitSetLoggedIn(context, false);
+    commitSetUserProfile(context, null);
   },
   async actionLogOut(context: MainContext) {
     await dispatchRemoveLogIn(context);
-    await dispatchRouteLogOut(context);
   },
   async actionUserLogOut(context: MainContext) {
     await dispatchLogOut(context);
     commitAddNotification(context, { content: "Logged out", color: "success" });
-  },
-  actionRouteLogOut(context: MainContext) {
-    if (router.currentRoute.path !== "/login") {
-      router.push("/login");
-    }
   },
   async actionCheckApiError(context: MainContext, payload: AxiosError) {
     if (payload.response && payload.response!.status === 401) {
@@ -159,7 +154,7 @@ export const actions = {
       }, payload.timeout);
     });
   },
-  async passwordRecovery(context: MainContext, payload: { username: string }) {
+  async passwordRecovery(context: MainContext, payload: { email: string }) {
     const loadingNotification = {
       content: "Sending password recovery email",
       showProgress: true,
@@ -168,7 +163,7 @@ export const actions = {
       commitAddNotification(context, loadingNotification);
       const response = (
         await Promise.all([
-          api.passwordRecovery(payload.username),
+          api.passwordRecovery(payload.email),
           await new Promise<void>((resolve, reject) =>
             setTimeout(() => resolve(), 500)
           ),
@@ -313,7 +308,6 @@ export const dispatchLogOut = dispatch(actions.actionLogOut);
 export const dispatchUserLogOut = dispatch(actions.actionUserLogOut);
 export const dispatchRemoveLogIn = dispatch(actions.actionRemoveLogIn);
 export const dispatchRouteLoggedIn = dispatch(actions.actionRouteLoggedIn);
-export const dispatchRouteLogOut = dispatch(actions.actionRouteLogOut);
 export const dispatchUpdateUserProfile = dispatch(
   actions.actionUpdateUserProfile
 );

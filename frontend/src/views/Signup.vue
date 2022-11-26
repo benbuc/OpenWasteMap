@@ -5,7 +5,7 @@
         <v-flex xs12 sm8 md4>
           <v-card class="elevation-12">
             <v-toolbar dark color="primary">
-              <v-toolbar-title>Create Account - {{ appName }}</v-toolbar-title>
+              <v-toolbar-title>Create Account</v-toolbar-title>
             </v-toolbar>
             <v-card-text>
               <v-form v-model="valid" ref="form" lazy-validation>
@@ -56,9 +56,19 @@
                 <v-checkbox
                   v-model="termsAccepted"
                   required
-                  :error-messages="errors.has('privacy_policy') ? 'You have to accept the privacy policy to create an account' : ''">
+                  :error-messages="
+                    errors.has('privacy_policy')
+                      ? 'You have to accept the privacy policy to create an account'
+                      : ''
+                  "
+                >
                   <template slot="label">
-                    I agree to the&nbsp;<a @click.stop target="_blank" href="/privacy">Privacy Policy</a>.
+                    I agree to the&nbsp;<a
+                      @click.stop
+                      target="_blank"
+                      href="/privacy"
+                      >Privacy Policy</a
+                    >.
                   </template>
                 </v-checkbox>
                 <input
@@ -66,9 +76,9 @@
                   name="privacy_policy"
                   v-model="termsAccepted"
                   v-validate="'required'"
-                  style="display: none;"
-                  required>
-                </input>
+                  style="display: none"
+                  required
+                />
               </v-form>
             </v-card-text>
             <v-card-actions class="justify-center">

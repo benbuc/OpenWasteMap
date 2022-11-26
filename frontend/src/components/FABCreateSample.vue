@@ -1,7 +1,11 @@
 <template>
   <v-speed-dial id="create-sample" v-model="active">
     <template v-slot:activator>
-      <v-btn fab :style="{ transform: `rotate(${active ? 45 : 0}deg)` }">
+      <v-btn
+        fab
+        :style="{ transform: `rotate(${active ? 45 : 0}deg)` }"
+        @click="checkLoggedIn"
+      >
         <v-icon>add</v-icon>
       </v-btn>
     </template>
@@ -34,6 +38,8 @@
 <script lang="ts">
 import { IWasteSampleCreate } from "@/interfaces";
 import { dispatchCreateWasteSample } from "@/store/main/actions";
+import { readIsLoggedIn } from "@/store/main/getters";
+import { commitAddNotification } from "@/store/main/mutations";
 import { Vue, Component, Watch } from "vue-property-decorator";
 
 @Component
@@ -107,6 +113,19 @@ export default class FABCreateSample extends Vue {
   }
   get gpsReady() {
     return this.$store.state.geolocation.lat && this.coordinates.accuracy < 15;
+  }
+  get loggedIn() {
+    return readIsLoggedIn(this.$store);
+  }
+  checkLoggedIn(e: Event) {
+    if (!this.loggedIn) {
+      commitAddNotification(this.$store, {
+        content: "Please log in to create samples",
+        color: "warning",
+      });
+      this.$router.push("/login");
+      e.stopPropagation();
+    }
   }
   get coordinates() {
     return {
