@@ -144,6 +144,7 @@ export default class OwmMap extends Vue {
     this.owmTileLayer.addTo(this.owmMap);
     L.control.zoom({ position: "bottomright" }).addTo(this.owmMap);
     this.updateOsmConsent();
+    this.owmMap.invalidateSize();
   }
   public activateOsmTileLayer() {
     if (this.osmTileLayer === undefined) {
