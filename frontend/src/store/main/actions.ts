@@ -154,7 +154,7 @@ export const actions = {
       }, payload.timeout);
     });
   },
-  async passwordRecovery(context: MainContext, payload: { username: string }) {
+  async passwordRecovery(context: MainContext, payload: { email: string }) {
     const loadingNotification = {
       content: "Sending password recovery email",
       showProgress: true,
@@ -163,7 +163,7 @@ export const actions = {
       commitAddNotification(context, loadingNotification);
       const response = (
         await Promise.all([
-          api.passwordRecovery(payload.username),
+          api.passwordRecovery(payload.email),
           await new Promise<void>((resolve, reject) =>
             setTimeout(() => resolve(), 500)
           ),
