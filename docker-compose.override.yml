@@ -74,11 +74,6 @@ services:
       args:
         INSTALL_DEV: ${INSTALL_DEV-true}
     command: /tile-manager-start-reload.sh
-    labels:
-      - traefik.enable=true
-      - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
-      - traefik.http.routers.${STACK_NAME?Variable not set}-tile-manager-http.rule=PathPrefix(`/`)
-      - traefik.http.services.${STACK_NAME?Variable not set}-tile-manager.loadbalancer.server.port=80
 
   celeryworker:
     volumes:
