@@ -1,4 +1,5 @@
 import base64
+from pathlib import Path
 
 from fastapi import APIRouter
 from fastapi.responses import Response
@@ -18,9 +19,23 @@ def get_tile(
     xcoord: int,
     ycoord: int,
 ):
-    render_task = celery_app.send_task(
-        "app.worker.render_tile", args=[zoom, xcoord, ycoord]
-    )
-    image_out = base64.b64decode(render_task.get(timeout=5))
+    """
+    Get tile from cache or render
+    """
 
-    return Response(content=image_out, media_type="image/png")
+    cached_tile_path = Path("/tiles") / str(zoom) / str(xcoord) / f"{ycoord}.png"
+    try:
+        # try loading file from cache
+        with open(cached_tile_path, "rb") as f:
+            tile_image = f.read()
+    except FileNotFoundError:
+        # when no cached file found, recreate tile and store to cache
+        render_task = celery_app.send_task(
+            "app.worker.render_tile", args=[zoom, xcoord, ycoord]
+        )
+        tile_image = base64.b64decode(render_task.get(timeout=5))
+        cached_tile_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(cached_tile_path, "wb") as f:
+            f.write(tile_image)
+
+    return Response(content=tile_image, media_type="image/png")
