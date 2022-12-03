@@ -38,11 +38,22 @@ CMD ["bash", "/worker-start.sh"]
 
 FROM base as backend
 
-COPY ./start-reload.sh /
-COPY ./start.sh /
-RUN chmod +x /start-reload.sh
-RUN chmod +x /start.sh
+COPY ./app/backend-start-reload.sh /
+COPY ./app/backend-start.sh /
+RUN chmod +x /backend-start-reload.sh
+RUN chmod +x /backend-start.sh
 COPY ./app /app
 ENV PYTHONPATH=/app
 
-CMD ["bash", "/start.sh"]
+CMD ["bash", "/backend-start.sh"]
+
+FROM base as tile_manager
+
+COPY ./app/tile-manager-start-reload.sh /
+COPY ./app/tile-manager-start.sh /
+RUN chmod +x /tile-manager-start-reload.sh
+RUN chmod +x /tile-manager-start.sh
+COPY ./app /app
+ENV PYTHONPATH=/app
+
+CMD ["bash", "/tile-manager-start.sh"]
