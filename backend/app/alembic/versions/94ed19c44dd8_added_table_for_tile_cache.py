@@ -1,8 +1,8 @@
-"""Added table for cached tiles
+"""Added table for tile cache.
 
-Revision ID: cd636a1ab1f7
+Revision ID: 94ed19c44dd8
 Revises: 552c9b2db396
-Create Date: 2022-12-04 15:24:36.374599
+Create Date: 2022-12-04 16:17:11.246012
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'cd636a1ab1f7'
+revision = '94ed19c44dd8'
 down_revision = '552c9b2db396'
 branch_labels = None
 depends_on = None
@@ -22,7 +22,7 @@ def upgrade():
     sa.Column('zoom', sa.Integer(), nullable=False),
     sa.Column('xcoord', sa.Integer(), nullable=False),
     sa.Column('ycoord', sa.Integer(), nullable=False),
-    sa.Column('num_of_changes', sa.Integer(), nullable=False),
+    sa.Column('change_count', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('zoom', 'xcoord', 'ycoord')
     )
     op.create_index(op.f('ix_cachedtile_xcoord'), 'cachedtile', ['xcoord'], unique=False)

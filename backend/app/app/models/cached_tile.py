@@ -12,4 +12,4 @@ class CachedTile(Base):
     zoom = Column(Integer, primary_key=True, index=True, nullable=False)
     xcoord = Column(Integer, primary_key=True, index=True, nullable=False)
     ycoord = Column(Integer, primary_key=True, index=True, nullable=False)
-    num_of_changes = Column(Integer, nullable=False, default=0)
+    change_count = Column(Integer, nullable=False, default=0)
