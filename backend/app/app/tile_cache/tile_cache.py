@@ -3,6 +3,7 @@ from typing import List, Optional
 from sqlalchemy.orm import Session
 
 from app.models.cached_tile import CachedTile
+from app.rendering.utilities import tiles_affected_by_sample
 from app.schemas.tile_cache import Tile
 
 
@@ -88,6 +89,10 @@ class TileCache:
             cached_tile.change_count += 1
             db.commit()
             db.refresh(cached_tile)
+
+    def increment_tiles_at_coordinate(self, db: Session, latitude: int, longitude: int):
+        for tile in tiles_affected_by_sample(latitude, longitude):
+            self.increment_tile_change_count(db, tile)
 
 
 tilecache = TileCache(CachedTile)

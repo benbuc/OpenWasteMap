@@ -71,6 +71,6 @@ def test_loading_over_coordinate_edges(db: Session) -> None:
 
 
 def test_sample_affects_all_zoom_levels():
-    zoom_levels = [zoom for (zoom, x, y) in tiles_affected_by_sample(0, 0)]
+    zoom_levels = [tile.zoom for tile in tiles_affected_by_sample(0, 0)]
     for z in range(19):
         assert z in zoom_levels

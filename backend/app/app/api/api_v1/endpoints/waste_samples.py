@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from app import crud, models, schemas
 from app.api import deps
+from app.tile_cache import tilecache
 
 router = APIRouter()
 
@@ -57,6 +58,9 @@ def create_waste_sample(
         obj_in=waste_sample_in,
         owner_id=current_user.id,
         sampling_date=datetime.utcnow(),
+    )
+    tilecache.increment_tiles_at_coordinate(
+        db, latitude=waste_sample_in.latitude, longitude=waste_sample_in.longitude
     )
     return waste_sample
 
