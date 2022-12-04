@@ -1,5 +1,6 @@
-import io
 import base64
+import io
+
 from raven import Client
 
 from app.core.celery_app import celery_app
