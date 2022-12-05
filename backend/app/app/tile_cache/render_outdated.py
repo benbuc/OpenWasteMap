@@ -31,23 +31,31 @@ class TileCacheRenderOutdated:
         # TODO: do we need to include a timeout here?
         for tile, task in self.tiles_in_progress.copy().items():
             if task.state == "SUCCESS":
+                self.tiles_in_progress[tile].get()
                 del self.tiles_in_progress[tile]
             elif task.state == "FAILURE":
                 logger.error(f"Failed to render tile {tile}")
+                self.tiles_in_progress[tile].get()
                 del self.tiles_in_progress[tile]
+
+    async def main(self):
+        self.fetch_outdated_tiles()
+        if self.tiles_to_render:
+            self.start_rendering_tasks()
+
+        if self.tiles_in_progress:
+            self.check_tiles_in_progress()
+
+        if not self.tiles_to_render and not self.tiles_in_progress:
+            # Nothig to do at the moment, sleep a little longer
+            await asyncio.sleep(60)
+        else:
+            # Some tiles are still being rendered, sleep a little shorter
+            await asyncio.sleep(1)
 
     async def mainloop(self):
         while True:
-            self.fetch_outdated_tiles()
-            if self.tiles_to_render:
-                self.start_rendering_tasks()
-
-            if self.tiles_in_progress:
-                self.check_tiles_in_progress()
-
-            if not self.tiles_to_render and not self.tiles_in_progress:
-                # Nothig to do at the moment, sleep a little longer
-                await asyncio.sleep(60)
-            else:
-                # Some tiles are still being rendered, sleep a little shorter
-                await asyncio.sleep(1)
+            try:
+                await self.main()
+            except Exception as e:
+                logger.error(f"Error in mainloop: {e}")

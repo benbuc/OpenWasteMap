@@ -51,6 +51,7 @@ async def get_tile(zoom: int, xcoord: int, ycoord: int):
                 raise HTTPException(status_code=500, detail="Failed to render tile")
             else:
                 await asyncio.sleep(0.1)
+        render_task.get()
         if timed_out:
             logger.error(f"Timed out while rendering tile {zoom}/{xcoord}/{ycoord}")
             raise HTTPException(status_code=500, detail="Failed to render tile")
