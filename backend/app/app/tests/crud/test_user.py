@@ -122,7 +122,10 @@ def test_update_user_without_password(db: Session) -> None:
     nickname = random_lower_string()
     email = random_email()
     user_in = UserCreate(
-        email=email, nickname=nickname, password=password, is_superuser=True,
+        email=email,
+        nickname=nickname,
+        password=password,
+        is_superuser=True,
     )
     user = crud.user.create(db, obj_in=user_in)
     new_nickname = random_lower_string()

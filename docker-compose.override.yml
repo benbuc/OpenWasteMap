@@ -53,12 +53,27 @@ services:
         INSTALL_DEV: ${INSTALL_DEV-true}
         INSTALL_JUPYTER: ${INSTALL_JUPYTER-true}
     # command: bash -c "while true; do sleep 1; done"  # Infinite loop to keep container live doing nothing
-    command: /start-reload.sh
+    command: /backend-start-reload.sh
     labels:
       - traefik.enable=true
       - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
       - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.rule=PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`)
       - traefik.http.services.${STACK_NAME?Variable not set}-backend.loadbalancer.server.port=80
+
+  tile_manager:
+    ports:
+      - "9999:9999"
+    volumes:
+      - ./backend/app:/app
+    environment:
+      - SERVER_HOST=http://${DOMAIN?Variable not set}
+      - PORT=9999
+    build:
+      context: ./backend
+      target: tile_manager
+      args:
+        INSTALL_DEV: ${INSTALL_DEV-true}
+    command: /tile-manager-start-reload.sh
 
   celeryworker:
     volumes:

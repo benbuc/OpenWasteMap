@@ -164,6 +164,27 @@ services:
         - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.rule=PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`)
         - traefik.http.services.${STACK_NAME?Variable not set}-backend.loadbalancer.server.port=80
 
+  tile_manager:
+    image: '${DOCKER_IMAGE_TILE_MANAGER?Variable not set}:${TAG-latest}'
+    env_file:
+      - .env
+    environment:
+      - SERVER_NAME=tiles.${DOMAIN?Variable not set}
+      - SERVER_HOST=https://tiles.${DOMAIN?Variable not set}
+    build:
+      context: ./backend
+      target: tile_manager
+      args:
+        INSTALL_DEV: ${INSTALL_DEV-false}
+    volumes:
+      - app-tile-cache:/tiles
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
+        - traefik.http.routers.${STACK_NAME?Variable not set}-tile-manager-http.rule=Host(`tiles.${DOMAIN?Variable not set}`)
+        - traefik.http.services.${STACK_NAME?Variable not set}-tile-manager.loadbalancer.server.port=80
+
   celeryworker:
     image: '${DOCKER_IMAGE_CELERYWORKER?Variable not set}:${TAG-latest}'
     env_file:
@@ -180,6 +201,7 @@ services:
         INSTALL_DEV: ${INSTALL_DEV-false}
     volumes:
       - ${BACKUP_DIR?Variable not set}:/backups
+      - app-tile-cache:/tiles
 
   frontend:
     image: '${DOCKER_IMAGE_FRONTEND?Variable not set}:${TAG-latest}'
@@ -198,6 +220,7 @@ services:
 volumes:
   app-db-data:
   app-pgadmin-config:
+  app-tile-cache:
 
 
 networks:

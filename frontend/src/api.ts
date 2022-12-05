@@ -1,5 +1,5 @@
 import axios from "axios";
-import { apiUrl } from "@/env";
+import { apiUrl, tilesUrl } from "@/env";
 import {
   IUserProfile,
   IUserProfileUpdate,
@@ -84,7 +84,7 @@ export const api = {
     );
   },
   getTilesEndpoint() {
-    return `${apiUrl}/api/v1/tiles/{z}/{x}/{y}.png`;
+    return `${tilesUrl}/v1/{z}/{x}/{y}.png`;
   },
   async getWasteSamples(token: string) {
     return axios.get<IWasteSample[]>(

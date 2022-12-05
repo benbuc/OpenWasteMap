@@ -2,6 +2,8 @@ import itertools
 
 import numpy as np
 
+from app.schemas.tile_cache import Tile
+
 from .parameters import EARTH_RADIUS, SAMPLE_MAX_INFLUENCE
 
 
@@ -67,4 +69,4 @@ def tiles_affected_by_sample(latitude, longitude):
         for x, y in itertools.product(
             range(min_xy[0], max_xy[0] + 1), range(min_xy[1], max_xy[1] + 1)
         ):
-            yield (zoom, x, y)
+            yield Tile(zoom=zoom, xcoord=x, ycoord=y)
