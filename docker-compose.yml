@@ -45,10 +45,10 @@ services:
         # Uses environment variable DOMAIN
         # To disable www redirection remove the Host() you want to discard, here and
         # below for HTTPS
-        - traefik.http.routers.${STACK_NAME?Variable not set}-proxy-http.rule=Host(`${DOMAIN?Variable not set}`) || Host(`www.${DOMAIN?Variable not set}`)
+        - traefik.http.routers.${STACK_NAME?Variable not set}-proxy-http.rule=Host(`${DOMAIN?Variable not set}`) || Host(`www.${DOMAIN?Variable not set}`) || Host(`tiles.${DOMAIN?Variable not set}`)
         - traefik.http.routers.${STACK_NAME?Variable not set}-proxy-http.entrypoints=http
         # traefik-https the actual router using HTTPS
-        - traefik.http.routers.${STACK_NAME?Variable not set}-proxy-https.rule=Host(`${DOMAIN?Variable not set}`) || Host(`www.${DOMAIN?Variable not set}`)
+        - traefik.http.routers.${STACK_NAME?Variable not set}-proxy-https.rule=Host(`${DOMAIN?Variable not set}`) || Host(`www.${DOMAIN?Variable not set}`) || Host(`tiles.${DOMAIN?Variable not set}`)
         - traefik.http.routers.${STACK_NAME?Variable not set}-proxy-https.entrypoints=https
         - traefik.http.routers.${STACK_NAME?Variable not set}-proxy-https.tls=true
         # Use the "le" (Let's Encrypt) resolver created below

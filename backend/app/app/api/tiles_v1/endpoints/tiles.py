@@ -3,12 +3,11 @@ import logging
 import time
 from pathlib import Path
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, HTTPException
 from fastapi.responses import Response
-from sqlalchemy.orm import Session
 
-from app.api import deps
 from app.core.celery_app import celery_app
+from app.db.session import SessionLocal
 from app.schemas.tile_cache import Tile
 from app.tile_cache import tilecache
 
@@ -23,17 +22,19 @@ logger = logging.getLogger(__name__)
     response_class=Response,
     responses={200: {"content": {"image/png": {}}}},
 )
-async def get_tile(
-    zoom: int, xcoord: int, ycoord: int, db: Session = Depends(deps.get_db)
-):
+async def get_tile(zoom: int, xcoord: int, ycoord: int):
     """
     Get tile from cache or render
     """
 
     cached_tile_path = Path("/tiles") / str(zoom) / str(xcoord) / f"{ycoord}.png"
-    tile_in_cache_db = tilecache.get_tile(
-        db, Tile(zoom=zoom, xcoord=xcoord, ycoord=ycoord)
-    )
+    with SessionLocal() as db:
+        # use session to immediately close after request
+        # as we are waiting for the celerytasks to finish
+        # and they are also using the database, we could end up in a deadlock
+        tile_in_cache_db = tilecache.get_tile(
+            db, Tile(zoom=zoom, xcoord=xcoord, ycoord=ycoord)
+        )
     if not (tile_in_cache_db and cached_tile_path.exists()):
         render_task = celery_app.send_task(
             "app.worker.render_tile", args=[zoom, xcoord, ycoord]
