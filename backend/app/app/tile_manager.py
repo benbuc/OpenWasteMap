@@ -6,7 +6,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from app.api.tiles_v1.api import api_router
 from app.core.config import settings
-from app.tile_cache.render_outdated import mainloop
+from app.tile_cache.render_outdated import TileCacheRenderOutdated
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -36,4 +36,5 @@ async def run_mainloop():
     logger.info("Starting the mainloop")
 
     current_loop = asyncio.get_running_loop()
-    current_loop.create_task(mainloop())
+    renderer = TileCacheRenderOutdated()
+    current_loop.create_task(renderer.mainloop())

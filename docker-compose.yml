@@ -201,6 +201,7 @@ services:
         INSTALL_DEV: ${INSTALL_DEV-false}
     volumes:
       - ${BACKUP_DIR?Variable not set}:/backups
+      - app-tile-cache:/tiles
 
   frontend:
     image: '${DOCKER_IMAGE_FRONTEND?Variable not set}:${TAG-latest}'

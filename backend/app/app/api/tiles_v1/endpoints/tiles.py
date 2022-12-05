@@ -1,7 +1,9 @@
-import base64
+import asyncio
+import logging
+import time
 from pathlib import Path
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import Response
 from sqlalchemy.orm import Session
 
@@ -12,13 +14,18 @@ from app.tile_cache import tilecache
 
 router = APIRouter()
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 
 @router.get(
     "/{zoom}/{xcoord}/{ycoord}.png",
     response_class=Response,
     responses={200: {"content": {"image/png": {}}}},
 )
-def get_tile(zoom: int, xcoord: int, ycoord: int, db: Session = Depends(deps.get_db)):
+async def get_tile(
+    zoom: int, xcoord: int, ycoord: int, db: Session = Depends(deps.get_db)
+):
     """
     Get tile from cache or render
     """
@@ -27,21 +34,27 @@ def get_tile(zoom: int, xcoord: int, ycoord: int, db: Session = Depends(deps.get
     tile_in_cache_db = tilecache.get_tile(
         db, Tile(zoom=zoom, xcoord=xcoord, ycoord=ycoord)
     )
-    if tile_in_cache_db and cached_tile_path.exists():
-        with open(cached_tile_path, "rb") as f:
-            tile_image = f.read()
-    else:
+    if not (tile_in_cache_db and cached_tile_path.exists()):
         render_task = celery_app.send_task(
             "app.worker.render_tile", args=[zoom, xcoord, ycoord]
         )
-        # TODO: sometimes the task ran into a timeout
-        # although execution is successful and fast
-        # could not reproduce this error
-        tile_image = base64.b64decode(render_task.get(timeout=10))
-        cached_tile_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(cached_tile_path, "wb") as f:
-            f.write(tile_image)
 
-        tilecache.updated_tile(db, Tile(zoom=zoom, xcoord=xcoord, ycoord=ycoord))
+        start_time = time.time()
+        timed_out = True
+        while time.time() - start_time < 10:
+            if render_task.state == "SUCCESS":
+                timed_out = False
+                break
+            elif render_task.state == "FAILURE":
+                logger.error(f"Failed to render tile {zoom}/{xcoord}/{ycoord}")
+                raise HTTPException(status_code=500, detail="Failed to render tile")
+            else:
+                await asyncio.sleep(0.1)
+        if timed_out:
+            logger.error(f"Timed out while rendering tile {zoom}/{xcoord}/{ycoord}")
+            raise HTTPException(status_code=500, detail="Failed to render tile")
+
+    with open(cached_tile_path, "rb") as f:
+        tile_image = f.read()
 
     return Response(content=tile_image, media_type="image/png")
