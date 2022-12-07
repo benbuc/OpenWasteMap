@@ -1,10 +1,12 @@
 import logging
+from datetime import datetime
 from pathlib import Path
 from typing import List, Optional
 
 from sqlalchemy.orm import Session
 from tenacity import retry, retry_if_result, stop_after_delay, wait_fixed
 
+from app.db.session import SessionLocal
 from app.models.cached_tile import CachedTile
 from app.rendering.utilities import tiles_affected_by_sample
 from app.schemas.tile_cache import Tile
@@ -38,9 +40,9 @@ class TileCache:
         )
         return cached_tile
 
-    def updated_tile(self, db: Session, tile: Tile):
+    def updated_tile(self, db: Session, tile: Tile, prior_change_count: int):
         """
-        A tile was updated, so reset the outdated flag.
+        A tile was updated, so reset the outdated flag and refresh time.
         If it doesn't exist in the database, create it.
         """
         cached_tile = (
@@ -60,7 +62,8 @@ class TileCache:
             db.commit()
             db.refresh(cached_tile)
         else:
-            cached_tile.change_count = 0
+            cached_tile.change_count -= prior_change_count
+            cached_tile.last_refresh = datetime.utcnow()
             db.commit()
             db.refresh(cached_tile)
 
@@ -119,6 +122,23 @@ class TileCache:
     )
     async def wait_for_tile_on_disk(self, tile: Tile):
         return self.is_on_disk(tile)
+
+    @retry(
+        stop=stop_after_delay(30),
+        wait=wait_fixed(1),
+        retry=retry_if_result(lambda x: x is False),
+    )
+    async def wait_for_tile_refresh(self, tile: Tile):
+        with SessionLocal() as db:
+            cached_tile = self.get_tile(db, tile)
+            if cached_tile is None:
+                return False
+            if tile.last_refresh is None:
+                return cached_tile.last_refresh is not None
+            elif cached_tile.last_refresh is None:
+                return False
+            else:
+                return cached_tile.last_refresh > tile.last_refresh
 
 
 tilecache = TileCache(CachedTile)

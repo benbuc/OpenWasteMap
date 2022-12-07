@@ -6,7 +6,7 @@ from app.tile_cache import tilecache
 
 def test_increment_change_count(db: Session):
     tile = Tile(zoom=1, xcoord=1, ycoord=1)
-    tilecache.updated_tile(db, tile)
+    tilecache.updated_tile(db, tile, 0)
     db_tile = tilecache.get_tile(db, tile)
     assert db_tile.change_count == 0
 
