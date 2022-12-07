@@ -3,8 +3,8 @@ import logging
 
 from tenacity import RetryError
 
-from app.api import deps
 from app.core.celery_app import celery_app
+from app.db.session import SessionLocal
 from app.tile_cache import tilecache
 
 logging.basicConfig(level=logging.INFO)
@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 
 class TileCacheRenderOutdated:
     def __init__(self):
-        self.db = next(deps.get_db())
         self.tiles_in_progress = set()
         self.tiles_to_render = []
 
@@ -23,7 +22,8 @@ class TileCacheRenderOutdated:
 
     def fetch_outdated_tiles(self):
         """Fetch all tiles that are not currently rendering."""
-        outdated_tiles = tilecache.get_outdated_tiles(self.db)
+        with SessionLocal() as db:
+            outdated_tiles = tilecache.get_outdated_tiles(db)
         self.tiles_to_render = [
             tile for tile in outdated_tiles if tile not in self.tiles_in_progress
         ]
