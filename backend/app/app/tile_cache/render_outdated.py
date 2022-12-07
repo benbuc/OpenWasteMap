@@ -52,10 +52,7 @@ class TileCacheRenderOutdated:
         self.fetch_outdated_tiles()
         self.enqueue_rendering_tasks()
 
-        logger.info(f"Rendering {len(self.tiles_to_render)} tiles...")
-        logger.info(f"Rendering {len(self.tiles_in_progress)} tiles in progress...")
-
-        await asyncio.sleep(2)
+        await asyncio.sleep(60)
 
     async def mainloop(self):
         while True:
