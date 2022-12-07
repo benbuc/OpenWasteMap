@@ -20,9 +20,10 @@ def test_celery(word: str) -> str:
 
 @celery_app.task(time_limit=60)
 def render_tile(zoom: int, xcoord: int, ycoord: int) -> str:
+    tile = Tile(zoom=zoom, xcoord=xcoord, ycoord=ycoord)
     with SessionLocal() as db:
-        # TODO: can we reuse database connection?
-        tilecache.updated_tile(db, Tile(zoom=zoom, xcoord=xcoord, ycoord=ycoord))
+        cached_tile = tilecache.get_tile(db, tile)
+        prior_change_count = cached_tile.change_count if cached_tile else 0
 
     image_out = io.BytesIO()
     rendered_tile = TileRenderer(zoom, xcoord, ycoord).render()
@@ -32,6 +33,8 @@ def render_tile(zoom: int, xcoord: int, ycoord: int) -> str:
     tile_path.parent.mkdir(parents=True, exist_ok=True)
     with open(tile_path, "wb") as f:
         f.write(image_out.getvalue())
+    with SessionLocal() as db:
+        tilecache.updated_tile(db, tile, prior_change_count)
 
 
 celery_app.autodiscover_tasks(["app.backup"])
