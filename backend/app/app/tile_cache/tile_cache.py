@@ -1,10 +1,16 @@
+import logging
+from pathlib import Path
 from typing import List, Optional
 
 from sqlalchemy.orm import Session
+from tenacity import retry, retry_if_result, stop_after_delay, wait_fixed
 
 from app.models.cached_tile import CachedTile
 from app.rendering.utilities import tiles_affected_by_sample
 from app.schemas.tile_cache import Tile
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 class TileCache:
@@ -14,6 +20,7 @@ class TileCache:
 
     def __init__(self, model):
         self.model = model
+        self.base_path = Path("/tiles")
 
     def get_tile(self, db: Session, tile: Tile) -> Optional[CachedTile]:
         """
@@ -93,6 +100,25 @@ class TileCache:
     def increment_tiles_at_coordinate(self, db: Session, latitude: int, longitude: int):
         for tile in tiles_affected_by_sample(latitude, longitude):
             self.increment_tile_change_count(db, tile)
+
+    def path_for_tile(self, tile: Tile):
+        return (
+            self.base_path
+            / str(tile.zoom)
+            / str(tile.xcoord)
+            / f"{str(tile.ycoord)}.png"
+        )
+
+    def is_on_disk(self, tile: Tile):
+        return self.path_for_tile(tile).exists()
+
+    @retry(
+        stop=stop_after_delay(10),
+        wait=wait_fixed(0.2),
+        retry=retry_if_result(lambda x: x is False),
+    )
+    async def wait_for_tile_on_disk(self, tile: Tile):
+        return self.is_on_disk(tile)
 
 
 tilecache = TileCache(CachedTile)
