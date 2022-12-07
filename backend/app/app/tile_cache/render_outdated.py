@@ -29,11 +29,10 @@ class TileCacheRenderOutdated:
         ]
 
     async def render_tile(self, tile):
-        celery_app.send_task(
-            "app.worker.render_tile", args=[tile.zoom, tile.xcoord, tile.ycoord]
-        )
-
         try:
+            celery_app.send_task(
+                "app.worker.render_tile", args=[tile.zoom, tile.xcoord, tile.ycoord]
+            )
             await tilecache.wait_for_tile_refresh(tile)
         except RetryError:
             logger.error(f"Timed out waiting for tile: f{tile}. Can be queued again.")
