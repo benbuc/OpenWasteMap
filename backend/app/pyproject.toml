@@ -28,7 +28,7 @@ Jinja2 = "^3.1.2"
 fastapi-mail = "^1.2.0"
 
 [tool.poetry.dev-dependencies]
-mypy = "^0.991"
+mypy = "^1.0"
 black = "^22.10"
 isort = "^5.10.1"
 autoflake = "^1.7.1"
