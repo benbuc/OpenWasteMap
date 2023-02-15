@@ -22,7 +22,7 @@ The individual levels can be described as follows:
 - 6: The waste is overwhelming. The area is covered in litter, and it may be difficult to navigate without stepping on or around waste.
 - 7: The waste is overwhelming and hazardous. The area is covered in litter, and there may be sharp or dangerous objects among the waste.
 - 8: The waste is overwhelming and hazardous. The area is covered in litter, and it is difficult to avoid coming into contact with waste.
-- 9: The waste is overwhelming and hazardous. The area is completely covered in waste, and it is difficult to move or even see.
+- 9: The waste is overwhelming and hazardous. The area is completely covered in waste, and it is difficult to move or see the ground or other surfaces.
 - 10: The waste is overwhelming and hazardous. The area is completely covered in waste, and it poses a serious health and safety hazard.
 
 
