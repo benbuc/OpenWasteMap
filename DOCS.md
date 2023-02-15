@@ -1,5 +1,7 @@
 # OpenWasteMap
 
+Default DOCS from template:
+
 ## Backend Requirements
 
 * [Docker](https://www.docker.com/).
