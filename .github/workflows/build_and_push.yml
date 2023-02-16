@@ -24,4 +24,6 @@ jobs:
           file: ./backend/Dockerfile
           target: backend
           push: true
-          tags: benbuc/owm_backend:latest
+          tags: |
+            ${{ secret.DOCKERHUB_USERNAME }}/owm_backend:latest
+            ${{ secret.DOCKERHUB_USERNAME }}/owm_backend:${{ github.ref_name }}
