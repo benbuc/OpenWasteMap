@@ -2,13 +2,8 @@ name: Build and Push to Registry
 
 on:
   workflow_dispatch:
-  workflow_run:
-    workflows: ["Backend Build & Test"]
-    branches: [master]
-    tags:
-      - '*.*.*'
-    types:
-      - completed
+  release:
+    types: [published]
 
 jobs:
   build-and-push:
@@ -33,4 +28,25 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/owm_backend:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/owm_backend:${{ github.ref_name }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/owm_backend:${{ github.event.release.tag_name }}
+
+      - name: Build Celeryworker
+        uses: docker/build-push-action@v3
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          target: celeryworker
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/owm_celeryworker:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/owm_celeryworker:${{ github.event.release.tag_name }} 
+
+      - name: Build Frontend
+        uses: docker/build-push-action@v3
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/owm_frontend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/owm_frontend:${{ github.event.release.tag_name }}

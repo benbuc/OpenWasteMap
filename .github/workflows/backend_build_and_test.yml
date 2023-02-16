@@ -8,8 +8,6 @@ on:
     paths:
       - 'backend/**'
       - 'docker-compose*.yml'
-    tags:
-      - '*.*.*'
   pull_request:
     branches:
       - master
@@ -54,24 +52,11 @@ jobs:
           build-args: |
             INSTALL_DEV=true
 
-      - name: Build Frontend
-        uses: docker/build-push-action@v3
-        with:
-          context: ./frontend
-          file: ./frontend/Dockerfile
-          push: false
-          load: true
-          tags: owm_frontend
-          cache-from: type=gha,scope=${{ github.workflow }}-frontend
-          cache-to: type=gha,mode=max,scope=${{ github.workflow }}-frontend
-          build-args: |
-            FRONTEND_ENV=dev
-
       - name: Run Setup
         env:
           TRAEFIK_PUBLIC_NETWORK_IS_EXTERNAL: false
         run: |
-          docker-compose -f docker-compose.yml up -d --no-build db backend frontend celeryworker queue
+          docker-compose -f docker-compose.yml up -d --no-build db backend celeryworker queue
 
       - name: Test
         env:
