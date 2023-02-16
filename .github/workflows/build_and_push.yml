@@ -2,6 +2,13 @@ name: Build and Push to Registry
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: ["Backend Build & Test"]
+    branches: [master]
+    tags:
+      - '*.*.*'
+    types:
+      - completed
 
 jobs:
   build-and-push:
