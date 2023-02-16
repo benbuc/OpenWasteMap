@@ -24,4 +24,4 @@ jobs:
           file: ./backend/Dockerfile
           target: backend
           push: true
-          tags: owm_backend:latest
+          tags: benbuc/owm_backend:latest
