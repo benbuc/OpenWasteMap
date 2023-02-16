@@ -25,5 +25,5 @@ jobs:
           target: backend
           push: true
           tags: |
-            ${{ secret.DOCKERHUB_USERNAME }}/owm_backend:latest
-            ${{ secret.DOCKERHUB_USERNAME }}/owm_backend:${{ github.ref_name }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/owm_backend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/owm_backend:${{ github.ref_name }}
