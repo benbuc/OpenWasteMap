@@ -24,28 +24,49 @@ jobs:
         with:
           context: ./backend
           file: ./backend/Dockerfile
+          build-args: |
+            "INSTALL_DEV=false"
           target: backend
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/owm_backend:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/owm_backend:${{ github.event.release.tag_name }}
 
+      - name: Build Tile Manager
+        uses: docker/build-push-action@v3
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          build-args: |
+            "INSTALL_DEV=false"
+          target: tile_manager
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/owm_tile_manager:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/owm_tile_manager:${{ github.event.release.tag_name }}
+
       - name: Build Celeryworker
         uses: docker/build-push-action@v3
         with:
           context: ./backend
           file: ./backend/Dockerfile
+          build-args: |
+            "INSTALL_DEV=false"
           target: celeryworker
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/owm_celeryworker:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/owm_celeryworker:${{ github.event.release.tag_name }} 
 
+
       - name: Build Frontend
         uses: docker/build-push-action@v3
         with:
           context: ./frontend
           file: ./frontend/Dockerfile
+          build-args: |
+            "FRONTEND_ENV=production"
+            "VERSION=${{ github.event.release.tag_name }}"
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/owm_frontend:latest

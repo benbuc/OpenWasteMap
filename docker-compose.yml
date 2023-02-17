@@ -142,7 +142,7 @@ services:
         - traefik.http.services.${STACK_NAME?Variable not set}-flower.loadbalancer.server.port=5555
 
   backend:
-    image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
+    image: 'benbuc/owm_backend:${TAG-latest}'
     env_file:
       - .env
     environment:
@@ -150,11 +150,6 @@ services:
       - SERVER_HOST=https://${DOMAIN?Variable not set}
       # Allow explicit env var override for tests
       - SMTP_HOST=${SMTP_HOST}
-    build:
-      context: ./backend
-      target: backend
-      args:
-        INSTALL_DEV: ${INSTALL_DEV-false}
     volumes:
       - ${BACKUP_DIR?Variable not set}:/backups
     deploy:
@@ -165,17 +160,12 @@ services:
         - traefik.http.services.${STACK_NAME?Variable not set}-backend.loadbalancer.server.port=80
 
   tile_manager:
-    image: '${DOCKER_IMAGE_TILE_MANAGER?Variable not set}:${TAG-latest}'
+    image: 'benbuc/owm_tile_manager:${TAG-latest}'
     env_file:
       - .env
     environment:
       - SERVER_NAME=tiles.${DOMAIN?Variable not set}
       - SERVER_HOST=https://tiles.${DOMAIN?Variable not set}
-    build:
-      context: ./backend
-      target: tile_manager
-      args:
-        INSTALL_DEV: ${INSTALL_DEV-false}
     volumes:
       - app-tile-cache:/tiles
     deploy:
@@ -186,7 +176,7 @@ services:
         - traefik.http.services.${STACK_NAME?Variable not set}-tile-manager.loadbalancer.server.port=80
 
   celeryworker:
-    image: '${DOCKER_IMAGE_CELERYWORKER?Variable not set}:${TAG-latest}'
+    image: 'benbuc/owm_celeryworker:${TAG-latest}'
     env_file:
       - .env
     environment:
@@ -194,22 +184,12 @@ services:
       - SERVER_HOST=https://${DOMAIN?Variable not set}
       # Allow explicit env var override for tests
       - SMTP_HOST=${SMTP_HOST?Variable not set}
-    build:
-      context: ./backend
-      target: celeryworker
-      args:
-        INSTALL_DEV: ${INSTALL_DEV-false}
     volumes:
       - ${BACKUP_DIR?Variable not set}:/backups
       - app-tile-cache:/tiles
 
   frontend:
-    image: '${DOCKER_IMAGE_FRONTEND?Variable not set}:${TAG-latest}'
-    build:
-      context: ./frontend
-      args:
-        FRONTEND_ENV: ${FRONTEND_ENV-production}
-        VERSION: ${VERSION}
+    image: 'benbuc/owm_frontend:${TAG-latest}'
     deploy:
       labels:
         - traefik.enable=true

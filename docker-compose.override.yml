@@ -39,6 +39,7 @@ services:
       - "5555:5555"
 
   backend:
+    image: 'owm_backend:latest'
     ports:
       - "8888:8888"
     volumes:
@@ -61,6 +62,7 @@ services:
       - traefik.http.services.${STACK_NAME?Variable not set}-backend.loadbalancer.server.port=80
 
   tile_manager:
+    image: 'owm_tile_manager:latest'
     ports:
       - "9999:9999"
     volumes:
@@ -76,6 +78,7 @@ services:
     command: /tile-manager-start-reload.sh
 
   celeryworker:
+    image: 'owm_celeryworker:latest'
     volumes:
       - ./backend/app:/app
     environment:
@@ -90,6 +93,7 @@ services:
         INSTALL_JUPYTER: ${INSTALL_JUPYTER-true}
 
   frontend:
+    image: 'owm_frontend:latest'
     build:
       context: ./frontend
       args:
