@@ -1,0 +1,11 @@
+version: "3.6"
+services:
+
+  backend:
+    image: 'owm_backend:latest'
+
+  celeryworker:
+    image: 'owm_celeryworker:latest'
+
+  frontend:
+    image: 'owm_frontend:latest'

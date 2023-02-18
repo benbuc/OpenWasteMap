@@ -56,12 +56,12 @@ jobs:
         env:
           TRAEFIK_PUBLIC_NETWORK_IS_EXTERNAL: false
         run: |
-          docker-compose -f docker-compose.yml up -d --no-build db backend celeryworker queue
+          docker-compose -f docker-compose.yml -f .github/docker-compose.ci.yml up -d --no-build db backend celeryworker queue
 
       - name: Test
         env:
           TRAEFIK_PUBLIC_NETWORK_IS_EXTERNAL: false
         run: |
-          docker-compose -f docker-compose.yml exec -T backend bash /app/tests-start.sh "$@"
-          docker-compose -f docker-compose.yml down -v
+          docker-compose -f docker-compose.yml -f .github/docker-compose.ci.yml exec -T backend bash /app/tests-start.sh "$@"
+          docker-compose -f docker-compose.yml -f .github/docker-compose.ci.yml down -v
        
