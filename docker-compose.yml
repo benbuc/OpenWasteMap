@@ -156,7 +156,7 @@ services:
       labels:
         - traefik.enable=true
         - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
-        - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.rule=PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`)
+        - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.rule=Host(`app.${DOMAIN?Variable not set}`) && (PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`))
         - traefik.http.services.${STACK_NAME?Variable not set}-backend.loadbalancer.server.port=80
 
   tile_manager:
@@ -194,13 +194,47 @@ services:
       labels:
         - traefik.enable=true
         - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
-        - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.rule=PathPrefix(`/`)
+        - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.rule=Host(`app.${DOMAIN?Variable not set}`) && PathPrefix(`/`)
         - traefik.http.services.${STACK_NAME?Variable not set}-frontend.loadbalancer.server.port=80
+
+  wordpress_db:
+    image: mysql:5.7
+    volumes:
+      - wp-db-data:/var/lib/mysql
+    env_file:
+      - .env
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD?Variable not set}
+      - MYSQL_DATABASE=wp
+      - MYSQL_USER=wordpress
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD?Variable not set}
+
+  wordpress:
+    image: wordpress:latest
+    depends_on:
+      - wordpress_db
+    env_file:
+      - .env
+    volumes:
+      - wp-data:/var/www/html
+    environment:
+      - WORDPRESS_DB_HOST=wordpress_db
+      - WORDPRESS_DB_USER=wordpress
+      - WORDPRESS_DB_PASSWORD=${MYSQL_PASSWORD?Variable not set}
+      - WORDPRESS_DB_NAME=wp
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
+        - traefik.http.routers.${STACK_NAME?Variable not set}-wordpress-http.rule=PathPrefix(`/`)
+        - traefik.http.services.${STACK_NAME?Variable not set}-wordpress.loadbalancer.server.port=80
 
 volumes:
   app-db-data:
   app-pgadmin-config:
   app-tile-cache:
+  wp-db-data:
+  wp-data:
 
 
 networks:
