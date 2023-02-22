@@ -173,6 +173,9 @@ services:
       - .env
     volumes:
       - wp-data:/var/www/html
+    networks:
+      - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
+      - default
     environment:
       - WORDPRESS_DB_HOST=wordpress_db
       - WORDPRESS_DB_USER=wordpress
