@@ -187,7 +187,7 @@ services:
       labels:
         - traefik.enable=true
         - traefik.docker.network=${TRAEFIK_PUBLIC_NETWORK?Variable not set}
-        - traefik.constraint-label=${TRAEFIK_TAG?Variable not set}
+        - traefik.constraint-label=${TRAEFIK_PUBLIC_TAG?Variable not set}
         - traefik.http.routers.${STACK_NAME?Variable not set}-wordpress-http.rule=Host(`${DOMAIN?Variable not set}`) || Host(`www.${DOMAIN?Variable not set}`)
         - traefik.http.routers.${STACK_NAME?Variable not set}-wordpress-http.entrypoints=http
         - traefik.http.routers.${STACK_NAME?Variable not set}-wordpress-http.middlewares=${STACK_NAME?Variable not set}-https-redirect
