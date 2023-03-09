@@ -14,7 +14,7 @@
             :key="i"
             text
             :to="item.link"
-            @click="(item.click !== undefined) ? item.click : null"
+            @click="item.click"
             class="ms-2"
           >
             <v-icon left>{{ item.icon }}</v-icon>
