@@ -18,14 +18,14 @@ uvloop = ["uvloop (>=0.13,<0.15)"]
 
 [[package]]
 name = "alembic"
-version = "1.10.1"
+version = "1.10.3"
 description = "A database migration tool for SQLAlchemy."
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "alembic-1.10.1-py3-none-any.whl", hash = "sha256:367370c74ccf4979e658c8404d8c9fac00907313dc8e9225b71eb9b2db77a3ec"},
-    {file = "alembic-1.10.1.tar.gz", hash = "sha256:afd5a30dca731aa92808c081272d05787195b42e04df687e81e8c5a950c68c7f"},
+    {file = "alembic-1.10.3-py3-none-any.whl", hash = "sha256:b2e0a6cfd3a8ce936a1168320bcbe94aefa3f4463cd773a968a55071beb3cd37"},
+    {file = "alembic-1.10.3.tar.gz", hash = "sha256:32a69b13a613aeb7e8093f242da60eff9daed13c0df02fff279c1b06c32965d2"},
 ]
 
 [package.dependencies]
@@ -1939,4 +1939,4 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7"
-content-hash = "ff6b80dfefbba9af5b88dd7dff0bf0bcae53ba76b737940cc8a7138855ff1d58"
+content-hash = "120b0ab6881ed03b1ff33b876bd47eb7a38302b4fb12df5b149c28045c8a8053"
