@@ -112,7 +112,7 @@ export default class FABCreateSample extends Vue {
     }
   }
   get gpsReady() {
-    return this.$store.state.geolocation.lat && this.coordinates.accuracy < 15;
+    return this.$store.state.geolocation.lat && this.coordinates.accuracy < 50;
   }
   get loggedIn() {
     return readIsLoggedIn(this.$store);
