@@ -20,7 +20,7 @@ sqlalchemy = "^1.4.44"
 pytest = "^8.2.1"
 python-jose = {extras = ["cryptography"], version = "^3.1.0"}
 Pillow = "^10.3.0"
-numpy = {version = "^1.26.4", python = ">=3.8,<3.11"}
+numpy = {version = "^2.0.0", python = ">=3.8,<3.11"}
 fastapi-mail = "^1.2.0"
 
 [tool.poetry.dev-dependencies]
