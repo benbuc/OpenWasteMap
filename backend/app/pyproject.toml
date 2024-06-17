@@ -10,7 +10,7 @@ fastapi = {extras = ["all"], version = "^0.99.0"}
 requests = "^2.32.3"
 celery = "^5.4.0"
 passlib = {extras = ["bcrypt"], version = "^1.7.2"}
-tenacity = "^8.3.0"
+tenacity = "^8.4.1"
 pydantic = "^1.10"
 raven = "^6.10.0"
 gunicorn = "^22.0.0"
