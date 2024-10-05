@@ -15,7 +15,7 @@ pydantic = "^1.10"
 raven = "^6.10.0"
 gunicorn = "^23.0.0"
 psycopg2-binary = "^2.9.6"
-alembic = "^1.13.2"
+alembic = "^1.13.3"
 sqlalchemy = "^1.4.44"
 pytest = "^8.3.3"
 python-jose = {extras = ["cryptography"], version = "^3.1.0"}
