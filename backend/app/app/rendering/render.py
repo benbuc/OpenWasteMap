@@ -171,12 +171,12 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
 
         samples = np.radians(samples)
 
-        pixel_coordinates[..., 0, None]
-        pixel_coordinates[..., 1, None]
-        samples[..., 1]
-        samples[..., 2]
+        px_lat = pixel_coordinates[..., 0, None]
+        px_lon = pixel_coordinates[..., 1, None]
+        sample_lat = samples[..., 1]
+        sample_lon = samples[..., 2]
 
-        ne.evaluate("px_lat - sample_lat")
+        dlat = ne.evaluate("px_lat - sample_lat")
 
         # This allows us to use small-angle approximation even at the edges
         # of the coordinate system (longitude around -180 oder 180 degrees)
@@ -187,7 +187,7 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
         dlon = ne.evaluate("abs(px_lon - sample_lon)")
         dlon[dlon > np.pi] -= 2 * np.pi
 
-        DATATYPE(EARTH_RADIUS)
+        earth_r = DATATYPE(EARTH_RADIUS)
 
         # This is a highly optimized version of the Haversine formula
         return ne.evaluate(
