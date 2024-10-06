@@ -1,3 +1,5 @@
+# type: ignore
+# flake8: noqa
 """
 Module for rendering a single OWM tile.
 """
@@ -5,6 +7,7 @@ Module for rendering a single OWM tile.
 import math
 from typing import Optional
 
+import numexpr as ne
 import numpy as np
 from PIL import Image
 
@@ -160,20 +163,20 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
 
         return np.array(np.meshgrid(latitudes, longitudes)).T
 
-    def get_distance_array(self, pixel_coordinates):
+    def get_distance_array(self, pixel_coordinates, samples):
         """
         Returns an array containing the distance from every pixel
         to every sample.
         """
 
-        samples = np.radians(self.samples)
+        samples = np.radians(samples)
 
-        px_lat = pixel_coordinates[..., 0, None]
-        px_lon = pixel_coordinates[..., 1, None]
-        sample_lat = samples[..., 1]
-        sample_lon = samples[..., 2]
+        pixel_coordinates[..., 0, None]
+        pixel_coordinates[..., 1, None]
+        samples[..., 1]
+        samples[..., 2]
 
-        dlat = px_lat - sample_lat
+        ne.evaluate("px_lat - sample_lat")
 
         # This allows us to use small-angle approximation even at the edges
         # of the coordinate system (longitude around -180 oder 180 degrees)
@@ -181,12 +184,14 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
         # we are simply subtracting 360 degrees.
         # This works with the assumption, that the maximum influence of a sample does
         # not exceed 180 degrees.
-        dlon = np.abs(px_lon - sample_lon)
+        dlon = ne.evaluate("abs(px_lon - sample_lon)")
         dlon[dlon > np.pi] -= 2 * np.pi
 
+        DATATYPE(EARTH_RADIUS)
+
         # This is a highly optimized version of the Haversine formula
-        return EARTH_RADIUS * np.sqrt(
-            (dlat**2) + (np.cos(sample_lat) ** 2) * (dlon**2)
+        return ne.evaluate(
+            "earth_r * sqrt((dlat**2) + (cos(sample_lat) ** 2) * (dlon**2))"
         )
 
     def get_confidence_levels(self, distances):
@@ -199,16 +204,19 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
         distances = np.clip(distances, 0, self.sample_max_influence)
 
         # calculate confidence levels
-        return 1.0 - (distances / self.sample_max_influence)
+        return ne.evaluate(
+            "1.0 - (distances / max_influence)",
+            local_dict={
+                "distances": distances,
+                "max_influence": self.sample_max_influence,
+            },
+        )
 
-    def get_weighted_average(self, confidence_levels):
+    def get_weighted_average(self, confidence_sum, waste_levels_sum):
         """
         Returns weighted average waste level for every pixel
         and the sum of confidence levels for every pixel.
         """
-
-        confidence_sum = np.sum(confidence_levels, axis=2)
-        waste_levels_sum = np.sum(confidence_levels * self.samples[..., 0], axis=2)
 
         # confidence sums may be zero!
         # so only devide if there is confidence at this pixel
@@ -219,7 +227,7 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
             where=confidence_sum != 0,
         )
 
-        return (average_waste_levels, confidence_sum)
+        return average_waste_levels
 
     def render(self):
         """
@@ -231,11 +239,23 @@ class TileRenderer:  # pylint: disable=too-many-instance-attributes
 
         pixel_coordinates = self.get_pixel_coordinates()
 
-        distances = self.get_distance_array(pixel_coordinates)
+        confidence_sum = np.zeros((TILE_SIZE, TILE_SIZE), dtype=DATATYPE)
+        waste_levels_sum = np.zeros((TILE_SIZE, TILE_SIZE), dtype=DATATYPE)
 
-        confidence_levels = self.get_confidence_levels(distances)
+        batch_size = 1000
+        for i in range(0, len(self.samples), batch_size):
+            distances = self.get_distance_array(
+                pixel_coordinates, self.samples[i : i + batch_size]
+            )
 
-        waste_levels, confidence_sum = self.get_weighted_average(confidence_levels)
+            confidence_levels = self.get_confidence_levels(distances)
+
+            confidence_sum += np.sum(confidence_levels, axis=2)
+            waste_levels_sum += np.sum(
+                confidence_levels * self.samples[i : i + batch_size, 0], axis=2
+            )
+
+        waste_levels = self.get_weighted_average(confidence_sum, waste_levels_sum)
 
         blend = np.clip(confidence_sum, 0, 1) * 0.75
         self.pixels[..., :3] = get_color_channels_for_waste_levels(waste_levels)
