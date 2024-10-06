@@ -1,4 +1,4 @@
-FROM python:3.10 as base
+FROM python:3.10 AS base
 
 WORKDIR /app/
 
@@ -21,7 +21,7 @@ RUN bash -c "if [ $INSTALL_DEV == 'true' ] ; then poetry install --no-root ; els
 ARG INSTALL_JUPYTER=false
 RUN bash -c "if [ $INSTALL_JUPYTER == 'true' ] ; then pip install jupyterlab ; fi"
 
-FROM base as celeryworker
+FROM base AS celeryworker
 
 ENV C_FORCE_ROOT=1
 
@@ -36,7 +36,7 @@ RUN chmod +x /worker-start.sh
 
 CMD ["bash", "/worker-start.sh"]
 
-FROM base as backend
+FROM base AS backend
 
 COPY ./app/backend-start-reload.sh /
 COPY ./app/backend-start.sh /
@@ -47,7 +47,7 @@ ENV PYTHONPATH=/app
 
 CMD ["bash", "/backend-start.sh"]
 
-FROM base as tile_manager
+FROM base AS tile_manager
 
 COPY ./app/tile-manager-start-reload.sh /
 COPY ./app/tile-manager-start.sh /
