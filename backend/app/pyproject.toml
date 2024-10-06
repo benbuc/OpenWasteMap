@@ -22,6 +22,7 @@ python-jose = {extras = ["cryptography"], version = "^3.1.0"}
 Pillow = "^10.4.0"
 numpy = {version = "^2.0.2", python = ">=3.8,<3.11"}
 fastapi-mail = "^1.2.0"
+numexpr = "^2.10.1"
 
 [tool.poetry.dev-dependencies]
 mypy = "^1.0"

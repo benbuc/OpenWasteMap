@@ -1,5 +1,5 @@
 # Stage 0, "build-stage", based on Node.js, to build and compile the frontend
-FROM benbuc/node-frontend:18.11 as build-stage
+FROM benbuc/node-frontend:18.11 AS build-stage
 
 WORKDIR /app
 
