@@ -19,7 +19,7 @@ alembic = "^1.14.0"
 sqlalchemy = "^1.4.44"
 pytest = "^8.3.3"
 python-jose = {extras = ["cryptography"], version = "^3.1.0"}
-Pillow = "^11.0.0"
+Pillow = "^11.1.0"
 numpy = {version = "^2.0.2", python = ">=3.8,<3.11"}
 fastapi-mail = "^1.2.0"
 numexpr = "^2.10.2"
