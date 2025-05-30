@@ -18,7 +18,7 @@ psycopg2-binary = "^2.9.10"
 alembic = "^1.16.1"
 sqlalchemy = "^1.4.44"
 pytest = "^8.3.5"
-python-jose = {extras = ["cryptography"], version = "^3.4.0"}
+python-jose = {extras = ["cryptography"], version = "^3.5.0"}
 Pillow = "^11.2.1"
 numpy = {version = "^2.0.2", python = ">=3.8,<3.11"}
 fastapi-mail = "^1.2.0"
