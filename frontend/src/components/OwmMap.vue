@@ -126,6 +126,9 @@ export default class OwmMap extends Vue {
     this.$root.$on("update_osm_consent", () => {
       this.updateOsmConsent();
     });
+    this.$root.$on("center_on_user_location", () => {
+      this.centerOnUserLocation();
+    });
     this.mapHeight = window.innerHeight;
     window.addEventListener("resize", this.onResize);
   }
@@ -152,8 +155,17 @@ export default class OwmMap extends Vue {
     }
     this.osmTileLayer.setUrl(this.urlOSM);
   }
-  onResize() {
+  public onResize() {
     this.mapHeight = window.innerHeight;
+  }
+  public centerOnUserLocation() {
+    if (this.currentPosition && this.owmMap) {
+      this.owmMap.setView(
+        [this.currentPosition[0], this.currentPosition[1]],
+        16, // Zoom level when centering on user location
+        { animate: true }
+      );
+    }
   }
 }
 </script>
