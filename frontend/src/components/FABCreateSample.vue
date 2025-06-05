@@ -109,6 +109,8 @@ export default class FABCreateSample extends Vue {
       setTimeout(() => {
         this.showGPSTooltip = true;
       }, 250);
+    } else {
+      this.$root.$emit("center_on_user_location");
     }
   }
   get gpsReady() {
@@ -125,6 +127,8 @@ export default class FABCreateSample extends Vue {
       });
       this.$router.push("/login");
       e.stopPropagation();
+    } else if (this.gpsReady) {
+      this.$root.$emit("center_on_user_location");
     }
   }
   get coordinates() {
@@ -157,6 +161,8 @@ export default class FABCreateSample extends Vue {
   public async createSample(wasteLevel: number) {
     if (this.gpsReady) {
       this.createButtonsDisabled = true;
+      this.$root.$emit("center_on_user_location");
+
       const newSample: IWasteSampleCreate = {
         waste_level: wasteLevel,
         latitude: this.coordinates.latitude,
