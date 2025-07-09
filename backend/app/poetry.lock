@@ -18,14 +18,14 @@ uvloop = ["uvloop (>=0.14,<0.15) ; python_version == \"3.7\"", "uvloop (>=0.14,<
 
 [[package]]
 name = "alembic"
-version = "1.16.1"
+version = "1.16.3"
 description = "A database migration tool for SQLAlchemy."
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "alembic-1.16.1-py3-none-any.whl", hash = "sha256:0cdd48acada30d93aa1035767d67dff25702f8de74d7c3919f2e8492c8db2e67"},
-    {file = "alembic-1.16.1.tar.gz", hash = "sha256:43d37ba24b3d17bc1eb1024fe0f51cd1dc95aeb5464594a02c6bb9ca9864bfa4"},
+    {file = "alembic-1.16.3-py3-none-any.whl", hash = "sha256:70a7c7829b792de52d08ca0e3aefaf060687cb8ed6bebfa557e597a1a5e5a481"},
+    {file = "alembic-1.16.3.tar.gz", hash = "sha256:18ad13c1f40a5796deee4b2346d1a9c382f44b8af98053897484fa6cf88025e4"},
 ]
 
 [package.dependencies]
@@ -2583,4 +2583,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.9"
-content-hash = "54bb2b183cf6ec6d15353dd30dea34c8dfe713c973165870338188e74893d1ef"
+content-hash = "5e166bd672bf9719c5df3fb19befad6f0d23219c61bc3a0a61ae6673dd516001"
