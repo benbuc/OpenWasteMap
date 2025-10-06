@@ -27,7 +27,7 @@ numexpr = "^2.10.2"
 [tool.poetry.dev-dependencies]
 mypy = "^1.0"
 black = "^25.1"
-isort = "^6.0.1"
+isort = "^6.1.0"
 autoflake = "^1.7.1"
 flake8 = "^5.0.4"
 pytest = "^8.4.2"
